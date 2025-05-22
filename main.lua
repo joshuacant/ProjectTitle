@@ -12,23 +12,33 @@
 local lfs = require("libs/libkoreader-lfs")
 local logger = require("logger")
 local Version = require("version")
+
+local function getSourceDir()
+    local src = debug.getinfo(1, "S").source
+    if src:sub(1,1) == "@" then
+        return src:gsub("^@(.*)/[^/]*$", "%1")
+    end
+    return lfs.currentdir()
+end
+
+local src_dir = getSourceDir()
 local font1_missing = true
-if lfs.attributes(lfs.currentdir() .. "/fonts/source/SourceSans3-Regular.ttf") ~= nil then
+if lfs.attributes(src_dir .. "/fonts/source/SourceSans3-Regular.ttf") ~= nil then
     font1_missing = false
 else logger.warn("Font1 missing")
 end
 local font2_missing = true
-if lfs.attributes(lfs.currentdir() .. "/fonts/source/SourceSerif4-Regular.ttf") ~= nil then
+if lfs.attributes(src_dir .. "/fonts/source/SourceSerif4-Regular.ttf") ~= nil then
     font2_missing = false
 else logger.warn("Font2 missing")
 end
 local font3_missing = true
-if lfs.attributes(lfs.currentdir() .. "/fonts/source/SourceSerif4-BoldIt.ttf") ~= nil then
+if lfs.attributes(src_dir .. "/fonts/source/SourceSerif4-BoldIt.ttf") ~= nil then
     font3_missing = false
 else logger.warn("Font3 missing")
 end
 local icons_missing = true
-if lfs.attributes(lfs.currentdir() .. "/icons/hero.svg") ~= nil then
+if lfs.attributes(src_dir .. "/icons/hero.svg") ~= nil then
     icons_missing = false -- check for one icon and assume the rest are there too
 else logger.warn("Icons missing")
 end
