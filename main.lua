@@ -51,7 +51,8 @@ if plugins_disabled["coverbrowser"] == true then
     coverbrowser_plugin = false
 else logger.warn("CoverBrowser enabled")
 end
-local safe_version = 202411000000
+-- Only load on the KOReader version we have tested against
+local safe_version = 202504000000
 local cv_int, cv_hash = Version:getNormalizedCurrentVersion()
 local version_unsafe = true
 if (cv_int == safe_version) then
