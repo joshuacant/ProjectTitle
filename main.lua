@@ -287,7 +287,7 @@ function CoverBrowser:addToMainMenu(menu_items)
         sub_item_table = {
             {
                 text_func = function()
-                    return T(_("Items per page in portrait mosaic mode: %1 × %2"), fc.nb_cols_portrait,
+                    return T(_("Items per page in portrait cover grid mode: %1 × %2"), fc.nb_cols_portrait,
                         fc.nb_rows_portrait)
                 end,
                 -- Best to not "keep_menu_open = true", to see how this apply on the full view
@@ -296,7 +296,7 @@ function CoverBrowser:addToMainMenu(menu_items)
                     local nb_rows = fc.nb_rows_portrait
                     local DoubleSpinWidget = require("/ui/widget/doublespinwidget")
                     local widget = DoubleSpinWidget:new {
-                        title_text = _("Portrait mosaic mode"),
+                        title_text = _("Portrait cover grid mode"),
                         width_factor = 0.6,
                         left_text = _("Columns"),
                         left_value = nb_cols,
@@ -337,7 +337,7 @@ function CoverBrowser:addToMainMenu(menu_items)
             },
             {
                 text_func = function()
-                    return T(_("Items per page in landscape mosaic mode: %1 × %2"), fc.nb_cols_landscape,
+                    return T(_("Items per page in landscape cover grid mode: %1 × %2"), fc.nb_cols_landscape,
                         fc.nb_rows_landscape)
                 end,
                 callback = function()
@@ -345,7 +345,7 @@ function CoverBrowser:addToMainMenu(menu_items)
                     local nb_rows = fc.nb_rows_landscape
                     local DoubleSpinWidget = require("/ui/widget/doublespinwidget")
                     local widget = DoubleSpinWidget:new {
-                        title_text = _("Landscape mosaic mode"),
+                        title_text = _("Landscape cover grid mode"),
                         width_factor = 0.6,
                         left_text = _("Columns"),
                         left_value = nb_cols,

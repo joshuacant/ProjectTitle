@@ -456,6 +456,54 @@ function MosaicMenuItem:update()
 
     self.is_directory = not (self.entry.is_file or self.entry.file)
     if self.is_directory then
+        -- START NEW TEST CRAP flow:
+        -- check for folder image, use that OR
+        -- check for subfolder covers, use that OR
+        -- use stock folder(shelves) icon
+        -- bonus points: be flexible enough to be used here AND list mode
+        local SQ3 = require("lua-ljsqlite3/init")
+        local DataStorage = require("datastorage")
+        self.db_location = DataStorage:getSettingsDir() .. "/PT_bookinfo_cache.sqlite3"
+        self.db_conn = SQ3.open(self.db_location)
+        self.db_conn:set_busy_timeout(5000)
+        local res = self.db_conn:exec("SELECT directory, filename FROM bookinfo WHERE directory IS '" .. self.filepath .. "/' ORDER BY filename LIMIT 4;")
+        local subfolder_image_grid = VerticalGroup:new {}
+        local subfolder_images = {}
+        if res then
+            local directories = res[1]
+            local filenames = res[2]
+            for i, filename in ipairs(filenames) do
+                local dirpath = directories[i]
+                local f = filename
+                local fullpath = dirpath .. f
+                local subfolder_book = BookInfoManager:getBookInfo(fullpath, self.do_cover_image)
+                if subfolder_book then
+                    local _, _, scale_factor = BookInfoManager.getCachedCoverSize(subfolder_book.cover_w,
+                        subfolder_book.cover_h,
+                        max_img_w/2, max_img_h/2)
+                    table.insert(subfolder_images, ImageWidget:new {
+                        image = subfolder_book.cover_bb,
+                        scale_factor = scale_factor,
+                    })
+                end
+            end
+        end
+        self.db_conn:close()
+        local subfolder_image_row1 = HorizontalGroup:new {}
+        local subfolder_image_row2 = HorizontalGroup:new {}
+        for i, subfolder_image in ipairs(subfolder_images) do
+            if i < 3 then
+                table.insert(subfolder_image_row1, subfolder_image)
+            else
+                table.insert(subfolder_image_row2, subfolder_image)
+            end
+        end
+        table.insert(subfolder_image_grid, subfolder_image_row1)
+        table.insert(subfolder_image_grid, subfolder_image_row2)
+        -- END NEW TEST CRAP
+
+
+
         -- Directory : rounded corners
         local margin = Screen:scaleBySize(5) -- make directories less wide
         local padding = Screen:scaleBySize(5)
@@ -515,6 +563,7 @@ function MosaicMenuItem:update()
             radius = Screen:scaleBySize(10),
             OverlapGroup:new {
                 dimen = dimen_in,
+                subfolder_image_grid,
                 CenterContainer:new { dimen = dimen_in, directory },
                 BottomContainer:new { dimen = dimen_in, nbitems },
             },
