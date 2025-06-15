@@ -7,29 +7,35 @@
 --]]
 
 -- Disable this entire plugin if: fonts missing. icons missing. coverbrowser enabled. wrong version of koreader.
+local DataStorage = require("datastorage")
 local lfs = require("libs/libkoreader-lfs")
 local logger = require("logger")
 local Version = require("version")
+-- data_dir is separate from lfs.currentdir() on Android.  Will be `.`
+-- on Kobo devices but a full path on Android.
+local data_dir = DataStorage:getDataDir()
+logger.info("Checking project title requirements in " .. data_dir)
+
 local font1_missing = true
-if lfs.attributes(lfs.currentdir() .. "/fonts/source/SourceSans3-Regular.ttf") ~= nil then
+if lfs.attributes(data_dir .. "/fonts/source/SourceSans3-Regular.ttf") ~= nil then
     font1_missing = false
 else
     logger.warn("Font1 missing")
 end
 local font2_missing = true
-if lfs.attributes(lfs.currentdir() .. "/fonts/source/SourceSerif4-Regular.ttf") ~= nil then
+if lfs.attributes(data_dir .. "/fonts/source/SourceSerif4-Regular.ttf") ~= nil then
     font2_missing = false
 else
     logger.warn("Font2 missing")
 end
 local font3_missing = true
-if lfs.attributes(lfs.currentdir() .. "/fonts/source/SourceSerif4-BoldIt.ttf") ~= nil then
+if lfs.attributes(data_dir .. "/fonts/source/SourceSerif4-BoldIt.ttf") ~= nil then
     font3_missing = false
 else
     logger.warn("Font3 missing")
 end
 local icons_missing = true
-if lfs.attributes(lfs.currentdir() .. "/icons/hero.svg") ~= nil then
+if lfs.attributes(data_dir .. "/icons/hero.svg") ~= nil then
     icons_missing = false -- check for one icon and assume the rest are there too
 else
     logger.warn("Icons missing")
