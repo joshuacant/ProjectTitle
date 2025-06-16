@@ -100,7 +100,6 @@ local _updateItemTable_orig_funcs = {
     filesearcher = FileManagerFileSearcher.updateItemTable,
 }
 
-local _FileManager_tapPlus_orig = FileManager.tapPlus
 local _FileManager_setupLayout_orig = FileManager.setupLayout
 local _FileManager_updateTitleBarPath_orig = FileManager.updateTitleBarPath
 
@@ -709,7 +708,6 @@ function CoverBrowser:setupFileManagerDisplayMode(display_mode)
         FileChooser._recalculateDimen = _FileChooser__recalculateDimen_orig
         CoverBrowser.removeFileDialogButtons("filemanager")
         FileChooser.genItemTable = _FileChooser_genItemTable_orig
-        FileManager.tapPlus = _FileManager_tapPlus_orig
         FileManager.setupLayout = _FileManager_setupLayout_orig
         FileManager.updateTitleBarPath = _FileManager_updateTitleBarPath_orig
         Menu.init = _Menu_init_orig
@@ -754,12 +752,6 @@ function CoverBrowser:setupFileManagerDisplayMode(display_mode)
         FileChooser._do_filename_only = display_mode == "list_image_filename"
         FileChooser._do_hint_opened = true -- dogear at bottom
     end
-
-    -- Replace this FileManager method with the one from CoverMenu
-    -- (but first, make the original method saved here as local available
-    -- to CoverMenu)
-    CoverMenu._FileManager_tapPlus_orig = _FileManager_tapPlus_orig
-    FileManager.tapPlus = CoverMenu.tapPlus
 
     CoverMenu._FileChooser_genItemTable_orig = _FileChooser_genItemTable_orig
     FileChooser.genItemTable = CoverMenu.genItemTable

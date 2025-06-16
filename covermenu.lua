@@ -361,11 +361,6 @@ function CoverMenu:genItemTable(dirs, files, path)
     end
 end
 
-function CoverMenu:tapPlus()
-    -- Call original function: it will create a ButtonDialog
-    CoverMenu._FileManager_tapPlus_orig(self)
-end
-
 local function onFolderUp()
     if current_path then -- file browser or PathChooser
         if current_path ~= "/" and not (G_reader_settings:isTrue("lock_home_folder") and
@@ -479,7 +474,7 @@ function CoverMenu:setupLayout()
 
     function file_chooser:onFileHold(item)
         if file_manager.selected_files then
-            CoverMenu:tapPlus()
+            file_manager:tapPlus()
         else
             self:showFileDialog(item)
         end
