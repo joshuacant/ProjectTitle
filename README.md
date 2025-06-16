@@ -26,7 +26,7 @@ Project: Title is a project by two people who love KOreader but wanted to expand
 * Readers who like browsing for their next book and being able to see how long a book is before starting it.
 
 ## Who this (probably) is not for:
-* Android users. Sorry. We were unable to make it work on Android. We'd love someone to help us, so PRs are very welcome!
+* ~~Android users.~~ Android should be working now, give it a try!
 * Non-English speakers. Many UI strings were added, some were rewritten and we did not design with an eye toward the localization. PRs welcome here as well, though we prefer to distribute any additional translations with this plugin. Ideally, nothing added to the plugin would ever need a PR against KOReader itself.
 * KOReader users who prefer a barebones UI. If you are happy picking your next read from a list of filenames, I don't think you'll like what we're offering. Good news is that KOReader already does this extremely well!
 * People who absolutely love one of the features we removed from CoverBrowser. We made this plugin for ourselves by adding and also removing. We didn't remove much, but someone is bound to miss one of the things we took out.

@@ -14,7 +14,7 @@ local Version = require("version")
 -- data_dir is separate from lfs.currentdir() on Android.  Will be `.`
 -- on Kobo devices but a full path on Android.
 local data_dir = DataStorage:getDataDir()
-logger.info("Checking project title requirements in " .. data_dir)
+logger.info("Checking Project: Title requirements in '" .. data_dir .. "'")
 
 local font1_missing = true
 if lfs.attributes(data_dir .. "/fonts/source/SourceSans3-Regular.ttf") ~= nil then

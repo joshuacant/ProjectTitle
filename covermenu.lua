@@ -319,12 +319,11 @@ function CoverMenu:genItemTable(dirs, files, path)
             local filenames = res[2]
             for i, filename in ipairs(filenames) do
                 local dirpath = directories[i]
-                local f = filename
-                local fullpath = dirpath..f
-                if lfs.attributes(fullpath, "mode") == "file" then
+                local fullpath = dirpath..filename
+                if lfs.attributes(fullpath, "mode") == "file" and not (G_reader_settings:isFalse("show_hidden") and util.stringStartsWith(filename, ".")) then
                     local attributes = lfs.attributes(fullpath) or {}
                     local collate = { can_collate_mixed = nil, item_func = nil }
-                    local item = Filechooser:getListItem(dirpath, f, fullpath, attributes, collate)
+                    local item = Filechooser:getListItem(dirpath, filename, fullpath, attributes, collate)
                     table.insert(custom_item_table, item)
                 end
             end
@@ -341,14 +340,8 @@ function CoverMenu:genItemTable(dirs, files, path)
         -- CalibreMetadata:init(root, true)
         -- for _, book in ipairs(CalibreMetadata.books) do
         --     local fullpath = root.."/"..book.lpath
-        --     logger.info(fullpath)
         --     local dirpath, f = util.splitFilePathName(fullpath)
-        --     if lfs.attributes(fullpath, "mode") == "file" then
-        --         local attributes = lfs.attributes(fullpath) or {}
-        --         local collate = { can_collate_mixed = nil, item_func = nil }
-        --         local item = Filechooser:getListItem(dirpath, f, fullpath, attributes, collate)
-        --         table.insert(custom_item_table, item)
-        --     end
+        --     -- if file, then insert in custom_item_table
         -- end
         -- CalibreMetadata:clean()
         -- return custom_item_table
