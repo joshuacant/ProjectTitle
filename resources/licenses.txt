@@ -8,3 +8,6 @@ SVG Icons:
 Material Design Light: https://pictogrammers.com/docs/general/license/
 SVG Repo CC0: https://www.svgrepo.com/page/licensing/#CC0
 Anton Kalashnyk CC BY 4.0: https://www.iconfinder.com/Kalash
+
+Code:
+2-foldercover by ebanDev AGPL v2: https://github.com/ebanDev
