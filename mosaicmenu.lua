@@ -146,9 +146,11 @@ function FakeCover:init()
     local filename = self.filename
     -- (some engines may have already given filename (without extension) as title)
     local bd_wrap_title_as_filename = false
+    local titlefont = title_serif
     if not title then -- use filename as title (big and centered)
         title = filename
         filename = nil
+        titlefont = good_serif
         if not self.title_add and self.filename_add then
             -- filename_add ("…" or "(deleted)") always comes without any title_add
             self.title_add = self.filename_add
@@ -164,6 +166,7 @@ function FakeCover:init()
     -- act according to common usage in naming files.
     if not authors and title and self.filename and self.filename:sub(1, title:len()) == title then
         bd_wrap_title_as_filename = true
+        titlefont = good_serif
         -- Replace a hyphen surrounded by spaces (which most probably was
         -- used to separate Authors/Title/Serie/Year/Categorie in the
         -- filename with a \n
@@ -243,7 +246,7 @@ function FakeCover:init()
             authors_wg = TextBoxWidget:new {
                 text = authors,
                 lang = self.book_lang,
-                face = Font:getFace("cfont", math.max(self.authors_font_max - sizedec, self.authors_font_min)),
+                face = Font:getFace(good_serif, math.max(self.authors_font_max - sizedec, self.authors_font_min)),
                 width = text_width,
                 alignment = "center",
             }
@@ -253,7 +256,7 @@ function FakeCover:init()
             title_wg = TextBoxWidget:new {
                 text = title,
                 lang = self.book_lang,
-                face = Font:getFace("cfont", math.max(self.title_font_max - sizedec, self.title_font_min)),
+                face = Font:getFace(titlefont, math.max(self.title_font_max - sizedec, self.title_font_min)),
                 width = text_width,
                 alignment = "center",
             }
@@ -263,7 +266,7 @@ function FakeCover:init()
             filename_wg = TextBoxWidget:new {
                 text = filename,
                 lang = self.book_lang, -- might as well use it for filename
-                face = Font:getFace("cfont", math.max(self.filename_font_max - sizedec, self.filename_font_min)),
+                face = Font:getFace(good_sans, math.max(self.filename_font_max - sizedec, self.filename_font_min)),
                 width = self.bottom_right_compensate and width - 2 * corner_mark_size or text_width,
                 alignment = "center",
             }
