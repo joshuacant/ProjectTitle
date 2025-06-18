@@ -1,3 +1,4 @@
+local AlphaContainer = require("ui/widget/container/alphacontainer")
 local BD = require("ui/bidi")
 local Blitbuffer = require("ffi/blitbuffer")
 local BottomContainer = require("ui/widget/container/bottomcontainer")
@@ -24,6 +25,7 @@ local UnderlineContainer = require("ui/widget/container/underlinecontainer")
 local VerticalGroup = require("ui/widget/verticalgroup")
 local VerticalSpan = require("ui/widget/verticalspan")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
+local lfs = require("libs/libkoreader-lfs")
 local logger = require("logger")
 local util = require("util")
 local _ = require("gettext")
@@ -36,16 +38,26 @@ local BookInfoManager = require("bookinfomanager")
 -- Here is the specific UI implementation for "mosaic" display modes
 -- (see covermenu.lua for the generic code)
 
+-- declare 3 fonts included with our plugin
+local title_serif = "source/SourceSerif4-BoldIt.ttf"
+local good_serif = "source/SourceSerif4-Regular.ttf"
+local good_sans = "source/SourceSans3-Regular"
+
 -- We will show a rotated dogear at bottom right corner of cover widget for
 -- opened files (the dogear will make it look like a "used book")
 -- The ImageWidget will be created when we know the available height (and
 -- recreated if height changes)
 local corner_mark_size
 local corner_mark
-local reading_mark
-local abandoned_mark
 local complete_mark
 local progress_widget
+
+local function getSourceDir()
+    local callerSource = debug.getinfo(2, "S").source
+    if callerSource:find("^@") then
+        return callerSource:gsub("^@(.*)/[^/]*", "%1")
+    end
+end
 
 -- ItemShortCutIcon (for keyboard navigation) is private to menu.lua and can't be accessed,
 -- so we need to redefine it
@@ -456,116 +468,226 @@ function MosaicMenuItem:update()
 
     self.is_directory = not (self.entry.is_file or self.entry.file)
     if self.is_directory then
-        -- START NEW TEST CRAP flow:
-        -- check for folder image, use that OR
-        -- check for subfolder covers, use that OR
-        -- use stock folder(shelves) icon
-        -- bonus points: be flexible enough to be used here AND list mode
-        local SQ3 = require("lua-ljsqlite3/init")
-        local DataStorage = require("datastorage")
-        self.db_location = DataStorage:getSettingsDir() .. "/PT_bookinfo_cache.sqlite3"
-        self.db_conn = SQ3.open(self.db_location)
-        self.db_conn:set_busy_timeout(5000)
-        local res = self.db_conn:exec("SELECT directory, filename FROM bookinfo WHERE directory IS '" .. self.filepath .. "/' ORDER BY filename LIMIT 4;")
-        local subfolder_image_grid = VerticalGroup:new {}
-        local subfolder_images = {}
-        if res then
-            local directories = res[1]
-            local filenames = res[2]
-            for i, filename in ipairs(filenames) do
-                local dirpath = directories[i]
-                local f = filename
-                local fullpath = dirpath .. f
-                local subfolder_book = BookInfoManager:getBookInfo(fullpath, self.do_cover_image)
-                if subfolder_book then
-                    local _, _, scale_factor = BookInfoManager.getCachedCoverSize(subfolder_book.cover_w,
-                        subfolder_book.cover_h,
-                        max_img_w/2, max_img_h/2)
-                    table.insert(subfolder_images, ImageWidget:new {
-                        image = subfolder_book.cover_bb,
-                        scale_factor = scale_factor,
-                    })
+        local subfolder_cover_image
+
+        -- check for folder image
+        local function findCover(dir_path)
+            local COVER_CANDIDATES = { "cover", "folder", ".cover", ".folder" }
+            local COVER_EXTENSIONS = { ".jpg", ".jpeg", ".png", ".webp", ".gif" }
+            if not dir_path or dir_path == "" or dir_path == ".." or dir_path:match("%.%.$") then
+                return nil
+            end
+            dir_path = dir_path:gsub("[/\\]+$", "")
+            -- Try exact matches with lowercase and uppercase extensions
+            for _, candidate in ipairs(COVER_CANDIDATES) do
+                for _, ext in ipairs(COVER_EXTENSIONS) do
+                    local exact_path = dir_path .. "/" .. candidate .. ext
+                    local f = io.open(exact_path, "rb")
+                    if f then
+                        f:close()
+                        return exact_path
+                    end
+                    local upper_path = dir_path .. "/" .. candidate .. ext:upper()
+                    if upper_path ~= exact_path then
+                        f = io.open(upper_path, "rb")
+                        if f then
+                            f:close()
+                            return upper_path
+                        end
+                    end
                 end
             end
+            -- Fallback: scan directory for case-insensitive matches
+            local success, handle = pcall(io.popen, 'ls -1 "' .. dir_path .. '" 2>/dev/null')
+            if success and handle then
+                for file in handle:lines() do
+                    if file and file ~= "." and file ~= ".." and file ~= "" then
+                        local file_lower = file:lower()
+                        for _, candidate in ipairs(COVER_CANDIDATES) do
+                            for _, ext in ipairs(COVER_EXTENSIONS) do
+                                if file_lower == candidate .. ext then
+                                    handle:close()
+                                    return dir_path .. "/" .. file
+                                end
+                            end
+                        end
+                    end
+                end
+                handle:close()
+            end
+            return nil
         end
-        self.db_conn:close()
-        local subfolder_image_row1 = HorizontalGroup:new {}
-        local subfolder_image_row2 = HorizontalGroup:new {}
-        for i, subfolder_image in ipairs(subfolder_images) do
-            if i < 3 then
-                table.insert(subfolder_image_row1, subfolder_image)
-            else
-                table.insert(subfolder_image_row2, subfolder_image)
+        local folder_image_file = findCover(self.filepath)
+        if folder_image_file ~= nil then
+            local success, folder_image = pcall(function()
+                local temp_image = ImageWidget:new { file = folder_image_file, scale_factor = 1 }
+                temp_image:_render()
+                local orig_w = temp_image:getOriginalWidth()
+                local orig_h = temp_image:getOriginalHeight()
+                temp_image:free()
+                local scale_to_fill = 0
+                if orig_w and orig_h then
+                    local scale_x = dimen.w / orig_w
+                    local scale_y = dimen.h / orig_h
+                    scale_to_fill = math.max(scale_x, scale_y)
+                end
+                return ImageWidget:new {
+                    file = folder_image_file,
+                    width = dimen.w,
+                    height = dimen.h,
+                    scale_factor = scale_to_fill,
+                    center_x_ratio = 0.5,
+                    center_y_ratio = 0.5,
+                }
+            end)
+            if success then
+                subfolder_cover_image = FrameContainer:new {
+                    dimen = dimen,
+                    bordersize = 0,
+                    margin = 0,
+                    padding = 0,
+                    folder_image
+                }
             end
         end
-        table.insert(subfolder_image_grid, subfolder_image_row1)
-        table.insert(subfolder_image_grid, subfolder_image_row2)
-        -- END NEW TEST CRAP
 
+        -- check for books with covers in the subfolder
+        if subfolder_cover_image == nil then
+            local SQ3 = require("lua-ljsqlite3/init")
+            local DataStorage = require("datastorage")
+            self.db_location = DataStorage:getSettingsDir() .. "/PT_bookinfo_cache.sqlite3"
+            self.db_conn = SQ3.open(self.db_location)
+            self.db_conn:set_busy_timeout(5000)
+            local res = self.db_conn:exec("SELECT directory, filename FROM bookinfo WHERE directory IS '" .. self.filepath .. "/' AND has_cover = 'Y' ORDER BY RANDOM() LIMIT 16;")
+            local subfolder_images = {}
+            if res then
+                local directories = res[1]
+                local filenames = res[2]
+                -- db query returned up to 16 rows, find 4 that are books that still exist on filesystem or give up
+                for i, filename in ipairs(filenames) do
+                    local dirpath = directories[i]
+                    local f = filename
+                    local fullpath = dirpath .. f
+                    local subfolder_book = BookInfoManager:getBookInfo(fullpath, self.do_cover_image)
+                    if subfolder_book and lfs.attributes(fullpath, "mode") == "file" then
+                        local _, _, scale_factor = BookInfoManager.getCachedCoverSize(subfolder_book.cover_w,
+                            subfolder_book.cover_h,
+                            max_img_w/2.05, max_img_h/2.05)
+                        table.insert(subfolder_images, ImageWidget:new {
+                            image = subfolder_book.cover_bb,
+                            scale_factor = scale_factor,
+                        })
+                    end
+                    if #subfolder_images == 4 then
+                        break
+                    end
+                end
+            end
+            self.db_conn:close()
+            if #subfolder_images == 4 then
+                subfolder_cover_image = VerticalGroup:new { dimen = dimen, }
+                local subfolder_image_row1 = HorizontalGroup:new {}
+                local subfolder_image_row2 = HorizontalGroup:new {}
+                for i, subfolder_image in ipairs(subfolder_images) do
+                    if i < 3 then
+                        table.insert(subfolder_image_row1, subfolder_image)
+                    else
+                        table.insert(subfolder_image_row2, subfolder_image)
+                    end
+                    if i == 1 then
+                        table.insert(subfolder_image_row1, HorizontalSpan:new { width = Size.padding.small, })
+                    end
+                    if i == 3 then
+                        table.insert(subfolder_image_row2, HorizontalSpan:new { width = Size.padding.small, })
+                    end
+                end
+                table.insert(subfolder_cover_image, subfolder_image_row1)
+                table.insert(subfolder_cover_image, VerticalSpan:new { width = Size.padding.small, } )
+                table.insert(subfolder_cover_image, subfolder_image_row2)
+            end
+        end
 
+        -- use stock folder icon
+        if subfolder_cover_image == nil then
+            local _, _, scale_factor = BookInfoManager.getCachedCoverSize(250, 500, max_img_w*1.1, max_img_h*1.1)
+            subfolder_cover_image = FrameContainer:new {
+                width = dimen.h,
+                height = dimen.h,
+                margin = 0,
+                padding = 0,
+                color = Blitbuffer.COLOR_WHITE,
+                bordersize = border_size,
+                dim = self.file_deleted,
+                ImageWidget:new({
+                    file = getSourceDir() .. "/resources/folder.svg",
+                    alpha = true,
+                    scale_factor = scale_factor,
+                    width = max_img_w,
+                    height = max_img_h,
+                    original_in_nightmode = false,
+                }),
+            }
+        end
 
-        -- Directory : rounded corners
-        local margin = Screen:scaleBySize(5) -- make directories less wide
-        local padding = Screen:scaleBySize(5)
-        border_size = Size.border.thick      -- make directories' borders larger
-        local dimen_in = Geom:new {
-            w = dimen.w - (margin + padding + border_size) * 2,
-            h = dimen.h - (margin + padding + border_size) * 2
-        }
+        -- build final widget with whatever we assembled from above
         local text = self.text
-        if text:match('/$') then -- remove /, more readable
+        if text:match('/$') then
             text = text:sub(1, -2)
         end
         text = BD.directory(text)
-        local nbitems = TextBoxWidget:new {
-            text = self.mandatory,
-            face = Font:getFace("infont", 15),
-            width = dimen_in.w,
-            alignment = "center",
-        }
-        -- The directory name will be centered, with nbitems at bottom.
-        -- We could use 2*nbitems:getSize().h to keep that centering,
-        -- but using 3* will avoid getting the directory name stuck
-        -- to nbitems.
-        local available_height = dimen_in.h - 3 * nbitems:getSize().h
-        local dir_font_size = 20
-        local directory
-        while true do
-            if directory then
-                directory:free(true)
-            end
-            directory = TextBoxWidget:new {
-                text = text,
-                face = Font:getFace("cfont", dir_font_size),
-                width = dimen_in.w,
-                alignment = "center",
-                bold = true,
-            }
-            if directory:getSize().h <= available_height then
-                break
-            end
-            dir_font_size = dir_font_size - 1
-            if dir_font_size < 10 then -- don't go too low
-                directory:free()
-                directory.height = available_height
-                directory.height_adjust = true
-                directory.height_overflow_show_ellipsis = true
-                directory:init()
-                break
-            end
+        local nbitems = self.mandatory
+        if nbitems:match('^☆ ') then
+            nbitems = nbitems:sub(5)
         end
+        local nbitems_text  = TextWidget:new {
+            text = " " .. nbitems .. " ",
+            face = Font:getFace("infont", 15),
+            max_width = dimen.w,
+            alignment = "center",
+            padding = Size.padding.tiny,
+            bgcolor = Blitbuffer.COLOR_WHITE,
+        }
+        local nbitems_frame = FrameContainer:new{
+            bordersize = Size.border.thin,
+            padding = 0,
+            margin = 0,
+            nbitems_text,
+        }
+        local nbitems = AlphaContainer:new{
+            alpha = 0.84,
+            nbitems_frame,
+        }
+        local dir_font_size = 22
+        local directory_text = TextWidget:new {
+            text = " " .. text .. " ",
+            face = Font:getFace(good_serif, dir_font_size),
+            max_width = dimen.w - (4 * Size.border.window),
+            alignment = "center",
+            padding = 0,
+            bgcolor = Blitbuffer.COLOR_WHITE,
+        }
+        local directory_frame = FrameContainer:new {
+            bordersize = Size.border.window,
+            padding = 0,
+            margin = 0,
+            directory_text,
+        }
+        local directory = AlphaContainer:new {
+            alpha = 0.84,
+            directory_frame,
+        }
         widget = FrameContainer:new {
             width = dimen.w,
             height = dimen.h,
-            margin = margin,
-            padding = padding,
-            bordersize = border_size,
-            radius = Screen:scaleBySize(10),
+            margin = 0,
+            padding = 0,
+            bordersize = 0,
+            radius = nil,
             OverlapGroup:new {
-                dimen = dimen_in,
-                subfolder_image_grid,
-                CenterContainer:new { dimen = dimen_in, directory },
-                BottomContainer:new { dimen = dimen_in, nbitems },
+                dimen = dimen,
+                CenterContainer:new { dimen = dimen, subfolder_cover_image },
+                CenterContainer:new { dimen = dimen, directory },
+                BottomContainer:new { dimen = dimen, nbitems },
             },
         }
     else                                   -- file
@@ -783,33 +905,18 @@ function MosaicMenuItem:paintTo(bb, x, y)
         end
         local iy = self.height - math.ceil((self.height - target.dimen.h) / 2) - corner_mark_size
         -- math.ceil() makes it looks better than math.floor()
-        if self.status == "abandoned" then
-            corner_mark = abandoned_mark
-        elseif self.status == "complete" then
+        if self.status == "complete" then
             corner_mark = complete_mark
-        else
-            corner_mark = reading_mark
+            corner_mark:paintTo(bb, x + ix, y + iy)
         end
-        corner_mark:paintTo(bb, x + ix, y + iy)
     end
 
     if self.show_progress_bar then
         local progress_widget_margin = math.floor((corner_mark_size - progress_widget.height) / 2)
         progress_widget.width = target.width - 2 * progress_widget_margin
         local pos_x = x + math.ceil((self.width - progress_widget.width) / 2)
-        if self.do_hint_opened then
-            progress_widget.width = progress_widget.width - corner_mark_size
-            if BD.mirroredUILayout() then
-                pos_x = pos_x + corner_mark_size
-            end
-        end
         local pos_y = y + self.height - math.ceil((self.height - target.height) / 2) - corner_mark_size +
         progress_widget_margin
-        if self.status == "abandoned" then
-            progress_widget.fillcolor = Blitbuffer.COLOR_GRAY_6
-        else
-            progress_widget.fillcolor = Blitbuffer.COLOR_BLACK
-        end
         progress_widget:setPercentage(self.percent_finished)
         progress_widget:paintTo(bb, pos_x, pos_y)
     end
@@ -890,21 +997,8 @@ function MosaicMenu:_recalculateDimen()
     if mark_size ~= corner_mark_size then
         corner_mark_size = mark_size
         if corner_mark then
-            reading_mark:free()
-            abandoned_mark:free()
             complete_mark:free()
         end
-        reading_mark = IconWidget:new {
-            icon = "dogear.reading",
-            rotation_angle = BD.mirroredUILayout() and 270 or 0,
-            width = corner_mark_size,
-            height = corner_mark_size,
-        }
-        abandoned_mark = IconWidget:new {
-            icon = BD.mirroredUILayout() and "dogear.abandoned.rtl" or "dogear.abandoned",
-            width = corner_mark_size,
-            height = corner_mark_size,
-        }
         complete_mark = IconWidget:new {
             icon = BD.mirroredUILayout() and "dogear.complete.rtl" or "dogear.complete",
             alpha = true,
@@ -917,14 +1011,14 @@ function MosaicMenu:_recalculateDimen()
     local progress_bar_width = self.item_width * 0.60;
     if not progress_widget or progress_widget.width ~= progress_bar_width then
         progress_widget = ProgressWidget:new {
-            bgcolor = Blitbuffer.COLOR_WHITE,
-            fillcolor = Blitbuffer.COLOR_BLACK,
-            bordercolor = Blitbuffer.COLOR_BLACK,
-            height = Screen:scaleBySize(8),
-            margin_h = Screen:scaleBySize(1),
             width = progress_bar_width,
-            radius = Size.border.thin,
-            bordersize = Size.border.default,
+            height = Screen:scaleBySize(8),
+            margin_v = 0,
+            margin_h = 0,
+            bordersize = Screen:scaleBySize(0.5),
+            bordercolor = Blitbuffer.COLOR_BLACK,
+            bgcolor = Blitbuffer.COLOR_GRAY_E,
+            fillcolor = Blitbuffer.COLOR_GRAY_6,
         }
     end
 end
