@@ -730,13 +730,13 @@ function MosaicMenuItem:update()
                 self.menu.cover_info_cache = {}
             end
 
-            -- local pages = book_info.pages or bookinfo.pages -- default to those in bookinfo db
+            local pages = book_info.pages or bookinfo.pages -- default to those in bookinfo db
             local percent_finished = book_info.percent_finished
             local status = book_info.status
 
             self.percent_finished = percent_finished
             self.status = status
-            self.show_progress_bar = self.status ~= "complete" -- and BookInfoManager:getSetting("show_progress_in_mosaic") and self.percent_finished
+            self.show_progress_bar = self.status ~= "complete" and bookinfo.pages ~= nil
 
             local cover_bb_used = false
             self.bookinfo_found = true
@@ -913,10 +913,8 @@ function MosaicMenuItem:paintTo(bb, x, y)
         end
     end
 
+    local bookinfo = BookInfoManager:getBookInfo(self.filepath, self.do_cover_image)
     if self.show_progress_bar then
-        local progress_widget_margin = math.floor((corner_mark_size - progress_widget.height) / 2)
-
-        local bookinfo = BookInfoManager:getBookInfo(self.filepath, self.do_cover_image)
         local progress_widget_width_mult = 1.0
         local est_page_count = bookinfo.pages or nil
         local large_book = false
@@ -930,13 +928,12 @@ function MosaicMenuItem:paintTo(bb, x, y)
             progress_widget_width_mult = total_pixels / max_progress_size
             if fn_pages > (max_progress_size * pixels_per_page) then large_book = true end
         end
+        local progress_widget_margin = math.floor((corner_mark_size - progress_widget.height) / 2)
         progress_widget.width = (self.width - 2 * progress_widget_margin) * progress_widget_width_mult
-
-        local pos_x = x -- + math.ceil((self.width - progress_widget.width) / 2)
-        local pos_y = y + self.height - math.ceil((self.height - target.height) / 2) - corner_mark_size + progress_widget_margin
         progress_widget:setPercentage(self.percent_finished or 0)
+        local pos_x = x
+        local pos_y = y + self.height - math.ceil((self.height - target.height) / 2) - corner_mark_size + progress_widget_margin
         progress_widget:paintTo(bb, pos_x, pos_y)
-
         if large_book then
             local bar_icon_size = Screen:scaleBySize(18)
             local max_widget = ImageWidget:new({
@@ -948,6 +945,30 @@ function MosaicMenuItem:paintTo(bb, x, y)
                 original_in_nightmode = false,
             })
             max_widget:paintTo(bb, (pos_x - (bar_icon_size / 2)), (pos_y - (bar_icon_size / 4.5)))
+        end
+    else
+        if self.status ~= "complete" and self.percent_finished ~= nil then
+            local txtprogress_widget_text = TextWidget:new {
+                text = " " .. math.floor(100 * self.percent_finished) .. "% Read ",
+                face = Font:getFace(good_sans, 15),
+                alignment = "center",
+                padding = Size.padding.tiny,
+                bgcolor = Blitbuffer.COLOR_WHITE,
+            }
+            local txtprogress_widget_frame = FrameContainer:new{
+                bordersize = Size.border.thin,
+                padding = 0,
+                margin = 0,
+                txtprogress_widget_text,
+            }
+            local txtprogress_widget = AlphaContainer:new{
+                alpha = 0.84,
+                txtprogress_widget_frame,
+            }
+            local progress_widget_margin = math.floor((corner_mark_size - txtprogress_widget:getSize().h) / 2)
+            local pos_x = x + math.ceil((self.width - txtprogress_widget:getSize().w) / 2)
+            local pos_y = y + self.height - math.ceil((self.height - target.height) / 2) - corner_mark_size + progress_widget_margin
+            txtprogress_widget:paintTo(bb, pos_x, pos_y)
         end
     end
 end
