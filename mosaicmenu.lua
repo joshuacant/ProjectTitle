@@ -22,6 +22,7 @@ local ProgressWidget = require("ui/widget/progresswidget")
 local Size = require("ui/size")
 local TextBoxWidget = require("ui/widget/textboxwidget")
 local TextWidget = require("ui/widget/textwidget")
+local TopContainer = require("ui/widget/container/topcontainer")
 local UnderlineContainer = require("ui/widget/container/underlinecontainer")
 local VerticalGroup = require("ui/widget/verticalgroup")
 local VerticalSpan = require("ui/widget/verticalspan")
@@ -546,10 +547,11 @@ function MosaicMenuItem:update()
             end)
             if success then
                 subfolder_cover_image = FrameContainer:new {
-                    dimen = dimen,
-                    bordersize = 0,
+                    width = dimen.w,
+                    height = dimen.h,
                     margin = 0,
                     padding = 0,
+                    bordersize = 0,
                     folder_image
                 }
             end
@@ -620,7 +622,7 @@ function MosaicMenuItem:update()
                 margin = 0,
                 padding = 0,
                 color = Blitbuffer.COLOR_WHITE,
-                bordersize = border_size,
+                bordersize = 0,
                 dim = self.file_deleted,
                 ImageWidget:new({
                     file = getSourceDir() .. "/resources/folder.svg",
@@ -634,11 +636,40 @@ function MosaicMenuItem:update()
         end
 
         -- build final widget with whatever we assembled from above
-        local text = self.text
-        if text:match('/$') then
-            text = text:sub(1, -2)
+        local directory_string = self.text
+        if directory_string:match('/$') then
+            directory_string = directory_string:sub(1, -2)
         end
-        text = BD.directory(text)
+        directory_string = BD.directory(directory_string)
+        local dir_font_size = 22
+        local directory_text = TextWidget:new {
+            text = " " .. directory_string .. " ",
+            face = Font:getFace(good_serif, dir_font_size),
+            max_width = dimen.w - (4 * Size.border.window),
+            alignment = "center",
+            padding = 0,
+            bgcolor = Blitbuffer.COLOR_WHITE,
+            color = Blitbuffer.COLOR_BLACK,
+        }
+        local directory_frame = UnderlineContainer:new {
+            linesize = Screen:scaleBySize(2),
+            color = Blitbuffer.COLOR_GRAY_2,
+            bordersize = 0,
+            padding = 0,
+            margin = 0,
+            HorizontalGroup:new {
+                directory_text,
+                LineWidget:new {
+                    dimen = Geom:new { w = Screen:scaleBySize(2), h = directory_text:getSize().h, },
+                    background = Blitbuffer.COLOR_GRAY_2,
+                },
+            },
+        }
+        local directory = AlphaContainer:new {
+            alpha = 0.84,
+            directory_frame,
+        }
+
         local nbitems_string = self.mandatory
         if nbitems_string:match('^☆ ') then
             nbitems_string = nbitems_string:sub(5)
@@ -646,7 +677,7 @@ function MosaicMenuItem:update()
         local nbitems_text  = TextWidget:new {
             text = " " .. nbitems_string .. " ",
             face = Font:getFace("infont", 15),
-            max_width = dimen.w,
+            max_width = dimen.w - (4 * Size.border.window),
             alignment = "center",
             padding = Size.padding.tiny,
             bgcolor = Blitbuffer.COLOR_WHITE,
@@ -661,25 +692,7 @@ function MosaicMenuItem:update()
             alpha = 0.84,
             nbitems_frame,
         }
-        local dir_font_size = 22
-        local directory_text = TextWidget:new {
-            text = " " .. text .. " ",
-            face = Font:getFace(good_serif, dir_font_size),
-            max_width = dimen.w - (4 * Size.border.window),
-            alignment = "center",
-            padding = 0,
-            bgcolor = Blitbuffer.COLOR_WHITE,
-        }
-        local directory_frame = FrameContainer:new {
-            bordersize = Size.border.window,
-            padding = 0,
-            margin = 0,
-            directory_text,
-        }
-        local directory = AlphaContainer:new {
-            alpha = 0.84,
-            directory_frame,
-        }
+
         widget = FrameContainer:new {
             width = dimen.w,
             height = dimen.h,
@@ -690,7 +703,7 @@ function MosaicMenuItem:update()
             OverlapGroup:new {
                 dimen = dimen,
                 CenterContainer:new { dimen = dimen, subfolder_cover_image },
-                CenterContainer:new { dimen = dimen, directory },
+                TopContainer:new { dimen = dimen, directory },
                 BottomContainer:new { dimen = dimen, nbitems },
             },
         }
