@@ -540,7 +540,7 @@ function MosaicMenuItem:update()
                     file = folder_image_file,
                     width = dimen.w,
                     height = dimen.h,
-                    scale_factor = scale_to_fill,
+                    scale_factor = scale_to_fill * 0.92,
                     center_x_ratio = 0.5,
                     center_y_ratio = 0.5,
                 }
