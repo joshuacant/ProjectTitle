@@ -638,12 +638,12 @@ function MosaicMenuItem:update()
             text = text:sub(1, -2)
         end
         text = BD.directory(text)
-        local nbitems = self.mandatory
-        if nbitems:match('^☆ ') then
-            nbitems = nbitems:sub(5)
+        local nbitems_string = self.mandatory
+        if nbitems_string:match('^☆ ') then
+            nbitems_string = nbitems_string:sub(5)
         end
         local nbitems_text  = TextWidget:new {
-            text = " " .. nbitems .. " ",
+            text = " " .. nbitems_string .. " ",
             face = Font:getFace("infont", 15),
             max_width = dimen.w,
             alignment = "center",
@@ -730,14 +730,13 @@ function MosaicMenuItem:update()
                 self.menu.cover_info_cache = {}
             end
 
-            local pages = book_info.pages or bookinfo.pages -- default to those in bookinfo db
+            -- local pages = book_info.pages or bookinfo.pages -- default to those in bookinfo db
             local percent_finished = book_info.percent_finished
             local status = book_info.status
 
             self.percent_finished = percent_finished
             self.status = status
-            self.show_progress_bar = self.status ~= "complete" and BookInfoManager:getSetting("show_progress_in_mosaic") and
-            self.percent_finished
+            self.show_progress_bar = self.status ~= "complete" -- and BookInfoManager:getSetting("show_progress_in_mosaic") and self.percent_finished
 
             local cover_bb_used = false
             self.bookinfo_found = true
@@ -916,12 +915,40 @@ function MosaicMenuItem:paintTo(bb, x, y)
 
     if self.show_progress_bar then
         local progress_widget_margin = math.floor((corner_mark_size - progress_widget.height) / 2)
-        progress_widget.width = target.width - 2 * progress_widget_margin
-        local pos_x = x + math.ceil((self.width - progress_widget.width) / 2)
-        local pos_y = y + self.height - math.ceil((self.height - target.height) / 2) - corner_mark_size +
-        progress_widget_margin
-        progress_widget:setPercentage(self.percent_finished)
+
+        local bookinfo = BookInfoManager:getBookInfo(self.filepath, self.do_cover_image)
+        local progress_widget_width_mult = 1.0
+        local est_page_count = bookinfo.pages or nil
+        local large_book = false
+        if est_page_count then
+            local fn_pages = tonumber(est_page_count)
+            local max_progress_size = 235
+            local pixels_per_page = 3
+            local min_progress_size = 25
+            local total_pixels = math.max(
+                (math.min(math.floor((fn_pages / pixels_per_page) + 0.5), max_progress_size)), min_progress_size)
+            progress_widget_width_mult = total_pixels / max_progress_size
+            if fn_pages > (max_progress_size * pixels_per_page) then large_book = true end
+        end
+        progress_widget.width = (self.width - 2 * progress_widget_margin) * progress_widget_width_mult
+
+        local pos_x = x -- + math.ceil((self.width - progress_widget.width) / 2)
+        local pos_y = y + self.height - math.ceil((self.height - target.height) / 2) - corner_mark_size + progress_widget_margin
+        progress_widget:setPercentage(self.percent_finished or 0)
         progress_widget:paintTo(bb, pos_x, pos_y)
+
+        if large_book then
+            local bar_icon_size = Screen:scaleBySize(18)
+            local max_widget = ImageWidget:new({
+                file = getSourceDir() .. "/resources/large_book.svg",
+                width = bar_icon_size,
+                height = bar_icon_size,
+                scale_factor = 0,
+                alpha = true,
+                original_in_nightmode = false,
+            })
+            max_widget:paintTo(bb, (pos_x - (bar_icon_size / 2)), (pos_y - (bar_icon_size / 4.5)))
+        end
     end
 end
 
@@ -1015,7 +1042,7 @@ function MosaicMenu:_recalculateDimen()
     if not progress_widget or progress_widget.width ~= progress_bar_width then
         progress_widget = ProgressWidget:new {
             width = progress_bar_width,
-            height = Screen:scaleBySize(8),
+            height = Screen:scaleBySize(10),
             margin_v = 0,
             margin_h = 0,
             bordersize = Screen:scaleBySize(0.5),
