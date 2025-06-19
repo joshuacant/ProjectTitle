@@ -16,6 +16,7 @@ local ImageWidget = require("ui/widget/imagewidget")
 local InputContainer = require("ui/widget/container/inputcontainer")
 local LeftContainer = require("ui/widget/container/leftcontainer")
 local LineWidget = require("ui/widget/linewidget")
+local Math = require("optmath")
 local OverlapGroup = require("ui/widget/overlapgroup")
 local ProgressWidget = require("ui/widget/progresswidget")
 local Size = require("ui/size")
@@ -730,14 +731,14 @@ function MosaicMenuItem:update()
                 self.menu.cover_info_cache = {}
             end
 
-            local pages = book_info.pages or bookinfo.pages -- default to those in bookinfo db
             local percent_finished = book_info.percent_finished
             local status = book_info.status
 
             self.percent_finished = percent_finished
             self.status = status
-            self.show_progress_bar = self.status ~= "complete" and bookinfo.pages ~= nil
-
+            self.show_progress_bar = self.status ~= "complete" and bookinfo.pages ~= nil and
+                not BookInfoManager:getSetting("show_pages_read_as_progress") and
+                not BookInfoManager:getSetting("hide_page_info")
             local cover_bb_used = false
             self.bookinfo_found = true
             -- For wikipedia saved as epub, we made a cover from the 1st pic of the page,
@@ -948,8 +949,16 @@ function MosaicMenuItem:paintTo(bb, x, y)
         end
     else
         if self.status ~= "complete" and self.percent_finished ~= nil then
+            local progresstxt = " " .. math.floor(100 * self.percent_finished) .. "% Read "
+            if BookInfoManager:getSetting("show_pages_read_as_progress") then
+                local book_info = self.menu.getBookInfo(self.filepath)
+                local pages = book_info.pages or bookinfo.pages or nil -- default to those in bookinfo db
+                if pages ~= nil then
+                    progresstxt = T(_(" %1 of %2 "), Math.round(self.percent_finished * pages), pages)
+                end
+            end
             local txtprogress_widget_text = TextWidget:new {
-                text = " " .. math.floor(100 * self.percent_finished) .. "% Read ",
+                text = progresstxt,
                 face = Font:getFace(good_sans, 15),
                 alignment = "center",
                 padding = Size.padding.tiny,
