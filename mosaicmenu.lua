@@ -645,7 +645,7 @@ function MosaicMenuItem:update()
         local directory_text = TextWidget:new {
             text = " " .. directory_string .. " ",
             face = Font:getFace(good_serif, dir_font_size),
-            max_width = dimen.w - (4 * Size.border.window),
+            max_width = dimen.w,
             alignment = "center",
             padding = 0,
             bgcolor = Blitbuffer.COLOR_WHITE,
@@ -677,7 +677,7 @@ function MosaicMenuItem:update()
         local nbitems_text  = TextWidget:new {
             text = " " .. nbitems_string .. " ",
             face = Font:getFace("infont", 15),
-            max_width = dimen.w - (4 * Size.border.window),
+            max_width = dimen.w,
             alignment = "center",
             padding = Size.padding.tiny,
             bgcolor = Blitbuffer.COLOR_WHITE,
