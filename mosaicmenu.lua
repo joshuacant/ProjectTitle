@@ -558,7 +558,7 @@ function MosaicMenuItem:update()
         end
 
         -- check for books with covers in the subfolder
-        if subfolder_cover_image == nil then
+        if subfolder_cover_image == nil and not BookInfoManager:getSetting("disable_auto_foldercovers") then
             local SQ3 = require("lua-ljsqlite3/init")
             local DataStorage = require("datastorage")
             self.db_location = DataStorage:getSettingsDir() .. "/PT_bookinfo_cache.sqlite3"

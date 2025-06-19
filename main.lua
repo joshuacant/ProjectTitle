@@ -181,6 +181,7 @@ function CoverBrowser:init()
 
     -- Set up default display modes on first launch
     if not G_reader_settings:isTrue("aaaProjectTitle_initial_default_setup_done2") then
+        logger.info("Initalizing Project: Title settings")
         -- Only if no display mode has been set yet
         if not BookInfoManager:getSetting("filemanager_display_mode")
             and not BookInfoManager:getSetting("history_display_mode") then
@@ -189,6 +190,7 @@ function CoverBrowser:init()
             BookInfoManager:saveSetting("collection_display_mode", "list_image_meta")
         end
         -- set up a few default settings
+        BookInfoManager:saveSetting("config_version", "1")
         BookInfoManager:saveSetting("series_mode", "series_in_separate_line")
         BookInfoManager:saveSetting("hide_file_info", true)
         BookInfoManager:saveSetting("unified_display_mode", true)
@@ -197,6 +199,17 @@ function CoverBrowser:init()
         G_reader_settings:makeTrue("aaaProjectTitle_initial_default_setup_done2")
         UIManager:restartKOReader()
         FFIUtil.sleep(2)
+    end
+
+    -- migrate settings as needed
+    if BookInfoManager:getSetting("config_version") == nil then
+        logger.info("Migrating Project: Title settings to version 1")
+        BookInfoManager:saveSetting("config_version", "1")
+    end
+    if BookInfoManager:getSetting("config_version") == 1 then
+        logger.info("Migrating Project: Title settings to version 2")
+        BookInfoManager:saveSetting("disable_auto_foldercovers", false)
+        BookInfoManager:saveSetting("config_version", "2")
     end
 
     self:setupFileManagerDisplayMode(BookInfoManager:getSetting("filemanager_display_mode"))
@@ -461,6 +474,16 @@ function CoverBrowser:addToMainMenu(menu_items)
                     else
                         BookInfoManager:saveSetting("hide_page_info", false)
                     end
+                    fc:updateItems(1, true)
+                end,
+            },
+            {
+                text = _("Auto-generate cover images for folders from books"),
+                checked_func = function()
+                    return not BookInfoManager:getSetting("disable_auto_foldercovers")
+                end,
+                callback = function()
+                    BookInfoManager:toggleSetting("disable_auto_foldercovers")
                     fc:updateItems(1, true)
                 end,
             },
