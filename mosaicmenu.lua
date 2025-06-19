@@ -957,6 +957,9 @@ function MosaicMenuItem:paintTo(bb, x, y)
                     progresstxt = T(_(" %1 of %2 "), Math.round(self.percent_finished * pages), pages)
                 end
             end
+            if not BookInfoManager:getSetting("hide_file_info") then
+                progresstxt = (" " .. self.mandatory .. " ") or " ??? "
+            end
             local txtprogress_widget_text = TextWidget:new {
                 text = progresstxt,
                 face = Font:getFace(good_sans, 15),
