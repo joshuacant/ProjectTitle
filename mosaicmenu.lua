@@ -617,7 +617,7 @@ function MosaicMenuItem:update()
         if subfolder_cover_image == nil then
             local _, _, scale_factor = BookInfoManager.getCachedCoverSize(250, 500, max_img_w*1.1, max_img_h*1.1)
             subfolder_cover_image = FrameContainer:new {
-                width = dimen.h,
+                width = dimen.w,
                 height = dimen.h,
                 margin = 0,
                 padding = 0,
