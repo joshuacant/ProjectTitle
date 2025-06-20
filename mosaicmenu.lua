@@ -564,7 +564,8 @@ function MosaicMenuItem:update()
             self.db_location = DataStorage:getSettingsDir() .. "/PT_bookinfo_cache.sqlite3"
             self.db_conn = SQ3.open(self.db_location)
             self.db_conn:set_busy_timeout(5000)
-            local res = self.db_conn:exec("SELECT directory, filename FROM bookinfo WHERE directory IS '" .. self.filepath .. "/' AND has_cover = 'Y' ORDER BY RANDOM() LIMIT 16;")
+            local res = self.db_conn:exec("SELECT directory, filename FROM bookinfo WHERE directory IS '" ..
+            self.filepath .. "/' AND has_cover = 'Y' ORDER BY RANDOM() LIMIT 16;")
             local subfolder_images = {}
             if res then
                 local directories = res[1]
@@ -578,7 +579,7 @@ function MosaicMenuItem:update()
                     if subfolder_book and lfs.attributes(fullpath, "mode") == "file" then
                         local _, _, scale_factor = BookInfoManager.getCachedCoverSize(subfolder_book.cover_w,
                             subfolder_book.cover_h,
-                            max_img_w/2.05, max_img_h/2.05)
+                            max_img_w / 2.05, max_img_h / 2.05)
                         table.insert(subfolder_images, ImageWidget:new {
                             image = subfolder_book.cover_bb,
                             scale_factor = scale_factor,
@@ -608,14 +609,14 @@ function MosaicMenuItem:update()
                     end
                 end
                 table.insert(subfolder_cover_image, subfolder_image_row1)
-                table.insert(subfolder_cover_image, VerticalSpan:new { width = Size.padding.small, } )
+                table.insert(subfolder_cover_image, VerticalSpan:new { width = Size.padding.small, })
                 table.insert(subfolder_cover_image, subfolder_image_row2)
             end
         end
 
         -- use stock folder icon
         if subfolder_cover_image == nil then
-            local _, _, scale_factor = BookInfoManager.getCachedCoverSize(250, 500, max_img_w*1.1, max_img_h*1.1)
+            local _, _, scale_factor = BookInfoManager.getCachedCoverSize(250, 500, max_img_w * 1.1, max_img_h * 1.1)
             subfolder_cover_image = FrameContainer:new {
                 width = dimen.w,
                 height = dimen.h,
@@ -682,18 +683,18 @@ function MosaicMenuItem:update()
             padding = Size.padding.tiny,
             bgcolor = Blitbuffer.COLOR_WHITE,
         }
-        local nbitems_frame = FrameContainer:new{
+        local nbitems_frame = FrameContainer:new {
             bordersize = Size.border.thin,
             padding = 0,
             margin = 0,
             nbitems_text,
         }
-        local nbitems = AlphaContainer:new{
+        local nbitems       = AlphaContainer:new {
             alpha = 0.84,
             nbitems_frame,
         }
 
-        widget = FrameContainer:new {
+        widget              = FrameContainer:new {
             width = dimen.w,
             height = dimen.h,
             margin = 0,
@@ -946,7 +947,8 @@ function MosaicMenuItem:paintTo(bb, x, y)
         progress_widget.width = (self.width - 2 * progress_widget_margin) * progress_widget_width_mult
         progress_widget:setPercentage(self.percent_finished or 0)
         local pos_x = x
-        local pos_y = y + self.height - math.ceil((self.height - target.height) / 2) - corner_mark_size + progress_widget_margin
+        local pos_y = y + self.height - math.ceil((self.height - target.height) / 2) - corner_mark_size +
+        progress_widget_margin
         progress_widget:paintTo(bb, pos_x, pos_y)
         if large_book then
             local bar_icon_size = Screen:scaleBySize(18)
@@ -980,19 +982,20 @@ function MosaicMenuItem:paintTo(bb, x, y)
                 padding = Size.padding.tiny,
                 bgcolor = Blitbuffer.COLOR_WHITE,
             }
-            local txtprogress_widget_frame = FrameContainer:new{
+            local txtprogress_widget_frame = FrameContainer:new {
                 bordersize = Size.border.thin,
                 padding = 0,
                 margin = 0,
                 txtprogress_widget_text,
             }
-            local txtprogress_widget = AlphaContainer:new{
+            local txtprogress_widget = AlphaContainer:new {
                 alpha = 0.84,
                 txtprogress_widget_frame,
             }
             local progress_widget_margin = math.floor((corner_mark_size - txtprogress_widget:getSize().h) / 2)
             local pos_x = x + math.ceil((self.width - txtprogress_widget:getSize().w) / 2)
-            local pos_y = y + self.height - math.ceil((self.height - target.height) / 2) - corner_mark_size + progress_widget_margin
+            local pos_y = y + self.height - math.ceil((self.height - target.height) / 2) - corner_mark_size +
+            progress_widget_margin
             txtprogress_widget:paintTo(bb, pos_x, pos_y)
         end
     end
@@ -1059,7 +1062,7 @@ function MosaicMenu:_recalculateDimen()
     -- Set our items target size
     self.item_margin = Screen:scaleBySize(10)
     self.item_height = math.floor((self.inner_dimen.h - self.others_height - (1 + self.nb_rows) * self.item_margin) /
-    self.nb_rows)
+        self.nb_rows)
     self.item_width = math.floor((self.inner_dimen.w - (1 + self.nb_cols) * self.item_margin) / self.nb_cols)
     self.item_dimen = Geom:new {
         x = 0, y = 0,

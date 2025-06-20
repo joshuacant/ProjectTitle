@@ -117,9 +117,9 @@ local AltBookStatusWidget = require("altbookstatuswidget")
 -- Available display modes
 local DISPLAY_MODES = {
     -- nil or ""                -- classic : filename only
-    mosaic_image    = true,     -- 3x3 grid covers with images
-    list_image_meta = true,     -- image with metadata (title/authors)
-    list_only_meta  = true,     -- metadata with no image
+    mosaic_image    = true, -- 3x3 grid covers with images
+    list_image_meta = true, -- image with metadata (title/authors)
+    list_only_meta  = true, -- metadata with no image
 }
 local display_mode_db_names = {
     filemanager = "filemanager_display_mode",
@@ -129,11 +129,11 @@ local display_mode_db_names = {
 -- Store some states as locals, to be permanent across instantiations
 local init_done = false
 local curr_display_modes = {
-    filemanager = false,  -- not initialized yet
-    history     = false,  -- not initialized yet
-    collections = false,  -- not initialized yet
+    filemanager = false, -- not initialized yet
+    history     = false, -- not initialized yet
+    collections = false, -- not initialized yet
 }
-local series_mode = nil   -- defaults to not display series
+local series_mode = nil  -- defaults to not display series
 
 local CoverBrowser = WidgetContainer:extend {
     name = "coverbrowserclean",

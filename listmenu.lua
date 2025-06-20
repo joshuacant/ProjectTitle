@@ -383,7 +383,8 @@ function ListMenuItem:update()
                 self.db_location = DataStorage:getSettingsDir() .. "/PT_bookinfo_cache.sqlite3"
                 self.db_conn = SQ3.open(self.db_location)
                 self.db_conn:set_busy_timeout(5000)
-                local res = self.db_conn:exec("SELECT directory, filename FROM bookinfo WHERE directory IS '" .. self.filepath .. "/' AND has_cover = 'Y' ORDER BY RANDOM() LIMIT 16;")
+                local res = self.db_conn:exec("SELECT directory, filename FROM bookinfo WHERE directory IS '" ..
+                self.filepath .. "/' AND has_cover = 'Y' ORDER BY RANDOM() LIMIT 16;")
                 local subfolder_images = {}
                 if res then
                     local directories = res[1]
@@ -397,7 +398,7 @@ function ListMenuItem:update()
                         if subfolder_book and lfs.attributes(fullpath, "mode") == "file" then
                             local _, _, scale_factor = BookInfoManager.getCachedCoverSize(subfolder_book.cover_w,
                                 subfolder_book.cover_h,
-                                max_img_w/2.05, max_img_h/2.05)
+                                max_img_w / 2.05, max_img_h / 2.05)
                             table.insert(subfolder_images, ImageWidget:new {
                                 image = subfolder_book.cover_bb,
                                 scale_factor = scale_factor,
@@ -427,7 +428,7 @@ function ListMenuItem:update()
                         end
                     end
                     table.insert(subfolder_cover_image, subfolder_image_row1)
-                    table.insert(subfolder_cover_image, VerticalSpan:new { width = Size.padding.small, } )
+                    table.insert(subfolder_cover_image, VerticalSpan:new { width = Size.padding.small, })
                     table.insert(subfolder_cover_image, subfolder_image_row2)
                     subfolder_cover_image = CenterContainer:new {
                         dimen = Geom:new { w = max_img_w, h = max_img_h },
@@ -440,13 +441,13 @@ function ListMenuItem:update()
             if subfolder_cover_image == nil then
                 local _, _, scale_factor = BookInfoManager.getCachedCoverSize(250, 500, max_img_w, max_img_h)
                 subfolder_cover_image = ImageWidget:new {
-                        file = getSourceDir() .. "/resources/folder.svg",
-                        alpha = true,
-                        scale_factor = scale_factor,
-                        width = max_img_w,
-                        height = max_img_h,
-                        original_in_nightmode = false,
-                    }
+                    file = getSourceDir() .. "/resources/folder.svg",
+                    alpha = true,
+                    scale_factor = scale_factor,
+                    width = max_img_w,
+                    height = max_img_h,
+                    original_in_nightmode = false,
+                }
             end
 
             folder_cover = FrameContainer:new {
@@ -670,7 +671,7 @@ function ListMenuItem:update()
                 local pixels_per_page = 3
                 local min_progress_size = 25
                 local total_pixels = math.max(
-                (math.min(math.floor((fn_pages / pixels_per_page) + 0.5), max_progress_size)), min_progress_size)
+                    (math.min(math.floor((fn_pages / pixels_per_page) + 0.5), max_progress_size)), min_progress_size)
                 local progress_bar = ProgressWidget:new {
                     width = Screen:scaleBySize(total_pixels),
                     height = Screen:scaleBySize(15),
@@ -887,7 +888,8 @@ function ListMenuItem:update()
             local title, authors
             local series_mode = BookInfoManager:getSetting("series_mode")
             local show_series = bookinfo.series and bookinfo.series_index and
-            bookinfo.series_index ~= 0                                                                   -- suppress series if index is "0"
+                bookinfo.series_index ~=
+                0                      -- suppress series if index is "0"
 
             -- whether to use or not title and authors
             -- (We wrap each metadata text with BD.auto() to get for each of them
@@ -1423,9 +1425,9 @@ local ListMenu = {}
 function ListMenu:_recalculateDimen()
     local Menu = require("ui/widget/menu")
     local perpage = self.items_per_page or G_reader_settings:readSetting("items_per_page") or self
-    .items_per_page_default
+        .items_per_page_default
     local font_size = self.items_font_size or G_reader_settings:readSetting("items_font_size") or
-    Menu.getItemFontSize(perpage)
+        Menu.getItemFontSize(perpage)
     if self.perpage ~= perpage or self.font_size ~= font_size then
         self.perpage = perpage
         self.font_size = font_size

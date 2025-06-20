@@ -208,7 +208,7 @@ function AltBookStatusWidget:genBookInfoGroup()
 
     -- title box (done last to calculate the max available height)
     local max_title_height = height - bookinfo:getSize().h - progress_bar:getSize().h - progress_text:getSize().h -
-    Size.padding.default
+        Size.padding.default
     local booktitle = TextBoxWidget:new {
         text = props.display_title,
         lang = lang,

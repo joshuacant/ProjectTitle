@@ -216,7 +216,7 @@ function TitleBar:init()
                 -- But then, smaller text is not vertically centered in the title bar.
                 -- So, go with just half the baseline difference:
                 title_top_padding = Math.round(self._initial_title_top_padding +
-                (self._initial_title_text_baseline - text_baseline) / 2)
+                    (self._initial_title_text_baseline - text_baseline) / 2)
             else
                 self._initial_title_top_padding = title_top_padding
                 self._initial_title_text_baseline = text_baseline
