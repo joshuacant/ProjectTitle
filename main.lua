@@ -238,7 +238,6 @@ function CoverBrowser:addToMainMenu(menu_items)
         sub_item_table[i] = {
             text = text,
             checked_func = function()
-                -- return mode == filemanager_display_mode
                 return mode == curr_display_modes["filemanager"]
             end,
             callback = function()
@@ -672,30 +671,31 @@ function CoverBrowser:refreshFileManagerInstance(cleanup, post_init)
     if fc then
         fc:_recalculateDimen()
         fc:switchItemTable(nil, nil, fc.prev_itemnumber, { dummy = "" }) -- dummy itemmatch to draw focus
-        if cleanup then                                                  -- clean instance properties we may have set
-            if fc.showFileDialog_orig then
-                -- remove our showFileDialog that extended file_dialog with new buttons
-                fc.showFileDialog = fc.showFileDialog_orig
-                fc.showFileDialog_orig = nil
-                fc.showFileDialog_ours = nil
-                FileManager.instance:reinit(fc.path, fc.prev_focused_path)
-            end
-        end
-        -- if filemanager_display_mode then
-        if curr_display_modes["filemanager"] then
-            if post_init then
-                self.ui:setupLayout()
-                -- FileBrowser was initialized in classic mode, but we changed
-                -- display mode: items per page may have changed, and we want
-                -- to re-position on the focused_file
-                fc:_recalculateDimen()
-                fc:changeToPath(fc.path, fc.prev_focused_path)
-            else
-                fc:updateItems()
-            end
-        else -- classic file_chooser needs this for a full redraw
-            fc:refreshPath()
-        end
+    --  i don't think we need this code any longer:
+    --     if cleanup then -- clean instance properties we may have set
+    --         if fc.showFileDialog_orig then
+    --             -- remove our showFileDialog that extended file_dialog with new buttons
+    --             fc.showFileDialog = fc.showFileDialog_orig
+    --             fc.showFileDialog_orig = nil
+    --             fc.showFileDialog_ours = nil
+    --             FileManager.instance:reinit(fc.path, fc.prev_focused_path)
+    --         end
+    --     end
+    --     -- if filemanager_display_mode then
+    --     if curr_display_modes["filemanager"] then
+    --         if post_init then
+    --             self.ui:setupLayout()
+    --             -- FileBrowser was initialized in classic mode, but we changed
+    --             -- display mode: items per page may have changed, and we want
+    --             -- to re-position on the focused_file
+    --             fc:_recalculateDimen()
+    --             fc:changeToPath(fc.path, fc.prev_focused_path)
+    --         else
+    --             fc:updateItems()
+    --         end
+    --     else -- classic file_chooser needs this for a full redraw
+    --         fc:refreshPath()
+    --     end
     end
 end
 
@@ -711,7 +711,6 @@ function CoverBrowser:setupFileManagerDisplayMode(display_mode)
     if not DISPLAY_MODES[display_mode] then
         display_mode = nil -- unknown mode, fallback to classic
     end
-    -- if init_done and display_mode == filemanager_display_mode then -- no change
     if init_done and display_mode == curr_display_modes["filemanager"] then -- no change
         return
     end
@@ -719,7 +718,6 @@ function CoverBrowser:setupFileManagerDisplayMode(display_mode)
         BookInfoManager:saveSetting(display_mode_db_names["filemanager"], display_mode)
     end
     -- remember current mode in module variable
-    -- filemanager_display_mode = display_mode
     curr_display_modes["filemanager"] = display_mode
     logger.dbg("CoverBrowser: setting FileManager display mode to:", display_mode or "classic")
 
@@ -729,7 +727,6 @@ function CoverBrowser:setupFileManagerDisplayMode(display_mode)
     if not init_done and not display_mode then
         return -- starting in classic mode, nothing to patch
     end
-
 
     if not display_mode then -- classic mode
         CoverBrowser.removeFileDialogButtons("filesearcher")
