@@ -661,6 +661,7 @@ function ListMenuItem:update()
             local wright_items = { align = "right" }
 
             local est_page_count = bookinfo.pages or nil
+            if BookInfoManager:getSetting("force_max_progressbars") then est_page_count = 700 end -- override metadata
             if est_page_count and
                 not BookInfoManager:getSetting("hide_page_info") and
                 not BookInfoManager:getSetting("show_pages_read_as_progress") then

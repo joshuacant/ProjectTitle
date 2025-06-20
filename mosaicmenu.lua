@@ -932,6 +932,7 @@ function MosaicMenuItem:paintTo(bb, x, y)
     if self.show_progress_bar then
         local progress_widget_width_mult = 1.0
         local est_page_count = bookinfo.pages or nil
+        if BookInfoManager:getSetting("force_max_progressbars") then est_page_count = 700 end -- override metadata
         local large_book = false
         if est_page_count then
             local fn_pages = tonumber(est_page_count)
@@ -944,7 +945,8 @@ function MosaicMenuItem:paintTo(bb, x, y)
             if fn_pages > (max_progress_size * pixels_per_page) then large_book = true end
         end
         local progress_widget_margin = math.floor((corner_mark_size - progress_widget.height) / 2)
-        progress_widget.width = (self.width - 2 * progress_widget_margin) * progress_widget_width_mult
+        -- progress_widget.width = (self.width - 2 * progress_widget_margin) * progress_widget_width_mult
+        progress_widget.width = self.width * progress_widget_width_mult
         progress_widget:setPercentage(self.percent_finished or 0)
         local pos_x = x
         local pos_y = y + self.height - math.ceil((self.height - target.height) / 2) - corner_mark_size +

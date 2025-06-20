@@ -209,6 +209,7 @@ function CoverBrowser:init()
     if BookInfoManager:getSetting("config_version") == 1 then
         logger.info("Migrating Project: Title settings to version 2")
         BookInfoManager:saveSetting("disable_auto_foldercovers", false)
+        BookInfoManager:saveSetting("force_max_progressbars", false)
         BookInfoManager:saveSetting("config_version", "2")
     end
 
@@ -478,18 +479,26 @@ function CoverBrowser:addToMainMenu(menu_items)
                 end,
             },
             {
-                text = _("Auto-generate cover images for folders from books"),
-                checked_func = function()
-                    return not BookInfoManager:getSetting("disable_auto_foldercovers")
-                end,
+                text = _("Always show maximum length progress bars"),
+                checked_func = function() return BookInfoManager:getSetting("force_max_progressbars") end,
                 callback = function()
-                    BookInfoManager:toggleSetting("disable_auto_foldercovers")
+                    BookInfoManager:toggleSetting("force_max_progressbars")
                     fc:updateItems(1, true)
                 end,
             },
             {
-                text = _("Book covers and info cache"),
+                text = _("Book cover and metadata cache"),
                 sub_item_table = {
+                    {
+                        text = _("Auto-generate cover images for folders from books"),
+                        checked_func = function()
+                            return not BookInfoManager:getSetting("disable_auto_foldercovers")
+                        end,
+                        callback = function()
+                            BookInfoManager:toggleSetting("disable_auto_foldercovers")
+                            fc:updateItems()
+                        end,
+                    },
                     {
                         text = _("Scan home folder for new books automatically"),
                         checked_func = function() return BookInfoManager:getSetting("autoscan_on_eject") end,
