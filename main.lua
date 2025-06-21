@@ -670,7 +670,7 @@ function CoverBrowser:refreshFileManagerInstance(cleanup, post_init)
     local fc = self.ui.file_chooser
     if fc then
         fc:_recalculateDimen()
-        -- fc:switchItemTable(nil, nil, fc.prev_itemnumber, { dummy = "" }) -- dummy itemmatch to draw focus
+        fc:switchItemTable(nil, nil, fc.prev_itemnumber, { dummy = "" }) -- dummy itemmatch to draw focus
         -- if cleanup then -- clean instance properties we may have set
         --     if fc.showFileDialog_orig then
         --         -- remove our showFileDialog that extended file_dialog with new buttons
