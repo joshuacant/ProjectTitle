@@ -670,32 +670,31 @@ function CoverBrowser:refreshFileManagerInstance(cleanup, post_init)
     local fc = self.ui.file_chooser
     if fc then
         fc:_recalculateDimen()
-        fc:switchItemTable(nil, nil, fc.prev_itemnumber, { dummy = "" }) -- dummy itemmatch to draw focus
-    --  i don't think we need this code any longer:
-    --     if cleanup then -- clean instance properties we may have set
-    --         if fc.showFileDialog_orig then
-    --             -- remove our showFileDialog that extended file_dialog with new buttons
-    --             fc.showFileDialog = fc.showFileDialog_orig
-    --             fc.showFileDialog_orig = nil
-    --             fc.showFileDialog_ours = nil
-    --             FileManager.instance:reinit(fc.path, fc.prev_focused_path)
-    --         end
-    --     end
-    --     -- if filemanager_display_mode then
-    --     if curr_display_modes["filemanager"] then
-    --         if post_init then
-    --             self.ui:setupLayout()
-    --             -- FileBrowser was initialized in classic mode, but we changed
-    --             -- display mode: items per page may have changed, and we want
-    --             -- to re-position on the focused_file
-    --             fc:_recalculateDimen()
-    --             fc:changeToPath(fc.path, fc.prev_focused_path)
-    --         else
-    --             fc:updateItems()
-    --         end
-    --     else -- classic file_chooser needs this for a full redraw
-    --         fc:refreshPath()
-    --     end
+        -- fc:switchItemTable(nil, nil, fc.prev_itemnumber, { dummy = "" }) -- dummy itemmatch to draw focus
+        -- if cleanup then -- clean instance properties we may have set
+        --     if fc.showFileDialog_orig then
+        --         -- remove our showFileDialog that extended file_dialog with new buttons
+        --         fc.showFileDialog = fc.showFileDialog_orig
+        --         fc.showFileDialog_orig = nil
+        --         fc.showFileDialog_ours = nil
+        --         FileManager.instance:reinit(fc.path, fc.prev_focused_path)
+        --     end
+        -- end
+        -- -- if filemanager_display_mode then
+        -- if curr_display_modes["filemanager"] then
+        --     if post_init then
+        --         self.ui:setupLayout()
+        --         -- FileBrowser was initialized in classic mode, but we changed
+        --         -- display mode: items per page may have changed, and we want
+        --         -- to re-position on the focused_file
+        --         fc:_recalculateDimen()
+        --         fc:changeToPath(fc.path, fc.prev_focused_path)
+        --     else
+        --         fc:updateItems()
+        --     end
+        -- else -- classic file_chooser needs this for a full redraw
+        --     fc:refreshPath()
+        -- end
     end
 end
 
@@ -742,7 +741,7 @@ function CoverBrowser:setupFileManagerDisplayMode(display_mode)
         Menu.init = _Menu_init_orig
         Menu.updatePageInfo = _Menu_updatePageInfo_orig
         -- Also clean-up what we added, even if it does not bother original code
-        FileChooser.updateCache = nil
+        --FileChooser.updateCache = nil
         FileChooser._updateItemsBuildUI = nil
         FileChooser._do_cover_images = nil
         FileChooser._do_filename_only = nil
@@ -757,7 +756,7 @@ function CoverBrowser:setupFileManagerDisplayMode(display_mode)
     -- In both mosaic and list modes, replace original methods with those from
     -- our generic CoverMenu
     local CoverMenu = require("covermenu")
-    FileChooser.updateCache = CoverMenu.updateCache
+    --FileChooser.updateCache = CoverMenu.updateCache
     FileChooser.updateItems = CoverMenu.updateItems
     FileChooser.onCloseWidget = CoverMenu.onCloseWidget
     CoverBrowser.addFileDialogButtons("filemanager")
@@ -906,22 +905,22 @@ function CoverBrowser:onInvalidateMetadataCache(file)
     return true
 end
 
-function CoverBrowser:onDocSettingsItemsChanged(file, doc_settings)
-    local status -- nil to wipe the covermenu book cache
-    if doc_settings then
-        status = doc_settings.summary and doc_settings.summary.status
-        if not status then return end -- changes not for us
-    end
-    if curr_display_modes["filemanager"] and self.ui.file_chooser then
-        self.ui.file_chooser:updateCache(file, status)
-    end
-    if curr_display_modes["history"] and self.ui.history and self.ui.history.hist_menu then
-        self.ui.history.hist_menu:updateCache(file, status)
-    end
-    if curr_display_modes["collections"] and self.ui.collections and self.ui.collections.coll_menu then
-        self.ui.collections.coll_menu:updateCache(file, status)
-    end
-end
+-- function CoverBrowser:onDocSettingsItemsChanged(file, doc_settings)
+--     local status -- nil to wipe the covermenu book cache
+--     if doc_settings then
+--         status = doc_settings.summary and doc_settings.summary.status
+--         if not status then return end -- changes not for us
+--     end
+--     if curr_display_modes["filemanager"] and self.ui.file_chooser then
+--         self.ui.file_chooser:updateCache(file, status)
+--     end
+--     if curr_display_modes["history"] and self.ui.history and self.ui.history.hist_menu then
+--         self.ui.history.hist_menu:updateCache(file, status)
+--     end
+--     if curr_display_modes["collections"] and self.ui.collections and self.ui.collections.coll_menu then
+--         self.ui.collections.coll_menu:updateCache(file, status)
+--     end
+-- end
 
 function CoverBrowser:extractBooksInDirectory(path)
     local Trapper = require("ui/trapper")

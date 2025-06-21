@@ -31,6 +31,7 @@ local _ = require("gettext")
 local Device = require("device")
 local filemanagerutil = require("apps/filemanager/filemanagerutil")
 local util = require("util")
+local time = require("ui/time")
 local ffiUtil = require("ffi/util")
 local C_ = _.pgettext
 
@@ -71,44 +72,47 @@ local nb_drawings_since_last_collectgarbage = 0
 -- in the real Menu class or instance
 local CoverMenu = {}
 
-function CoverMenu:updateCache(file, status, do_create, pages)
-    if do_create then -- create new cache entry if absent
-        if self.cover_info_cache[file] then return end
-        local doc_settings = DocSettings:open(file)
-        -- We can get nb of page in the new 'doc_pages' setting, or from the old 'stats.page'
-        local doc_pages = doc_settings:readSetting("doc_pages")
-        if doc_pages then
-            pages = doc_pages
-        else
-            local stats = doc_settings:readSetting("stats")
-            if stats and stats.pages and stats.pages ~= 0 then -- crengine with statistics disabled stores 0
-                pages = stats.pages
-            end
-        end
-        local percent_finished = doc_settings:readSetting("percent_finished")
-        local summary = doc_settings:readSetting("summary")
-        status = summary and summary.status
-        local has_highlight
-        local annotations = doc_settings:readSetting("annotations")
-        if annotations then
-            has_highlight = #annotations > 0
-        else
-            local highlight = doc_settings:readSetting("highlight")
-            has_highlight = highlight and next(highlight) and true
-        end
-        self.cover_info_cache[file] = table.pack(pages, percent_finished, status, has_highlight) -- may be a sparse array
-    else
-        if self.cover_info_cache and self.cover_info_cache[file] then
-            if status then
-                self.cover_info_cache[file][3] = status
-            else
-                self.cover_info_cache[file] = nil
-            end
-        end
-    end
-end
+-- function CoverMenu:updateCache(file, status, do_create, pages)
+--     if do_create then -- create new cache entry if absent
+--         if self.cover_info_cache[file] then return end
+--         local doc_settings = DocSettings:open(file)
+--         -- We can get nb of page in the new 'doc_pages' setting, or from the old 'stats.page'
+--         local doc_pages = doc_settings:readSetting("doc_pages")
+--         if doc_pages then
+--             pages = doc_pages
+--         else
+--             local stats = doc_settings:readSetting("stats")
+--             if stats and stats.pages and stats.pages ~= 0 then -- crengine with statistics disabled stores 0
+--                 pages = stats.pages
+--             end
+--         end
+--         local percent_finished = doc_settings:readSetting("percent_finished")
+--         local summary = doc_settings:readSetting("summary")
+--         status = summary and summary.status
+--         local has_highlight
+--         local annotations = doc_settings:readSetting("annotations")
+--         if annotations then
+--             has_highlight = #annotations > 0
+--         else
+--             local highlight = doc_settings:readSetting("highlight")
+--             has_highlight = highlight and next(highlight) and true
+--         end
+--         self.cover_info_cache[file] = table.pack(pages, percent_finished, status, has_highlight) -- may be a sparse array
+--     else
+--         if self.cover_info_cache and self.cover_info_cache[file] then
+--             if status then
+--                 self.cover_info_cache[file][3] = status
+--             else
+--                 self.cover_info_cache[file] = nil
+--             end
+--         end
+--     end
+-- end
 
 function CoverMenu:updateItems(select_number, no_recalculate_dimen)
+    logger.info("PTPT update items start")
+    logger.info(debug.getinfo(2).name)
+    local start_time = time.now()
     -- As done in Menu:updateItems()
     local old_dimen = self.dimen and self.dimen:copy()
     -- self.layout must be updated for focusmanager
@@ -169,7 +173,7 @@ function CoverMenu:updateItems(select_number, no_recalculate_dimen)
     -- Set the local variables with the things we know
     -- These are used only by extractBooksInDirectory(), which should
     -- use the cover_specs set for FileBrowser, and not those from History.
-    -- Hopefully, we get self.path=nil when called fro History
+    -- Hopefully, we get self.path=nil when called from History
     if self.path and is_pathchooser == false then
         current_path = self.path
         current_cover_specs = self.cover_specs
@@ -177,6 +181,7 @@ function CoverMenu:updateItems(select_number, no_recalculate_dimen)
 
     -- As done in Menu:updateItems()
     self:updatePageInfo(select_number)
+    Menu.mergeTitleBarIntoLayout(self)
 
     self.show_parent.dithered = self._has_cover_images
     UIManager:setDirty(self.show_parent, function()
@@ -257,7 +262,7 @@ function CoverMenu:updateItems(select_number, no_recalculate_dimen)
         UIManager:scheduleIn(1, self.items_update_action)
     end
 
-    Menu.mergeTitleBarIntoLayout(self)
+    logger.info(string.format("PTPT done in %.3f", time.to_ms(time.since(start_time))))
 end
 
 function CoverMenu:onCloseWidget()
@@ -363,12 +368,16 @@ end
 
 local function onFolderUp()
     if current_path then -- file browser or PathChooser
-        if current_path ~= "/" and not (G_reader_settings:isTrue("lock_home_folder") and
+        if not (G_reader_settings:isTrue("lock_home_folder") and
                 current_path == G_reader_settings:readSetting("home_dir")) then
-            FileManager.instance.file_chooser:changeToPath(string.format("%s/..", current_path))
-        else
-            FileManager.instance.file_chooser:goHome()
+            FileManager.instance.file_chooser:changeToPath(string.format("%s/..", current_path), current_path)
         end
+        -- if current_path ~= "/" and not (G_reader_settings:isTrue("lock_home_folder") and
+        --         current_path == G_reader_settings:readSetting("home_dir")) then
+        --     FileManager.instance.file_chooser:changeToPath(string.format("%s/..", current_path))
+        -- else
+        --     FileManager.instance.file_chooser:goHome()
+        -- end
     end
 end
 
@@ -426,7 +435,7 @@ function CoverMenu:setupLayout()
         center_icon_hold_callback = function()
             meta_browse_mode = not meta_browse_mode
             self:goHome()
-            end,
+        end,
         -- center_icon_hold_callback = function()
         --     UIManager:show(InfoMessage:new {
         --         text = T(_("KOReader %1\nwith Project: Title UI\nhttps://koreader.rocks\n\nLicensed under Affero GPL v3.\nAll dependencies are free software."), BD.ltr(Version:getShortVersion())),
