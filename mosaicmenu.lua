@@ -655,7 +655,6 @@ function MosaicMenuItem:update()
             end
 
             -- build final widget with whatever we assembled from above
-
             local dir_font_size = 22
             local directory_text = TextWidget:new {
                 text = " " .. directory_string .. " ",
