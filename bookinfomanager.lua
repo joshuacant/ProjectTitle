@@ -15,7 +15,7 @@ local logger = require("logger")
 local util = require("util")
 local zstd = require("ffi/zstd")
 local time = require("ui/time")
-local _ = require("resources.gettext")
+local _ = require("l10n.gettext")
 local N_ = _.ngettext
 local T = FFIUtil.template
 

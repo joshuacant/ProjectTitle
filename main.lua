@@ -81,7 +81,7 @@ local Trapper = require("ui/trapper")
 local UIManager = require("ui/uimanager")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
 local util = require("util")
-local _ = require("resources.gettext")
+local _ = require("l10n.gettext")
 local T = require("ffi/util").template
 local BookInfoManager = require("bookinfomanager")
 
