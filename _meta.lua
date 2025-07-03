@@ -1,4 +1,4 @@
-local _ = require("gettext")
+local _ = require("resources.gettext")
 return {
     -- we have to lie here and claim to be coverbrowser now that there are explicit calls from core koreader
     -- name = "projecttitle",
