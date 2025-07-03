@@ -7,7 +7,7 @@ if full_source_path:sub(1, 1) == "@" then
     full_source_path = full_source_path:sub(2)
 end
 local lib_path, _ = util.splitFilePathName(full_source_path)
-local plugin_path = lib_path:gsub("/+", "/"):gsub("[\\/]resources[\\/]", "")
+local plugin_path = lib_path:gsub("/+", "/"):gsub("[\\/]l10n[\\/]", "")
 
 local NewGetText = {
     dirname = string.format("%s/l10n", plugin_path)
