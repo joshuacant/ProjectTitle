@@ -422,11 +422,13 @@ function MosaicMenuItem:update()
             subfolder_cover_image = ptutil.getFolderCover(self.filepath, dimen.w, dimen.h)
             -- check for books with covers in the subfolder
             if subfolder_cover_image == nil and not BookInfoManager:getSetting("disable_auto_foldercovers") then
-                subfolder_cover_image = ptutil.getSubfolderCoverImages(self.filepath, max_img_w, max_img_h)
+                subfolder_cover_image = ptutil.getSubfolderCoverImages(self.filepath, max_img_w, max_img_h,
+                    BookInfoManager:getSetting("alternate_foldercovers"))
             end
             -- use stock folder icon
             local stock_image = sourcedir .. "/resources/folder.svg"
             if subfolder_cover_image == nil then
+                local stock_image = sourcedir .. "/resources/folder.svg"
                 local _, _, scale_factor = BookInfoManager.getCachedCoverSize(250, 500, max_img_w * 1.1, max_img_h * 1.1)
                 subfolder_cover_image = FrameContainer:new {
                     width = dimen.w,
