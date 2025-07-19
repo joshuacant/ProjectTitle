@@ -256,6 +256,7 @@ function CoverBrowser:init()
     end
     if BookInfoManager:getSetting("config_version") == 3 then
         logger.info(ptdbg.logprefix, "Migrating settings to version 4")
+        BookInfoManager:saveSetting("alternate_foldercovers", false)
         BookInfoManager:saveSetting("force_focus_indicator", false)
         BookInfoManager:saveSetting("use_stacked_foldercovers", false)
         BookInfoManager:saveSetting("config_version", "4")
@@ -526,6 +527,17 @@ function CoverBrowser:addToMainMenu(menu_items)
                         callback = function()
                             BookInfoManager:toggleSetting("disable_auto_foldercovers")
                             fc:updateItems()
+                        end,
+                    },
+                    {
+                        text = _("Show auto-generated cover images as stack instead of grid"),
+                        enabled_func = function()
+                            return not (BookInfoManager:getSetting("disable_auto_foldercovers"))
+                        end,
+                        checked_func = function() return BookInfoManager:getSetting("alternate_foldercovers") end,
+                        callback = function()
+                            BookInfoManager:toggleSetting("alternate_foldercovers")
+                            fc:updateItems(1, true)
                         end,
                     },
                     {
