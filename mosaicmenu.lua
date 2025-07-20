@@ -447,6 +447,10 @@ function MosaicMenuItem:update()
                 }
             end
 
+            logger.info(ptdbg.logprefix, "self.height", self.height)
+            logger.info(ptdbg.logprefix, "max_img_h", max_img_h)
+            logger.info(ptdbg.logprefix, "subfolder_cover_image:getSize().h", subfolder_cover_image:getSize().h)
+
             -- build final widget with whatever we assembled from above
             local dir_font_size = 22
             local directory_text = TextWidget:new {
