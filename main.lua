@@ -256,7 +256,6 @@ function CoverBrowser:init()
     end
     if BookInfoManager:getSetting("config_version") == 3 then
         logger.info(ptdbg.logprefix, "Migrating settings to version 4")
-        BookInfoManager:saveSetting("alternate_foldercovers", false)
         BookInfoManager:saveSetting("force_focus_indicator", false)
         BookInfoManager:saveSetting("use_stacked_foldercovers", false)
         BookInfoManager:saveSetting("config_version", "4")
@@ -534,9 +533,9 @@ function CoverBrowser:addToMainMenu(menu_items)
                         enabled_func = function()
                             return not (BookInfoManager:getSetting("disable_auto_foldercovers"))
                         end,
-                        checked_func = function() return BookInfoManager:getSetting("alternate_foldercovers") end,
+                        checked_func = function() return BookInfoManager:getSetting("use_stacked_foldercovers") end,
                         callback = function()
-                            BookInfoManager:toggleSetting("alternate_foldercovers")
+                            BookInfoManager:toggleSetting("use_stacked_foldercovers")
                             fc:updateItems(1, true)
                         end,
                     },

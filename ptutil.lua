@@ -197,8 +197,8 @@ local function build_cover_images(res, max_img_w, max_img_h, scale)
     return covers
 end
 
-function ptutil.getSubfolderCoverImages(filepath, max_img_w, max_img_h, diagonal_stack)
-    local res = query_cover_paths(filepath, false)
+function ptutil.getSubfolderCoverImages(filepath, max_img_w, max_img_h)
+    local diagonal_stack = BookInfoManager:getSetting("use_stacked_foldercovers")
     local scale = diagonal_stack and 1.45 or 2.05
     local subfolder_images = build_cover_images(res, max_img_w, max_img_h, scale)
 
@@ -234,7 +234,7 @@ function ptutil.getSubfolderCoverImages(filepath, max_img_w, max_img_h, diagonal
             }
         end
 
-        n_real_covers = #subfolder_images
+        local n_real_covers = #subfolder_images
         if n_real_covers == 3 then
             local w = subfolder_images[3]:getSize().w
             local h = subfolder_images[3]:getSize().h
