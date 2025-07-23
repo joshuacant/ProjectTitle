@@ -168,9 +168,8 @@ local function build_cover_images(db_res, max_img_w, max_img_h)
         local directories = db_res[1]
         local filenames = db_res[2]
         if BookInfoManager:getSetting("use_stacked_foldercovers") then
-            -- TODO: Calculate the scale for stacked mode
-            max_img_w = max_img_w / 1.4
-            max_img_h = max_img_h / 1.4
+            max_img_w = max_img_w - max_img_w / 4 - Size.border.thin * 4
+            max_img_h = max_img_h - max_img_h / 4 - Size.border.thin * 4
         else
             max_img_w = (max_img_h - (Size.border.thin * 4) - Size.padding.small) / 2
             max_img_h = (max_img_h - (Size.border.thin * 4) - Size.padding.small) / 2
@@ -228,20 +227,21 @@ local function create_blank_cover(w, h, background_idx)
 end
 
 -- Build the diagonal stack layout using OverlapGroup
-local function build_diagonal_stack(images)
-    local image_size = images[1]:getSize()
-    local scale = 1.45
+local function build_diagonal_stack(images, max_img_w, max_img_h)
+    local image_size = images[#images]:getSize()
     local stack = OverlapGroup:new {
-        dimen = Geom:new { w = image_size.w * scale, h = image_size.h * scale }
+        dimen = Geom:new { w = max_img_w, h = max_img_h }
     }
 
-    local padding_w = image_size.w * 0.15
-    local padding_h = image_size.h * 0.15
+    -- total padding is a quarter of the max container size
+    local padding_w = max_img_w / 12
+    local padding_h = max_img_h / 12
 
     -- Pad images to ensure at least 4 are present
     local target_count = 4
     for i = 1, target_count - #images do
-        table.insert(images, 1, create_blank_cover(image_size.w, image_size.h, i % 2 + 2))
+        table.insert(images, 1,
+            create_blank_cover(image_size.w - Size.border.thin * 2, image_size.h - Size.border.thin * 2, i % 2 + 2))
     end
 
     for i, img in ipairs(images) do
@@ -304,12 +304,17 @@ function ptutil.getSubfolderCoverImages(filepath, max_img_w, max_img_h)
     local db_res = query_cover_paths(filepath, true)
     local images = build_cover_images(db_res, max_img_w, max_img_h)
 
+    if #images < 4 then
+        db_res = query_cover_paths(filepath, true)
+        images = build_cover_images(db_res, max_img_w, max_img_h)
+    end
+
     -- Return nil if no images found
     if #images == 0 then return nil end
 
     local diagonal_stack = BookInfoManager:getSetting("use_stacked_foldercovers")
     if diagonal_stack then
-        return build_diagonal_stack(images)
+        return build_diagonal_stack(images, max_img_w, max_img_h)
     else
         return build_grid(images)
     end
