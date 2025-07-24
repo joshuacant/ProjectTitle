@@ -234,8 +234,8 @@ local function build_diagonal_stack(images, max_img_w, max_img_h)
     }
 
     -- total padding is a quarter of the max container size
-    local padding_w = max_img_w / 12
-    local padding_h = max_img_h / 12
+    local padding_steps_w = max_img_w / 12
+    local padding_steps_h = max_img_h / 12
 
     -- Pad images to ensure at least 4 are present
     local target_count = 4
@@ -245,10 +245,19 @@ local function build_diagonal_stack(images, max_img_w, max_img_h)
     end
 
     for i, img in ipairs(images) do
+        -- Last image is always right aligned
+        if i == #images then
+            local image_size = images[i]:getSize()
+            padding_h = max_img_h - (image_size.h + Size.border.thin * 2)
+            padding_w = max_img_w - (image_size.w + Size.border.thin * 2)
+        else
+            padding_h = (i - 1) * padding_steps_h
+            padding_w = (i - 1) * padding_steps_w
+        end
         local frame = FrameContainer:new {
             margin = 0,
-            padding_top = (i - 1) * padding_h,
-            padding_left = (i - 1) * padding_w,
+            padding_top = padding_h,
+            padding_left = padding_w,
             bordersize = 0,
             color = Blitbuffer.COLOR_WHITE,
             img,
