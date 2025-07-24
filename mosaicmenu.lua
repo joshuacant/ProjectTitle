@@ -425,8 +425,8 @@ function MosaicMenuItem:update()
                 subfolder_cover_image = ptutil.getSubfolderCoverImages(self.filepath, max_img_w, max_img_h)
             end
             -- use stock folder icon
+            local stock_image = sourcedir .. "/resources/folder.svg"
             if subfolder_cover_image == nil then
-                local stock_image = sourcedir .. "/resources/folder.svg"
                 local _, _, scale_factor = BookInfoManager.getCachedCoverSize(250, 500, max_img_w * 1.1, max_img_h * 1.1)
                 subfolder_cover_image = FrameContainer:new {
                     width = dimen.w,
@@ -446,10 +446,6 @@ function MosaicMenuItem:update()
                     }),
                 }
             end
-
-            logger.info(ptdbg.logprefix, "self.height", self.height)
-            logger.info(ptdbg.logprefix, "max_img_h", max_img_h)
-            logger.info(ptdbg.logprefix, "subfolder_cover_image:getSize().h", subfolder_cover_image:getSize().h)
 
             -- build final widget with whatever we assembled from above
             local dir_font_size = 22
