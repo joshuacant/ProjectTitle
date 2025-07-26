@@ -9,6 +9,7 @@ local LineWidget = require("ui/widget/linewidget")
 local Size = require("ui/size")
 local VerticalGroup = require("ui/widget/verticalgroup")
 local VerticalSpan = require("ui/widget/verticalspan")
+local OverlapGroup = require("ui/widget/overlapgroup")
 local logger = require("logger")
 local Device = require("device")
 local Screen = Device.screen
@@ -111,9 +112,11 @@ function ptutil.getFolderCover(filepath, max_img_w, max_img_h)
                 folder_image
             }
         else
-            logger.info(ptdbg.logprefix, "Folder cover found but failed to render, could be too large or broken:", folder_image_file)
+            logger.info(ptdbg.logprefix, "Folder cover found but failed to render, could be too large or broken:",
+                folder_image_file)
             local size_mult = 1.25
-            local _, _, scale_factor = BookInfoManager.getCachedCoverSize(250, 500, max_img_w * size_mult, max_img_h * size_mult)
+            local _, _, scale_factor = BookInfoManager.getCachedCoverSize(250, 500, max_img_w * size_mult,
+                max_img_h * size_mult)
             return FrameContainer:new {
                 width = max_img_w * size_mult,
                 height = max_img_h * size_mult,
@@ -161,13 +164,18 @@ local function query_cover_paths(folder, include_subfolders)
     return res
 end
 
-local function build_cover_images(res, max_img_w, max_img_h)
+local function build_cover_images(db_res, max_img_w, max_img_h)
     local covers = {}
-    if res then
-        local directories = res[1]
-        local filenames = res[2]
-        max_img_w = (max_img_h - (Size.border.thin * 4) - Size.padding.small) / 2
-        max_img_h = (max_img_h - (Size.border.thin * 4) - Size.padding.small) / 2
+    if db_res then
+        local directories = db_res[1]
+        local filenames = db_res[2]
+        if BookInfoManager:getSetting("use_stacked_foldercovers") then
+            max_img_w = max_img_w - max_img_w / 4 - Size.border.thin * 4
+            max_img_h = max_img_h - max_img_h / 4 - Size.border.thin * 4
+        else
+            max_img_w = (max_img_h - (Size.border.thin * 4) - Size.padding.small) / 2
+            max_img_h = (max_img_h - (Size.border.thin * 4) - Size.padding.small) / 2
+        end
         for i, filename in ipairs(filenames) do
             local fullpath = directories[i] .. filename
             if util.fileExists(fullpath) then
@@ -195,85 +203,131 @@ local function build_cover_images(res, max_img_w, max_img_h)
     return covers
 end
 
-function ptutil.getSubfolderCoverImages(filepath, max_img_w, max_img_h)
-    local res = query_cover_paths(filepath, false)
-    local subfolder_images = build_cover_images(res, max_img_w, max_img_h)
+-- Helper to create a blank frame-style cover with background
+local function create_blank_cover(w, h, background_idx)
+    local backgrounds = {
+        Blitbuffer.COLOR_LIGHT_GRAY,
+        Blitbuffer.COLOR_GRAY_D,
+        Blitbuffer.COLOR_GRAY_E,
+    }
+    local w_minus = w - (Size.border.thin * 2)
+    local h_minus = h - (Size.border.thin * 2)
+    return FrameContainer:new {
+        width = w,
+        height = h,
+        radius = Size.radius.default,
+        margin = 0,
+        padding = 0,
+        bordersize = Size.border.thin,
+        color = Blitbuffer.COLOR_DARK_GRAY,
+        background = backgrounds[background_idx],
+        CenterContainer:new {
+            dimen = Geom:new { w = w_minus, h = h_minus },
+            HorizontalSpan:new { width = w_minus, height = h_minus },
+        }
+    }
+end
 
-    if #subfolder_images < 4 then
-        res = query_cover_paths(filepath, true)
-        subfolder_images = build_cover_images(res, max_img_w, max_img_h)
+-- Build the diagonal stack layout using OverlapGroup
+local function build_diagonal_stack(images, max_img_w, max_img_h)
+    local image_size = images[#images]:getSize()
+    local stack = OverlapGroup:new {
+        dimen = Geom:new { w = max_img_w, h = max_img_h }
+    }
+
+    -- total padding is a quarter of the max container size
+    local padding_steps_w = max_img_w / 12
+    local padding_steps_h = max_img_h / 12
+
+    -- Pad images to ensure at least 4 are present
+    local target_count = 4
+    for i = 1, target_count - #images do
+        table.insert(images, 1,
+            create_blank_cover(image_size.w - Size.border.thin * 2, image_size.h - Size.border.thin * 2, i % 2 + 2))
     end
 
-    -- Continue if we found at least one cover
-    if #subfolder_images >= 1 then
-        local backgrounds = {
-            Blitbuffer.COLOR_LIGHT_GRAY,
-            Blitbuffer.COLOR_GRAY_D,
-            Blitbuffer.COLOR_GRAY_E,
+    for i, img in ipairs(images) do
+        -- Last image is always right aligned
+        if i == #images then
+            local image_size = images[i]:getSize()
+            padding_h = max_img_h - (image_size.h + Size.border.thin * 2)
+            padding_w = max_img_w - (image_size.w + Size.border.thin * 2)
+        else
+            padding_h = (i - 1) * padding_steps_h
+            padding_w = (i - 1) * padding_steps_w
+        end
+        local frame = FrameContainer:new {
+            margin = 0,
+            padding_top = padding_h,
+            padding_left = padding_w,
+            bordersize = 0,
+            color = Blitbuffer.COLOR_WHITE,
+            img,
         }
-        local function create_blank_cover(w, h, b)
-            local w_minus = w - (Size.border.thin * 2)
-            local h_minus = h - (Size.border.thin * 2)
-            return FrameContainer:new {
-                width = w,
-                height = h,
-                radius = Size.radius.default,
-                margin = 0,
-                padding = 0,
-                bordersize = Size.border.thin,
-                color = Blitbuffer.COLOR_DARK_GRAY,
-                background = backgrounds[b],
-                CenterContainer:new {
-                    dimen = Geom:new { w = w_minus, h = h_minus },
-                    HorizontalSpan:new { width = w_minus, height = h_minus }
-                }
-            }
+        table.insert(stack, frame)
+    end
+
+    return stack
+end
+
+-- Build a 2x2 grid layout using nested horizontal & vertical groups
+local function build_grid(images)
+    local row1 = HorizontalGroup:new {}
+    local row2 = HorizontalGroup:new {}
+    local layout = VerticalGroup:new {}
+
+    -- Create blank covers if needed
+    if #images == 3 then
+        local w, h = images[3]:getSize().w, images[3]:getSize().h
+        table.insert(images, 2, create_blank_cover(w, h, 3))
+    elseif #images == 2 then
+        local w1, h1 = images[1]:getSize().w, images[1]:getSize().h
+        local w2, h2 = images[2]:getSize().w, images[2]:getSize().h
+        table.insert(images, 2, create_blank_cover(w1, h1, 3))
+        table.insert(images, 3, create_blank_cover(w2, h2, 2))
+    elseif #images == 1 then
+        local w, h = images[1]:getSize().w, images[1]:getSize().h
+        table.insert(images, 1, create_blank_cover(w, h, 3))
+        table.insert(images, 2, create_blank_cover(w, h, 2))
+        table.insert(images, 4, create_blank_cover(w, h, 3))
+    end
+
+    for i, img in ipairs(images) do
+        if i < 3 then
+            table.insert(row1, img)
+        else
+            table.insert(row2, img)
         end
-
-        if #subfolder_images == 3 then
-            local w = subfolder_images[3]:getSize().w
-            local h = subfolder_images[3]:getSize().h
-            table.insert(subfolder_images, 2, create_blank_cover(w, h, 3))
-        elseif #subfolder_images == 2 then
-            local w1 = subfolder_images[1]:getSize().w
-            local h1 = subfolder_images[1]:getSize().h
-            local w2 = subfolder_images[2]:getSize().w
-            local h2 = subfolder_images[2]:getSize().h
-            table.insert(subfolder_images, 2, create_blank_cover(w1, h1, 3))
-            table.insert(subfolder_images, 3, create_blank_cover(w2, h2, 2))
-        elseif #subfolder_images == 1 then
-            local w = subfolder_images[1]:getSize().w
-            local h = subfolder_images[1]:getSize().h
-            table.insert(subfolder_images, 1, create_blank_cover(w, h, 3))
-            table.insert(subfolder_images, 2, create_blank_cover(w, h, 2))
-            table.insert(subfolder_images, 4, create_blank_cover(w, h, 3))
+        if i == 1 then
+            table.insert(row1, HorizontalSpan:new { width = Size.padding.small })
+        elseif i == 3 then
+            table.insert(row2, HorizontalSpan:new { width = Size.padding.small })
         end
+    end
 
-        local subfolder_image_row1 = HorizontalGroup:new {}
-        local subfolder_image_row2 = HorizontalGroup:new {}
-        local subfolder_cover_image = VerticalGroup:new {}
+    table.insert(layout, row1)
+    table.insert(layout, VerticalSpan:new { width = Size.padding.small })
+    table.insert(layout, row2)
+    return layout
+end
 
-        for i, subfolder_image in ipairs(subfolder_images) do
-            if i < 3 then
-                table.insert(subfolder_image_row1, subfolder_image)
-            else
-                table.insert(subfolder_image_row2, subfolder_image)
-            end
-            if i == 1 then
-                table.insert(subfolder_image_row1, HorizontalSpan:new { width = Size.padding.small, })
-            end
-            if i == 3 then
-                table.insert(subfolder_image_row2, HorizontalSpan:new { width = Size.padding.small, })
-            end
-        end
+function ptutil.getSubfolderCoverImages(filepath, max_img_w, max_img_h)
+    local db_res = query_cover_paths(filepath, false)
+    local images = build_cover_images(db_res, max_img_w, max_img_h)
 
-        table.insert(subfolder_cover_image, subfolder_image_row1)
-        table.insert(subfolder_cover_image, VerticalSpan:new { width = Size.padding.small, })
-        table.insert(subfolder_cover_image, subfolder_image_row2)
+    if #images < 4 then
+        db_res = query_cover_paths(filepath, true)
+        images = build_cover_images(db_res, max_img_w, max_img_h)
+    end
 
-        return subfolder_cover_image
+    -- Return nil if no images found
+    if #images == 0 then return nil end
+
+    local diagonal_stack = BookInfoManager:getSetting("use_stacked_foldercovers")
+    if diagonal_stack then
+        return build_diagonal_stack(images, max_img_w, max_img_h)
     else
-        return nil
+        return build_grid(images)
     end
 end
 
