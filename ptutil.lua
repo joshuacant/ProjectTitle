@@ -310,7 +310,7 @@ local function build_grid(images)
 end
 
 function ptutil.getSubfolderCoverImages(filepath, max_img_w, max_img_h)
-    local db_res = query_cover_paths(filepath, true)
+    local db_res = query_cover_paths(filepath, false)
     local images = build_cover_images(db_res, max_img_w, max_img_h)
 
     if #images < 4 then
