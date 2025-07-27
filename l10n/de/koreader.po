@@ -1,0 +1,146 @@
+msgid ""
+msgstr ""
+"projecttitle/de/>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+# covermenu.lua
+msgid "Library"
+msgstr "Bibliothek"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "Ordner"
+
+msgid "Book"
+msgstr "Buch"
+
+# main.lua
+msgid "Project: Title"
+msgstr "Project: Title"
+
+msgid "Decrease Items Per Page"
+msgstr "Elemente pro Seite reduzieren"
+
+msgid "Increase Items Per Page"
+msgstr "Elemente pro Seite erhöhen"
+
+msgid "Cover List"
+msgstr "Cover-Liste"
+
+msgid "Cover Grid"
+msgstr "Cover-Rasteransicht"
+
+msgid "Details List"
+msgstr "Detail-Liste"
+
+msgid "Filenames List"
+msgstr "Dateinamen-Liste"
+
+msgid "Project: Title settings"
+msgstr "Project: Title Einstellungen"
+
+msgid "Portrait cover grid mode"
+msgstr "Hochformat-Rasteransicht"
+
+msgid "Landscape cover grid mode"
+msgstr "Querformat-Rasteransicht"
+
+msgid "List modes"
+msgstr "Listenmodi"
+
+msgid "Folder display"
+msgstr "Ordneransicht"
+
+msgid "Auto-generate cover images from books"
+msgstr "Coverbilder automatisch aus Büchern generieren"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Titel und Details über Rasterkacheln anzeigen"
+
+msgid "Book display"
+msgstr "Bücheransicht"
+
+msgid "Show series"
+msgstr "Serien anzeigen"
+# a better translation would be "Bücherreihen anzeigen" but in calibre it's translated with "Serien anzeigen"
+
+msgid "Show pages read instead of progress %"
+msgstr "Gelesene Seiten statt Prozent anzeigen"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Dateiinformationen statt Seiten oder Prozent anzeigen"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Prozent statt Fortschrittsbalken anzeigen"
+
+msgid "Always show maximum length progress bars"
+msgstr "Fortschrittsbalken stets in voller Länge anzeigen"
+
+msgid "Use custom book status screen"
+msgstr "Benutzerdefinierten Bücherstatus benutzen"
+
+msgid "Footer"
+msgstr "Fußzeile"
+
+msgid "Replace folder name with device info"
+msgstr "Ordnernamen durch Geräteinformationen ersetzen"
+
+msgid "Show page controls in left corner"
+msgstr "Seiteneinstellungen in der linken Ecke anzeigen"
+
+msgid "Library mode"
+msgstr "Bibliotheksmodus"
+
+msgid "Show opened books first"
+msgstr "Geöffnete Bücher zuerst anzeigen"
+
+msgid "Cache database"
+msgstr "Datenbank in Cache laden"
+
+msgid "Scan home folder for new books automatically"
+msgstr "HOME-Verzeichnis automatisch nach neuen Büchern durchsuchen"
+
+msgid "Empty cache"
+msgstr "Cache leeren"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "Möchten Sie den Cover- und Metadaten-Cache wirklich löschen?"
+
+msgid "Cache emptied."
+msgstr "Cache geleert."
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"Dies extrahiert Metadaten und Coverbilder aus den Büchern im aktuellen Verzeichnis.\n"
+"Sobald die Extraktion gestartet wurde, können Sie diese jederzeit durch Antippen des Bildschirms abbrechen.\n"
+"Dieser Prozess kann einige Zeit dauern und den Akku beanspruchen - es wird empfohlen, das Gerät an den Strom anzuschließen."
+
+msgid "Found %1 books.\nLooking for new books…"
+msgstr "%1 Bücher gefunden.\nSuche nach neuen Büchern..."
+
+msgid "No new books found."
+msgstr "Keine neuen Bücher gefunden."
+
+msgid "Do you want to stop?"
+msgstr "Möchten Sie abbrechen?"
+
+msgid "Continue Indexing"
+msgstr "Indizieren fortführen"
+
+msgid "Stop Indexing"
+msgstr "Indizieren abbrechen"
+
+msgid "Tap anywhere to stop"
+msgstr "Tippen, um abzubrechen"

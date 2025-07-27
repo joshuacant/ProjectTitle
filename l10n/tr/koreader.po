@@ -1,0 +1,137 @@
+msgid ""
+msgstr ""
+"projecttitle/tr/>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+
+# covermenu.lua
+msgid "Library"
+msgstr "Kütüphane"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "Klasörler"
+
+msgid "Book"
+msgstr "Kitap"
+
+# main.lua
+msgid "Cover List"
+msgstr "Kapak Listesi"
+
+msgid "Cover Grid"
+msgstr "Kapak Izgarası"
+
+msgid "Details List"
+msgstr "Detay Listesi"
+
+msgid "Filenames List"
+msgstr "Dosya Adları Listesi"
+
+msgid "Project: Title settings"
+msgstr "Proje: Başlık ayarları"
+
+msgid "Portrait cover grid mode"
+msgstr "Dikey kapak ızgarası modu"
+
+msgid "Landscape cover grid mode"
+msgstr "Yatay kapak ızgarası modu"
+
+msgid "List modes"
+msgstr "Liste modları"
+
+msgid "Folder display"
+msgstr "Klasör görünümü"
+
+msgid "Auto-generate cover images from books"
+msgstr "Kitaplardan otomatik kapak görseli oluştur"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Kapak ızgarasında isim ve detayları göster"
+
+msgid "Book display"
+msgstr "Kitap görünümü"
+
+msgid "Show series"
+msgstr "Serileri göster"
+
+msgid "Show pages read instead of progress %"
+msgstr "İlerleme yüzdesi yerine okunan sayfa sayısını göster"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Sayfa veya ilerleme yüzdesi yerine dosya bilgisini göster"
+
+msgid "Always show maximum length progress bars"
+msgstr "Her zaman maksimum uzunlukta ilerleme çubukları göster"
+
+msgid "Use custom book status screen"
+msgstr "Özel kitap durumu ekranı kullan"
+
+msgid "Footer"
+msgstr "Alt bilgi"
+
+msgid "Replace folder name with device info"
+msgstr "Klasör adını cihaz bilgisiyle değiştir"
+
+msgid "Show page controls in left corner"
+msgstr "Sayfa kontrollerini sol köşede göster"
+
+msgid "Library mode"
+msgstr "Kütüphane modu"
+
+msgid "Show opened books first"
+msgstr "İlk önce açılan kitapları göster"
+
+msgid "Cache database"
+msgstr "Önbellek veritabanı"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Yeni kitaplar için ana klasörü otomatik tara"
+
+msgid "Empty cache"
+msgstr "Önbelleği boşalt"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "Kapak ve meta veri önbelleğini silmek istediğinizden emin misiniz?"
+
+msgid "Cache emptied."
+msgstr "Önbellek boşaltıldı."
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"Bu işlem, mevcut dizindeki kitaplardan meta veri ve kapak görsellerini "
+"çıkaracaktır.\n"
+"Çıkarma işlemi başladıktan sonra, ekrana dokunarak istediğiniz zaman iptal "
+"edebilirsiniz.\n"
+"\n"
+"Bu çıkarma işlemi zaman alabilir ve biraz pil gücü tüketebilir: cihazınızı "
+"prize takılı tutmak isteyebilirsiniz."
+
+msgid "Found %1 books.\nLooking for new books…"
+msgstr "%1 kitap bulundu.\nYeni kitaplar aranıyor…"
+
+msgid "No new books found."
+msgstr "Yeni kitap bulunamadı."
+
+msgid "Do you want to stop?"
+msgstr "Durdurmak istiyor misiniz?"
+
+msgid "Continue Indexing"
+msgstr "Dizinlemeye Devam Et"
+
+msgid "Stop Indexing"
+msgstr "Dizinlemeyi Durdur"
+
+msgid "Tap anywhere to stop"
+msgstr "Durdurmak için herhangi bir yere dokunun"

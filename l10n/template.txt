@@ -1,0 +1,142 @@
+# This is the template for localizing the additional strings found in Project: Title.
+# The strings below will be added to the full l10n file from KOReader.
+
+# When submitting this file, please indicate what KOReader language code the
+# translation is for. See: https://github.com/koreader/koreader-translations for a list.
+
+# Keep translations concise. Due to screen space limits, long strings may be truncated.
+# This is especially true of the setting names located in main.lua
+
+# covermenu.lua
+msgid "Library"
+msgstr ""
+
+# listmenu.lua
+msgid "Folders"
+msgstr ""
+
+msgid "Book"
+msgstr ""
+
+# main.lua
+msgid "Project: Title"
+msgstr ""
+
+msgid "Decrease Items Per Page"
+msgstr ""
+
+msgid "Increase Items Per Page"
+msgstr ""
+
+msgid "Cover List"
+msgstr ""
+
+msgid "Cover Grid"
+msgstr ""
+
+msgid "Details List"
+msgstr ""
+
+msgid "Filenames List"
+msgstr ""
+
+msgid "Project: Title settings"
+msgstr ""
+
+msgid "Portrait cover grid mode"
+msgstr ""
+
+msgid "Landscape cover grid mode"
+msgstr ""
+
+msgid "List modes"
+msgstr ""
+
+msgid "Folder display"
+msgstr ""
+
+msgid "Auto-generate cover images from books"
+msgstr ""
+
+msgid "Overlay name and details in cover grid"
+msgstr ""
+
+msgid "Book display"
+msgstr ""
+
+msgid "Show series"
+msgstr ""
+
+msgid "Show pages read instead of progress %"
+msgstr ""
+
+msgid "Show file info instead of pages or progress %"
+msgstr ""
+
+msgid "Show progress % instead of progress bars"
+msgstr ""
+
+msgid "Always show maximum length progress bars"
+msgstr ""
+
+msgid "Use custom book status screen"
+msgstr ""
+
+msgid "Footer"
+msgstr ""
+
+msgid "Replace folder name with device info"
+msgstr ""
+
+msgid "Show page controls in left corner"
+msgstr ""
+
+msgid "Library mode"
+msgstr ""
+
+msgid "Show opened books first"
+msgstr ""
+
+msgid "Cache database"
+msgstr ""
+
+msgid "Scan home folder for new books automatically"
+msgstr ""
+
+msgid "Empty cache"
+msgstr ""
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr ""
+
+msgid "Cache emptied."
+msgstr ""
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+
+msgid "Found %1 books.\nLooking for new books…"
+msgstr ""
+
+msgid "No new books found."
+msgstr ""
+
+msgid "Do you want to stop?"
+msgstr ""
+
+msgid "Continue Indexing"
+msgstr ""
+
+msgid "Stop Indexing"
+msgstr ""
+
+msgid "Tap anywhere to stop"
+msgstr ""

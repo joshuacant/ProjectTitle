@@ -1,3 +1,4 @@
+local AlphaContainer = require("ui/widget/container/alphacontainer")
 local BD = require("ui/bidi")
 local Blitbuffer = require("ffi/blitbuffer")
 local BottomContainer = require("ui/widget/container/bottomcontainer")
@@ -10,31 +11,38 @@ local Geom = require("ui/geometry")
 local GestureRange = require("ui/gesturerange")
 local HorizontalGroup = require("ui/widget/horizontalgroup")
 local HorizontalSpan = require("ui/widget/horizontalspan")
-local IconWidget = require("ui/widget/iconwidget")
 local ImageWidget = require("ui/widget/imagewidget")
 local InputContainer = require("ui/widget/container/inputcontainer")
 local LeftContainer = require("ui/widget/container/leftcontainer")
+local LineWidget = require("ui/widget/linewidget")
+local Math = require("optmath")
 local OverlapGroup = require("ui/widget/overlapgroup")
 local ProgressWidget = require("ui/widget/progresswidget")
-local ReadCollection = require("readcollection")
 local Size = require("ui/size")
 local TextBoxWidget = require("ui/widget/textboxwidget")
 local TextWidget = require("ui/widget/textwidget")
+local TopContainer = require("ui/widget/container/topcontainer")
 local UnderlineContainer = require("ui/widget/container/underlinecontainer")
 local VerticalGroup = require("ui/widget/verticalgroup")
 local VerticalSpan = require("ui/widget/verticalspan")
-local WidgetContainer = require("ui/widget/container/widgetcontainer")
 local logger = require("logger")
 local util = require("util")
-local _ = require("gettext")
+local time = require("ui/time")
+local _ = require("l10n.gettext")
 local Screen = Device.screen
 local T = require("ffi/util").template
 local getMenuText = require("ui/widget/menu").getMenuText
-
 local BookInfoManager = require("bookinfomanager")
+local ptutil = require("ptutil")
+local ptdbg = require("ptdbg")
 
--- Here is the specific UI implementation for "mosaic" display modes
+-- Here is the specific UI implementation for "grid" display modes
 -- (see covermenu.lua for the generic code)
+local is_pathchooser = false
+local sourcedir = ptutil.getSourceDir()
+local alpha_level = 0.84
+local tag_width = 0.35
+local margin_size = 10
 
 -- We will show a rotated dogear at bottom right corner of cover widget for
 -- opened files (the dogear will make it look like a "used book")
@@ -42,61 +50,16 @@ local BookInfoManager = require("bookinfomanager")
 -- recreated if height changes)
 local corner_mark_size
 local corner_mark
-local reading_mark
 local abandoned_mark
 local complete_mark
--- local collection_mark
 local progress_widget
-
--- ItemShortCutIcon (for keyboard navigation) is private to menu.lua and can't be accessed,
--- so we need to redefine it
-local ItemShortCutIcon = WidgetContainer:extend{
-    dimen = Geom:new{ x = 0, y = 0, w = Screen:scaleBySize(22), h = Screen:scaleBySize(22) },
-    key = nil,
-    bordersize = Size.border.default,
-    radius = 0,
-    style = "square",
-}
-
-function ItemShortCutIcon:init()
-    if not self.key then
-        return
-    end
-    local radius = 0
-    local background = Blitbuffer.COLOR_WHITE
-    if self.style == "rounded_corner" then
-        radius = math.floor(self.width/2)
-    elseif self.style == "grey_square" then
-        background = Blitbuffer.COLOR_LIGHT_GRAY
-    end
-    local sc_face
-    if self.key:len() > 1 then
-        sc_face = Font:getFace("ffont", 14)
-    else
-        sc_face = Font:getFace("scfont", 22)
-    end
-    self[1] = FrameContainer:new{
-        padding = 0,
-        bordersize = self.bordersize,
-        radius = radius,
-        background = background,
-        dimen = self.dimen:copy(),
-        CenterContainer:new{
-            dimen = self.dimen,
-            TextWidget:new{
-                text = self.key,
-                face = sc_face,
-            },
-        },
-    }
-end
 
 -- We may find a better algorithm, or just a set of
 -- nice looking combinations of 3 sizes to iterate thru
 -- the rendering of the TextBoxWidget we're doing below
 -- with decreasing font sizes till it fits is quite expensive.
 
-local FakeCover = FrameContainer:extend{
+local FakeCover = FrameContainer:extend {
     width = nil,
     height = nil,
     margin = 0,
@@ -135,9 +98,11 @@ function FakeCover:init()
     local filename = self.filename
     -- (some engines may have already given filename (without extension) as title)
     local bd_wrap_title_as_filename = false
+    local titlefont = ptutil.title_serif
     if not title then -- use filename as title (big and centered)
         title = filename
         filename = nil
+        titlefont = ptutil.good_serif
         if not self.title_add and self.filename_add then
             -- filename_add ("…" or "(deleted)") always comes without any title_add
             self.title_add = self.filename_add
@@ -151,8 +116,9 @@ function FakeCover:init()
     -- If no authors, and title is filename without extension, it was
     -- probably made by an engine, and we can consider it a filename, and
     -- act according to common usage in naming files.
-    if not authors and title and self.filename and self.filename:sub(1,title:len()) == title then
+    if not authors and title and self.filename and self.filename:sub(1, title:len()) == title then
         bd_wrap_title_as_filename = true
+        titlefont = ptutil.good_serif
         -- Replace a hyphen surrounded by spaces (which most probably was
         -- used to separate Authors/Title/Serie/Year/Categorie in the
         -- filename with a \n
@@ -182,7 +148,7 @@ function FakeCover:init()
     -- append "et al." on a 4th line if there are more
     if authors and authors:find("\n") then
         authors = util.splitToArray(authors, "\n")
-        for i=1, #authors do
+        for i = 1, #authors do
             authors[i] = BD.auto(authors[i])
         end
         if #authors > 3 then
@@ -205,9 +171,9 @@ function FakeCover:init()
 
     -- We build the VerticalGroup widget with decreasing font sizes till
     -- the widget fits into available height
-    local width = self.width - 2*(self.bordersize + self.margin + self.padding)
-    local height = self.height - 2*(self.bordersize + self.margin + self.padding)
-    local text_width = 7/8 * width -- make width of text smaller to have some padding
+    local width = self.width - 2 * (self.bordersize + self.margin + self.padding)
+    local height = self.height - 2 * (self.bordersize + self.margin + self.padding)
+    local text_width = 7 / 8 * width -- make width of text smaller to have some padding
     local inter_pad
     local sizedec = self.initial_sizedec
     local authors_wg, title_wg, filename_wg
@@ -229,30 +195,30 @@ function FakeCover:init()
         -- Build new widgets
         local texts_height = 0
         if authors then
-            authors_wg = TextBoxWidget:new{
+            authors_wg = TextBoxWidget:new {
                 text = authors,
                 lang = self.book_lang,
-                face = Font:getFace("cfont", math.max(self.authors_font_max - sizedec, self.authors_font_min)),
+                face = Font:getFace(ptutil.good_serif, math.max(self.authors_font_max - sizedec, self.authors_font_min)),
                 width = text_width,
                 alignment = "center",
             }
             texts_height = texts_height + authors_wg:getSize().h
         end
         if title then
-            title_wg = TextBoxWidget:new{
+            title_wg = TextBoxWidget:new {
                 text = title,
                 lang = self.book_lang,
-                face = Font:getFace("cfont", math.max(self.title_font_max - sizedec, self.title_font_min)),
+                face = Font:getFace(titlefont, math.max(self.title_font_max - sizedec, self.title_font_min)),
                 width = text_width,
                 alignment = "center",
             }
             texts_height = texts_height + title_wg:getSize().h
         end
         if filename then
-            filename_wg = TextBoxWidget:new{
+            filename_wg = TextBoxWidget:new {
                 text = filename,
                 lang = self.book_lang, -- might as well use it for filename
-                face = Font:getFace("cfont", math.max(self.filename_font_max - sizedec, self.filename_font_min)),
+                face = Font:getFace(ptutil.good_sans, math.max(self.filename_font_max - sizedec, self.filename_font_min)),
                 width = self.bottom_right_compensate and width - 2 * corner_mark_size or text_width,
                 alignment = "center",
             }
@@ -285,7 +251,7 @@ function FakeCover:init()
         if sizedec > 20 then -- break out of loop when too small
             -- but try a 2nd loop with some cleanup to strings (for filenames
             -- with no space but hyphen or underscore instead)
-            if not loop2  then
+            if not loop2 then
                 loop2 = true
                 sizedec = self.initial_sizedec -- restart from initial big size
                 if G_reader_settings:nilOrTrue("use_xtext") then
@@ -313,19 +279,19 @@ function FakeCover:init()
         end
     end
 
-    local vgroup = VerticalGroup:new{}
+    local vgroup = VerticalGroup:new {}
     if authors then
-        table.insert(vgroup, VerticalSpan:new{ width = self.top_pad })
+        table.insert(vgroup, VerticalSpan:new { width = self.top_pad })
         table.insert(vgroup, authors_wg)
     end
-    table.insert(vgroup, VerticalSpan:new{ width = inter_pad })
+    table.insert(vgroup, VerticalSpan:new { width = inter_pad })
     if title then
         table.insert(vgroup, title_wg)
     end
-    table.insert(vgroup, VerticalSpan:new{ width = inter_pad })
+    table.insert(vgroup, VerticalSpan:new { width = inter_pad })
     if filename then
         table.insert(vgroup, filename_wg)
-        table.insert(vgroup, VerticalSpan:new{ width = self.bottom_pad })
+        table.insert(vgroup, VerticalSpan:new { width = self.bottom_pad })
     end
 
     if self.file_deleted then
@@ -334,8 +300,8 @@ function FakeCover:init()
     end
 
     -- As we are a FrameContainer, a border will be painted around self[1]
-    self[1] = CenterContainer:new{
-        dimen = Geom:new{
+    self[1] = CenterContainer:new {
+        dimen = Geom:new {
             w = width,
             h = height,
         },
@@ -343,9 +309,8 @@ function FakeCover:init()
     }
 end
 
-
 -- Based on menu.lua's MenuItem
-local MosaicMenuItem = InputContainer:extend{
+local MosaicMenuItem = InputContainer:extend {
     entry = nil, -- table, mandatory
     text = nil,
     show_parent = nil,
@@ -358,6 +323,7 @@ local MosaicMenuItem = InputContainer:extend{
     bookinfo_found = false,
     cover_specs = nil,
     has_description = false,
+    pages = nil,
 }
 
 function MosaicMenuItem:init()
@@ -365,37 +331,19 @@ function MosaicMenuItem:init()
     -- store it as attribute so we can use it elsewhere
     self.filepath = self.entry.file or self.entry.path
 
-    -- As done in MenuItem
-    -- Squared letter for keyboard navigation
-    if self.shortcut then
-        local icon_width = math.floor(self.dimen.h*1/5)
-        local shortcut_icon_dimen = Geom:new{
-            x = 0, y = 0,
-            w = icon_width,
-            h = icon_width,
-        }
-        -- To keep a simpler widget structure, this shortcut icon will not
-        -- be part of it, but will be painted over the widget in our paintTo
-        self.shortcut_icon = ItemShortCutIcon:new{
-            dimen = shortcut_icon_dimen,
-            key = self.shortcut,
-            style = self.shortcut_style,
-        }
-    end
-
     self.percent_finished = nil
     self.status = nil
 
     -- we need this table per-instance, so we declare it here
     self.ges_events = {
         TapSelect = {
-            GestureRange:new{
+            GestureRange:new {
                 ges = "tap",
                 range = self.dimen,
             },
         },
         HoldSelect = {
-            GestureRange:new{
+            GestureRange:new {
                 ges = "hold",
                 range = self.dimen,
             },
@@ -408,16 +356,13 @@ function MosaicMenuItem:init()
     -- for compatibility with keyboard navigation
     -- (which does not seem to work well when multiple pages,
     -- even with classic menu)
-    self.underline_h = 0 -- smaller than default (3), don't waste space
-    self._underline_container = UnderlineContainer:new{
+    self._underline_container = UnderlineContainer:new {
         vertical_align = "top",
+        bordersize = 0,
         padding = 0,
-        dimen = Geom:new{
-            x = 0, y = 0,
-            w = self.width,
-            h = self.height,
-        },
-        linesize = self.underline_h,
+        margin = 0,
+        linesize = Screen:scaleBySize(3),
+        background = Blitbuffer.COLOR_WHITE,
         -- widget : will be filled in self:update()
     }
     self[1] = self._underline_container
@@ -433,17 +378,15 @@ function MosaicMenuItem:update()
     -- a known file with image / without image, or a not yet known file
     local widget
 
-    local dimen = Geom:new{
+    local dimen = Geom:new {
         w = self.width,
         h = self.height,
     }
 
-    -- We'll draw a border around cover images, it may not be
-    -- needed with some covers, but it's nicer when cover is
-    -- a pure white background (like rendered text page)
+    -- Set up thin border for around all types of cover images
     local border_size = Size.border.thin
-    local max_img_w = dimen.w - 2*border_size
-    local max_img_h = dimen.h - 2*border_size
+    local max_img_w = dimen.w - 2 * border_size
+    local max_img_h = dimen.h - 2 * border_size
     local cover_specs = {
         max_cover_w = max_img_w,
         max_cover_h = max_img_h,
@@ -456,72 +399,208 @@ function MosaicMenuItem:update()
         self.menu.cover_specs = false
     end
 
+    -- test to see what style to draw (pathchooser vs one of our fancy modes)
+    is_pathchooser = ptutil.isPathChooser(self)
+
     self.is_directory = not (self.entry.is_file or self.entry.file)
     if self.is_directory then
-        -- Directory : rounded corners
-        local margin = Screen:scaleBySize(5) -- make directories less wide
-        local padding = Screen:scaleBySize(5)
-        border_size = Size.border.thick -- make directories' borders larger
-        local dimen_in = Geom:new{
-            w = dimen.w - (margin + padding + border_size)*2,
-            h = dimen.h - (margin + padding + border_size)*2
-        }
-        local text = self.text
-        if text:match('/$') then -- remove /, more readable
-            text = text:sub(1, -2)
+        local directory_string = self.text
+        if directory_string:match('/$') then
+            directory_string = directory_string:sub(1, -2)
         end
-        text = BD.directory(text)
-        local nbitems = TextBoxWidget:new{
-            text = self.mandatory,
-            face = Font:getFace("infont", 15),
-            width = dimen_in.w,
-            alignment = "center",
-        }
-        -- The directory name will be centered, with nbitems at bottom.
-        -- We could use 2*nbitems:getSize().h to keep that centering,
-        -- but using 3* will avoid getting the directory name stuck
-        -- to nbitems.
-        local available_height = dimen_in.h - 3 * nbitems:getSize().h
-        local dir_font_size = 20
-        local directory
-        while true do
-            if directory then
-                directory:free(true)
+        directory_string = BD.directory(directory_string)
+        local nbitems_string = self.mandatory or ""
+        if nbitems_string:match('^☆ ') then
+            nbitems_string = nbitems_string:sub(5)
+        end
+        if is_pathchooser == false then
+            local subfolder_cover_image
+            -- check for folder image
+            subfolder_cover_image = ptutil.getFolderCover(self.filepath, dimen.w, dimen.h)
+            -- check for books with covers in the subfolder
+            if subfolder_cover_image == nil and not BookInfoManager:getSetting("disable_auto_foldercovers") then
+                subfolder_cover_image = ptutil.getSubfolderCoverImages(self.filepath, max_img_w, max_img_h)
             end
-            directory = TextBoxWidget:new{
-                text = text,
-                face = Font:getFace("cfont", dir_font_size),
+            -- use stock folder icon
+            if subfolder_cover_image == nil then
+                local stock_image = sourcedir .. "/resources/folder.svg"
+                local _, _, scale_factor = BookInfoManager.getCachedCoverSize(250, 500, max_img_w * 1.1, max_img_h * 1.1)
+                subfolder_cover_image = FrameContainer:new {
+                    width = dimen.w,
+                    height = dimen.h,
+                    margin = 0,
+                    padding = 0,
+                    color = Blitbuffer.COLOR_WHITE,
+                    bordersize = 0,
+                    dim = self.file_deleted,
+                    ImageWidget:new({
+                        file = stock_image,
+                        alpha = true,
+                        scale_factor = scale_factor,
+                        width = max_img_w,
+                        height = max_img_h,
+                        original_in_nightmode = false,
+                    }),
+                }
+            end
+
+            -- build final widget with whatever we assembled from above
+            local dir_font_size = 22
+            local directory_text = TextWidget:new {
+                text = " " .. directory_string .. " ",
+                face = Font:getFace(ptutil.good_serif, dir_font_size),
+                max_width = dimen.w,
+                alignment = "center",
+                padding = 0,
+            }
+            local directory_frame = UnderlineContainer:new {
+                linesize = Screen:scaleBySize(1),
+                color = Blitbuffer.COLOR_BLACK,
+                bordersize = 0,
+                padding = 0,
+                margin = 0,
+                HorizontalGroup:new {
+                    directory_text,
+                    LineWidget:new {
+                        dimen = Geom:new { w = Screen:scaleBySize(1), h = directory_text:getSize().h, },
+                        background = Blitbuffer.COLOR_BLACK,
+                    },
+                },
+            }
+            local directory = AlphaContainer:new {
+                alpha = alpha_level,
+                directory_frame,
+            }
+
+            -- use non-alpha styling when focus indicator is involved
+            if not Device:isTouchDevice() or BookInfoManager:getSetting("force_focus_indicator") then
+                directory = FrameContainer:new {
+                    bordersize = 0,
+                    padding = 0,
+                    margin = 0,
+                    background = Blitbuffer.COLOR_WHITE,
+                    directory_frame,
+                }
+            end
+
+            local nbitems_text = TextWidget:new {
+                text = " " .. nbitems_string .. " ",
+                face = Font:getFace("infont", 15),
+                max_width = dimen.w,
+                alignment = "center",
+                padding = Size.padding.tiny,
+            }
+            local nbitems_frame = UnderlineContainer:new {
+                linesize = Screen:scaleBySize(1),
+                color = Blitbuffer.COLOR_BLACK,
+                bordersize = 0,
+                padding = 0,
+                margin = 0,
+                HorizontalGroup:new {
+                    nbitems_text,
+                    LineWidget:new {
+                        dimen = Geom:new { w = Screen:scaleBySize(1), h = directory_text:getSize().h, },
+                        background = Blitbuffer.COLOR_BLACK,
+                    },
+                },
+            }
+            local nbitems_frame_container = AlphaContainer:new {
+                alpha = alpha_level,
+                nbitems_frame,
+            }
+
+            -- use non-alpha styling when focus indicator is involved
+            if not Device:isTouchDevice() or BookInfoManager:getSetting("force_focus_indicator") then
+                nbitems_frame_container = FrameContainer:new {
+                    bordersize = 0,
+                    padding = 0,
+                    margin = 0,
+                    background = Blitbuffer.COLOR_WHITE,
+                    nbitems_frame,
+                }
+            end
+
+            local nbitems = HorizontalGroup:new {
+                dimen = dimen,
+                HorizontalSpan:new {
+                    width = dimen.w - nbitems_frame:getSize().w - Size.padding.small
+                },
+                nbitems_frame_container
+            }
+
+            local widget_parts = OverlapGroup:new {
+                dimen = dimen,
+                CenterContainer:new { dimen = dimen, subfolder_cover_image },
+            }
+            if BookInfoManager:getSetting("show_name_grid_folders") then
+                table.insert(widget_parts, TopContainer:new { dimen = dimen, directory })
+                table.insert(widget_parts, BottomContainer:new { dimen = dimen, nbitems })
+            end
+            widget = FrameContainer:new {
+                width = dimen.w,
+                height = dimen.h,
+                margin = 0,
+                padding = 0,
+                bordersize = 0,
+                radius = nil,
+                widget_parts,
+            }
+        else -- pathchooser gets a plain style
+            local margin = Screen:scaleBySize(5) -- make directories less wide
+            local padding = Screen:scaleBySize(5)
+            border_size = Size.border.thick      -- make directories' borders larger
+            local dimen_in = Geom:new {
+                w = dimen.w - (margin + padding + border_size) * 2,
+                h = dimen.h - (margin + padding + border_size) * 2
+            }
+            local nbitems = TextBoxWidget:new {
+                text = nbitems_string,
+                face = Font:getFace("infont", 15),
                 width = dimen_in.w,
                 alignment = "center",
-                bold = true,
             }
-            if directory:getSize().h <= available_height then
-                break
+            local available_height = dimen_in.h - 3 * nbitems:getSize().h
+            local dir_font_size = 20
+            local directory
+            while true do
+                if directory then
+                    directory:free(true)
+                end
+                directory = TextBoxWidget:new {
+                    text = directory_string,
+                    face = Font:getFace("cfont", dir_font_size),
+                    width = dimen_in.w,
+                    alignment = "center",
+                    bold = true,
+                }
+                if directory:getSize().h <= available_height then
+                    break
+                end
+                dir_font_size = dir_font_size - 1
+                if dir_font_size < 10 then -- don't go too low
+                    directory:free()
+                    directory.height = available_height
+                    directory.height_adjust = true
+                    directory.height_overflow_show_ellipsis = true
+                    directory:init()
+                    break
+                end
             end
-            dir_font_size = dir_font_size - 1
-            if dir_font_size < 10 then -- don't go too low
-                directory:free()
-                directory.height = available_height
-                directory.height_adjust = true
-                directory.height_overflow_show_ellipsis = true
-                directory:init()
-                break
-            end
+            widget = FrameContainer:new {
+                width = dimen.w,
+                height = dimen.h,
+                margin = margin,
+                padding = padding,
+                bordersize = border_size,
+                radius = Screen:scaleBySize(10),
+                OverlapGroup:new {
+                    dimen = dimen_in,
+                    CenterContainer:new { dimen = dimen_in, directory },
+                    BottomContainer:new { dimen = dimen_in, nbitems },
+                },
+            }
         end
-        widget = FrameContainer:new{
-            width = dimen.w,
-            height = dimen.h,
-            margin = margin,
-            padding = padding,
-            bordersize = border_size,
-            radius = Screen:scaleBySize(10),
-            OverlapGroup:new{
-                dimen = dimen_in,
-                CenterContainer:new{ dimen = dimen_in, directory},
-                BottomContainer:new{ dimen = dimen_in, nbitems},
-            },
-        }
-    else -- file
+    else                                   -- file
         self.file_deleted = self.entry.dim -- entry with deleted file from History or selected file from FM
 
         if self.do_hint_opened and DocSettings:hasSidecarFile(self.filepath) then
@@ -534,7 +613,7 @@ function MosaicMenuItem:update()
             if bookinfo.cover_fetched then
                 if bookinfo.has_cover and not self.menu.no_refresh_covers then
                     --if BookInfoManager.isCachedCoverInvalid(bookinfo, cover_specs) then
-                        -- skip this. we're storing a single thumbnail res and that's it.
+                    -- skip this. we're storing a single thumbnail res and that's it.
                     --end
                 end
                 -- if not has_cover, book has no cover, no need to try again
@@ -545,7 +624,9 @@ function MosaicMenuItem:update()
             end
         end
 
-        if bookinfo then -- This book is known
+        local book_info = self.menu.getBookInfo(self.filepath)
+        self.been_opened = book_info.been_opened
+        if bookinfo and is_pathchooser == false then -- This book is known
             -- Current page / pages are available or more accurate in .sdr/metadata.lua
             -- We use a cache (cleaned at end of this browsing session) to store
             -- page, percent read and book status from sidecar files, to avoid
@@ -555,17 +636,12 @@ function MosaicMenuItem:update()
             if not self.menu.cover_info_cache then
                 self.menu.cover_info_cache = {}
             end
-            local percent_finished, status
-            if DocSettings:hasSidecarFile(self.filepath) then
-                self.been_opened = true
-                self.menu:updateCache(self.filepath, nil, true, bookinfo.pages) -- create new cache entry if absent
-                dummy, percent_finished, status =
-                    unpack(self.menu.cover_info_cache[self.filepath], 1, self.menu.cover_info_cache[self.filepath].n)
-            end
-            self.percent_finished = percent_finished
-            self.status = status
-            self.show_progress_bar = self.status ~= "complete" and BookInfoManager:getSetting("show_progress_in_mosaic") and self.percent_finished
 
+            local percent_finished = book_info.percent_finished
+            self.percent_finished = percent_finished
+            local status = book_info.status
+            self.status = status
+            self.pages, self.show_progress_bar = ptutil.showProgressBar(bookinfo.pages)
             local cover_bb_used = false
             self.bookinfo_found = true
             -- For wikipedia saved as epub, we made a cover from the 1st pic of the page,
@@ -577,23 +653,31 @@ function MosaicMenuItem:update()
             if self.do_cover_image and bookinfo.has_cover and not bookinfo.ignore_cover then
                 cover_bb_used = true
                 -- Let ImageWidget do the scaling and give us a bb that fit
-                local _, _, scale_factor = BookInfoManager.getCachedCoverSize(bookinfo.cover_w, bookinfo.cover_h, max_img_w, max_img_h)
-                local image= ImageWidget:new{
+                local border_total = Size.border.thin * 2
+                local _, _, scale_factor = BookInfoManager.getCachedCoverSize(bookinfo.cover_w, bookinfo.cover_h,
+                    max_img_w - border_total, max_img_h - border_total)
+                local image = ImageWidget:new {
                     image = bookinfo.cover_bb,
                     scale_factor = scale_factor,
                 }
                 image:_render()
                 local image_size = image:getSize()
-                widget = CenterContainer:new{
+                local frame_radius = 0
+                local frame_color = Blitbuffer.COLOR_GRAY_3
+                if self.show_progress_bar then
+                    frame_radius = Size.radius.default
+                end
+                widget = CenterContainer:new {
                     dimen = dimen,
-                    FrameContainer:new{
-                        width = image_size.w,
-                        height = image_size.h,
+                    FrameContainer:new {
+                        width = image_size.w + border_total,
+                        height = image_size.h + border_total,
                         margin = 0,
                         padding = 0,
-                        bordersize = 0,
+                        radius = frame_radius,
+                        bordersize = Size.border.thin,
                         dim = self.file_deleted,
-                        color = self.file_deleted and Blitbuffer.COLOR_DARK_GRAY or nil,
+                        color = frame_color,
                         image,
                     }
                 }
@@ -626,11 +710,11 @@ function MosaicMenuItem:update()
                 elseif self.show_progress_bar then
                     bottom_pad = corner_mark_size - Screen:scaleBySize(2)
                 end
-                widget = CenterContainer:new{
+                widget = CenterContainer:new {
                     dimen = dimen,
-                    FakeCover:new{
+                    FakeCover:new {
                         -- reduced width to make it look less squared, more like a book
-                        width = math.floor(dimen.w * 7/8),
+                        width = math.floor(dimen.w * 7 / 8),
                         height = dimen.h,
                         bordersize = border_size,
                         filename = self.text,
@@ -653,7 +737,7 @@ function MosaicMenuItem:update()
             if bookinfo.description then
                 self.has_description = true
             end
-        else -- bookinfo not found
+        elseif is_pathchooser == false then -- bookinfo not found
             if self.init_done then
                 -- Non-initial update(), but our widget is still not found:
                 -- it does not need to change, so avoid making the same FakeCover
@@ -671,14 +755,28 @@ function MosaicMenuItem:update()
             if self.file_deleted then -- unless file was deleted (can happen with History)
                 hint = _("(deleted)")
             end
-            widget = CenterContainer:new{
+            widget = CenterContainer:new {
                 dimen = dimen,
-                FakeCover:new{
+                FakeCover:new {
                     width = dimen.w,
                     height = dimen.h,
                     bordersize = border_size,
                     filename = self.text,
                     filename_add = "\n" .. hint,
+                    initial_sizedec = 4, -- start with a smaller font when filenames only
+                    file_deleted = self.file_deleted,
+                }
+            }
+        else -- we're in pathchooser mode
+            local filesize = self.mandatory or ""
+            widget = CenterContainer:new {
+                dimen = dimen,
+                FakeCover:new {
+                    width = dimen.w,
+                    height = dimen.h,
+                    bordersize = border_size,
+                    filename = self.text,
+                    filename_add = "\n" .. filesize,
                     initial_sizedec = 4, -- start with a smaller font when filenames only
                     file_deleted = self.file_deleted,
                 }
@@ -701,78 +799,223 @@ function MosaicMenuItem:paintTo(bb, x, y)
     -- Fixed by having TextWidget:updateSize() math.ceil()'ing its length and height
     -- But let us know if that happens again
     if x ~= math.floor(x) or y ~= math.floor(y) then
-        logger.err("MosaicMenuItem:paintTo() got non-integer x/y :", x, y)
+        logger.err(ptdbg.logprefix, "MosaicMenuItem:paintTo() got non-integer x/y :", x, y)
     end
 
     -- Original painting
     InputContainer.paintTo(self, bb, x, y)
 
-    -- to which we paint over the shortcut icon
-    if self.shortcut_icon then
-        -- align it on top left corner of widget
-        local target = self
-        local ix
-        if BD.mirroredUILayout() then
-            ix = target.dimen.w - self.shortcut_icon.dimen.w
-        else
-            ix = 0
-        end
-        local iy = 0
-        self.shortcut_icon:paintTo(bb, x+ix, y+iy)
-    end
-
     -- other paintings are anchored to the sub-widget (cover image)
-    local target =  self[1][1][1]
+    local target = self[1][1][1]
 
-    if self.do_hint_opened and self.been_opened then
-        -- bottom right corner
-        local ix
-        if BD.mirroredUILayout() then
-            ix = math.floor((self.width - target.dimen.w)/2)
-        else
-            ix = self.width - math.ceil((self.width - target.dimen.w)/2) - corner_mark_size
-        end
-        local iy = self.height - math.ceil((self.height - target.dimen.h)/2) - corner_mark_size
-        -- math.ceil() makes it looks better than math.floor()
-        if self.status == "abandoned" then
-            corner_mark = abandoned_mark
-        elseif self.status == "complete" then
+    if self.do_hint_opened and self.been_opened and is_pathchooser == false then
+        if self.status == "complete" and not self.show_progress_bar then
             corner_mark = complete_mark
-        else
-            corner_mark = reading_mark
+            local corner_mark_margin = math.floor((corner_mark_size - corner_mark:getSize().h) / 2)
+            local ix = x
+            local iy = y + self.height - math.ceil((self.height - target.height) / 2) - corner_mark_size + corner_mark_margin - (corner_mark:getSize().h / 3)
+            corner_mark:paintTo(bb, ix, iy)
+        elseif self.status == "abandoned" and not self.show_progress_bar then
+            corner_mark = abandoned_mark
+            local corner_mark_margin = math.floor((corner_mark_size - corner_mark:getSize().h) / 2)
+            local ix = x
+            local iy = y + self.height - math.ceil((self.height - target.height) / 2) - corner_mark_size + corner_mark_margin - (corner_mark:getSize().h / 3)
+            corner_mark:paintTo(bb, ix, iy)
         end
-        corner_mark:paintTo(bb, x+ix, y+iy)
     end
 
-    if self.show_progress_bar then
-        local progress_widget_margin = math.floor((corner_mark_size - progress_widget.height) / 2)
-        progress_widget.width = target.width - 2*progress_widget_margin
-        local pos_x = x + math.ceil((self.width - progress_widget.width) / 2)
-        if self.do_hint_opened then
-            progress_widget.width = progress_widget.width - corner_mark_size
-            if BD.mirroredUILayout() then
-                pos_x = pos_x + corner_mark_size
+    self.is_directory = not (self.entry.is_file or self.entry.file)
+
+    local bookinfo = BookInfoManager:getBookInfo(self.filepath, false)
+    if bookinfo and self.init_done then
+        local series_mode = BookInfoManager:getSetting("series_mode")
+        -- suppress showing series if index is "0"
+        local show_series = bookinfo.series and bookinfo.series_index and bookinfo.series_index ~= 0
+        if series_mode == "series_in_separate_line" and show_series and is_pathchooser == false then
+            local series_index = " " .. bookinfo.series_index .. " "
+            if string.len(series_index) == 3 then series_index = " " .. series_index .. " " end
+            local series_widget_radius = 0
+            local series_widget_background = Blitbuffer.COLOR_WHITE
+            local xmult = 0.80
+            if self.show_progress_bar then
+                -- xmult = 1.25
+                series_widget_radius = Size.radius.default
+                -- series_widget_background = Blitbuffer.COLOR_GRAY_E
+            end
+            local series_widget_text = TextWidget:new {
+                text = series_index,
+                face = Font:getFace(ptutil.good_serif, 14),
+                alignment = "left",
+                padding = 0,
+            }
+            local series_widget = FrameContainer:new {
+                linesize = Screen:scaleBySize(1),
+                radius = series_widget_radius,
+                color = Blitbuffer.COLOR_BLACK,
+                bordersize = Size.line.thin,
+                background = series_widget_background,
+                padding = 0,
+                margin = 0,
+                series_widget_text,
+            }
+            local pos_x = x + self.width / 2 + target.width / 2 - series_widget:getSize().w * xmult
+            local pos_y = y + series_widget:getSize().w * 0.33
+            series_widget:paintTo(bb, pos_x, pos_y)
+        end
+
+        if self.show_progress_bar and is_pathchooser == false and not self.is_directory then
+            local progress_widget_width_mult = 1.0
+            local est_page_count = self.pages or nil
+            local large_book = false
+            if est_page_count then
+                local fn_pages = tonumber(est_page_count)
+                local max_progress_size = 235
+                local pixels_per_page = 3
+                local min_progress_size = 40
+                local total_pixels = math.max(
+                (math.min(math.floor((fn_pages / pixels_per_page) + 0.5), max_progress_size)), min_progress_size)
+                progress_widget_width_mult = total_pixels / max_progress_size
+                if fn_pages > (max_progress_size * pixels_per_page) then large_book = true end
+            end
+            local progress_widget_margin = math.floor((corner_mark_size - progress_widget.height) / 4)
+            progress_widget.width = self.width * progress_widget_width_mult
+            local percent_done = self.percent_finished or 0
+            progress_widget:setPercentage(percent_done)
+            if self.status == "complete" then progress_widget:setPercentage(1) end
+            local pos_x = x
+            local pos_y = y + self.height - math.ceil((self.height - target.height) / 2) - corner_mark_size +
+            progress_widget_margin
+            progress_widget:paintTo(bb, pos_x, pos_y)
+            local status_widget = nil
+            local status_icon_size = Screen:scaleBySize(17)
+            if self.status == "complete" then
+                status_widget = FrameContainer:new {
+                    radius = Size.radius.default,
+                    bordersize = Size.border.thin,
+                    padding = Size.padding.small,
+                    margin = 0,
+                    background = Blitbuffer.COLOR_WHITE,
+                    ImageWidget:new {
+                        file = sourcedir .. "/resources/trophy.svg",
+                        alpha = true,
+                        width = status_icon_size - (Size.border.thin * 2) - Size.padding.small,
+                        height = status_icon_size - (Size.border.thin * 2) - Size.padding.small,
+                        scale_factor = 0,
+                        original_in_nightmode = false,
+                    }
+                }
+            elseif self.status == "abandoned" then
+                status_widget = FrameContainer:new {
+                    radius = Size.radius.default,
+                    bordersize = Size.border.thin,
+                    padding = Size.padding.small,
+                    margin = 0,
+                    background = Blitbuffer.COLOR_WHITE,
+                    ImageWidget:new {
+                        file = sourcedir .. "/resources/pause.svg",
+                        alpha = true,
+                        width = status_icon_size - (Size.border.thin * 2) - Size.padding.small,
+                        height = status_icon_size - (Size.border.thin * 2) - Size.padding.small,
+                        scale_factor = 0,
+                        original_in_nightmode = false,
+                    }
+                }
+            elseif not bookinfo._no_provider and percent_done == 0 then
+                local unopened_widget = ImageWidget:new {
+                    file = sourcedir .. "/resources/new.svg",
+                    alpha = true,
+                    width = Screen:scaleBySize(8),
+                    height = Screen:scaleBySize(8),
+                    scale_factor = 0,
+                    original_in_nightmode = false,
+                }
+                unopened_widget:paintTo(bb,
+                    (pos_x + (progress_widget:getSize().w - (unopened_widget:getSize().w * 0.625))),
+                    (pos_y - ((progress_widget:getSize().h / 2) - (unopened_widget:getSize().w * 0.50)))
+                )
+            end
+            if status_widget ~= nil then
+                local inset_mult = 1.25
+                if (progress_widget:getSize().w / status_widget:getSize().w) < 2 then inset_mult = 0.1 end
+                status_widget:paintTo(bb,
+                    (pos_x + progress_widget:getSize().w - (status_widget:getSize().w * inset_mult)),
+                    (pos_y - progress_widget:getSize().h / 2)
+                )
+            end
+            if large_book then
+                local large_book_icon_size = Screen:scaleBySize(19)
+                local max_widget = ImageWidget:new({
+                    file = sourcedir .. "/resources/large_book.svg",
+                    width = large_book_icon_size,
+                    height = large_book_icon_size,
+                    scale_factor = 0,
+                    alpha = true,
+                    original_in_nightmode = false,
+                })
+                max_widget:paintTo(bb,
+                    (pos_x - large_book_icon_size / 2),
+                    (pos_y - progress_widget:getSize().h / 3)
+                )
+            end
+        elseif not self.is_directory and is_pathchooser == false then
+            local progresstxt = nil
+            if not BookInfoManager:getSetting("hide_file_info") then
+                progresstxt = (" " .. self.mandatory .. " ") or " ??? "
+            elseif self.status ~= "complete" and self.status ~= "abandoned" and self.percent_finished ~= nil then
+                progresstxt = " " .. math.floor(100 * self.percent_finished) .. "% "
+                if BookInfoManager:getSetting("show_pages_read_as_progress") then
+                    local book_info = self.menu.getBookInfo(self.filepath)
+                    local pages = book_info.pages or bookinfo.pages or nil -- default to those in bookinfo db
+                    if pages ~= nil then
+                        progresstxt = T(("%1/%2 "), Math.round(self.percent_finished * pages), pages)
+                    end
+                end
+            end
+            if progresstxt ~= nil then
+                local txtprogress_widget_text = TextWidget:new {
+                    text = progresstxt,
+                    face = Font:getFace(ptutil.good_sans, 15),
+                    alignment = "center",
+                    padding = Size.padding.tiny,
+                }
+                local txtprogress_padding = math.max(0, ((self.width * tag_width) - txtprogress_widget_text:getSize().w))
+                local txtprogress_widget_frame = UnderlineContainer:new {
+                    linesize = Screen:scaleBySize(1),
+                    color = Blitbuffer.COLOR_BLACK,
+                    bordersize = 0,
+                    padding = 0,
+                    margin = 0,
+                    HorizontalGroup:new {
+                        HorizontalSpan:new { width = txtprogress_padding },
+                        txtprogress_widget_text,
+                        LineWidget:new {
+                            dimen = Geom:new { w = Screen:scaleBySize(1), h = txtprogress_widget_text:getSize().h, },
+                            background = Blitbuffer.COLOR_BLACK,
+                        },
+                    }
+                }
+                local txtprogress_widget = AlphaContainer:new {
+                    alpha = 1.0,
+                    txtprogress_widget_frame,
+                }
+                local progress_widget_margin = math.floor((corner_mark_size - txtprogress_widget:getSize().h) / 2)
+                local pos_x = x
+                local pos_y = y + self.height - math.ceil((self.height - target.height) / 2) - corner_mark_size +
+                    progress_widget_margin - (txtprogress_widget:getSize().h / 3)
+                txtprogress_widget:paintTo(bb, pos_x, pos_y)
             end
         end
-        local pos_y = y + self.height - math.ceil((self.height - target.height) / 2) - corner_mark_size + progress_widget_margin
-        if self.status == "abandoned" then
-            progress_widget.fillcolor = Blitbuffer.COLOR_GRAY_6
-        else
-            progress_widget.fillcolor = Blitbuffer.COLOR_BLACK
-        end
-        progress_widget:setPercentage(self.percent_finished)
-        progress_widget:paintTo(bb, pos_x, pos_y)
     end
 end
 
 -- As done in MenuItem
 function MosaicMenuItem:onFocus()
-    -- self._underline_container.color = Blitbuffer.COLOR_BLACK
+    ptutil.onFocus(self._underline_container)
     return true
 end
 
 function MosaicMenuItem:onUnfocus()
-    -- self._underline_container.color = Blitbuffer.COLOR_WHITE
+    ptutil.onUnfocus(self._underline_container)
     return true
 end
 
@@ -781,7 +1024,6 @@ end
 -- so let's not do it
 -- Also, no need for 2nd arg 'pos' (only used in readertoc.lua)
 function MosaicMenuItem:onTapSelect(arg)
-    -- logger.info("MosaicMenuItem:onTapSelect(arg): ", tostring(arg))
     self.menu:onMenuSelect(self.entry)
     return true
 end
@@ -790,7 +1032,6 @@ function MosaicMenuItem:onHoldSelect(arg, ges)
     self.menu:onMenuHold(self.entry)
     return true
 end
-
 
 -- Simple holder of methods that will replace those
 -- in the real Menu class or instance
@@ -810,6 +1051,9 @@ function MosaicMenu:_recalculateDimen()
     -- fix current page if out of range
     if self.page_num > 0 and self.page > self.page_num then self.page = self.page_num end
 
+    -- test to see what style to draw (pathchooser vs one of our fancy modes)
+    is_pathchooser = ptutil.isPathChooser(self)
+
     -- Find out available height from other UI elements made in Menu
     self.others_height = 0
     if self.title_bar then -- init() has been done
@@ -817,7 +1061,6 @@ function MosaicMenu:_recalculateDimen()
             self.others_height = self.others_height + 2
         end
         if not self.no_title then
-            self.others_height = self.others_height -- + self.header_padding
             self.others_height = self.others_height + self.title_bar.dimen.h
         end
         if self.page_info then
@@ -825,89 +1068,154 @@ function MosaicMenu:_recalculateDimen()
         end
     end
 
+    self.item_margin = Screen:scaleBySize(margin_size)
+    self.others_height = self.others_height + (Size.line.thin * self.nb_rows) -- lines between items
+    self.others_height = self.others_height + (self.nb_rows * self.item_margin) -- margins between rows
+    self.others_height = self.others_height + Screen:scaleBySize(3) -- bottom padding
+
     -- Set our items target size
-    self.item_margin = Screen:scaleBySize(10)
-    self.item_height = math.floor((self.inner_dimen.h - self.others_height - (1+self.nb_rows)*self.item_margin) / self.nb_rows)
-    self.item_width = math.floor((self.inner_dimen.w - (1+self.nb_cols)*self.item_margin) / self.nb_cols)
-    self.item_dimen = Geom:new{
+    self.item_height = math.floor(
+        (self.inner_dimen.h - self.others_height)
+        / self.nb_rows)
+    self.item_width = math.floor(
+        (self.inner_dimen.w - ((self.nb_cols + 1) * self.item_margin))
+        / self.nb_cols)
+    self.item_dimen = Geom:new {
         x = 0, y = 0,
         w = self.item_width,
         h = self.item_height
     }
 
-    -- Create or replace corner_mark if needed
-    -- 1/12 (larger) or 1/16 (smaller) of cover looks allright
-    local mark_size = math.floor(math.min(self.item_width, self.item_height) / 8)
-    if mark_size ~= corner_mark_size then
-        corner_mark_size = mark_size
-        if corner_mark then
-            reading_mark:free()
-            abandoned_mark:free()
-            complete_mark:free()
-        end
-        reading_mark = IconWidget:new{
-            icon = "dogear.reading",
-            rotation_angle = BD.mirroredUILayout() and 270 or 0,
-            width = corner_mark_size,
-            height = corner_mark_size,
-        }
-        abandoned_mark = IconWidget:new{
-            icon = BD.mirroredUILayout() and "dogear.abandoned.rtl" or "dogear.abandoned",
-            width = corner_mark_size,
-            height = corner_mark_size,
-        }
-        complete_mark = IconWidget:new{
-            icon = BD.mirroredUILayout() and "dogear.complete.rtl" or "dogear.complete",
+    -- Create or replace corner_mark
+    local mark_image_size = 21
+    if self.show_progress_bar then
+        mark_image_size = mark_image_size - (Size.border.thin * 2) - Size.padding.small
+    else
+        mark_image_size = mark_image_size - Size.padding.tiny
+    end
+    corner_mark_size = Screen:scaleBySize(mark_image_size)
+
+    if corner_mark then
+        complete_mark:free()
+        abandoned_mark:free()
+    end
+    local complete_mark_image = FrameContainer:new {
+        bordersize = 0,
+        padding = Size.padding.small,
+        margin = 0,
+        background = Blitbuffer.COLOR_WHITE,
+        ImageWidget:new {
+            file = sourcedir .. "/resources/trophy.svg",
             alpha = true,
             width = corner_mark_size,
             height = corner_mark_size,
+            scale_factor = 0,
+            original_in_nightmode = false,
         }
-    end
+    }
+    local complete_mark_frame = UnderlineContainer:new {
+        linesize = Screen:scaleBySize(1),
+        color = Blitbuffer.COLOR_BLACK,
+        background = Blitbuffer.COLOR_WHITE,
+        bordersize = 0,
+        padding = 0,
+        margin = 0,
+        HorizontalGroup:new {
+            HorizontalSpan:new { width = ((self.item_width * tag_width) - complete_mark_image:getSize().w) },
+            complete_mark_image,
+            LineWidget:new {
+                dimen = Geom:new { w = Screen:scaleBySize(1), h = complete_mark_image:getSize().h, },
+                background = Blitbuffer.COLOR_BLACK,
+            },
+        }
+    }
+    complete_mark = AlphaContainer:new {
+        alpha = 1.0,
+        complete_mark_frame,
+    }
 
-    -- Create or replace progress_widget if needed
-    local progress_bar_width =  self.item_width * 0.60;
-    if not progress_widget or progress_widget.width ~= progress_bar_width then
-        progress_widget = ProgressWidget:new{
-            bgcolor = Blitbuffer.COLOR_WHITE,
-            fillcolor = Blitbuffer.COLOR_BLACK,
+    local abandoned_mark_image = FrameContainer:new {
+        bordersize = 0,
+        padding = Size.padding.small,
+        margin = 0,
+        background = Blitbuffer.COLOR_WHITE,
+        ImageWidget:new {
+            file = sourcedir .. "/resources/pause.svg",
+            alpha = true,
+            width = corner_mark_size,
+            height = corner_mark_size,
+            scale_factor = 0,
+            original_in_nightmode = false,
+        }
+    }
+    local abandoned_mark_frame = UnderlineContainer:new {
+        linesize = Screen:scaleBySize(1),
+        color = Blitbuffer.COLOR_BLACK,
+        background = Blitbuffer.COLOR_WHITE,
+        bordersize = 0,
+        padding = 0,
+        margin = 0,
+        HorizontalGroup:new {
+            HorizontalSpan:new { width = ((self.item_width * tag_width) - abandoned_mark_image:getSize().w) },
+            abandoned_mark_image,
+            LineWidget:new {
+                dimen = Geom:new { w = Screen:scaleBySize(1), h = abandoned_mark_image:getSize().h, },
+                background = Blitbuffer.COLOR_BLACK,
+            },
+        }
+    }
+    abandoned_mark = AlphaContainer:new {
+        alpha = 1.0,
+        abandoned_mark_frame,
+    }
+
+    -- Create progress_widget
+    if not progress_widget then
+        progress_widget = ProgressWidget:new {
+            width = self.item_width,
+            height = Screen:scaleBySize(11),
+            margin_v = 0,
+            margin_h = 0,
+            bordersize = Screen:scaleBySize(0.5),
             bordercolor = Blitbuffer.COLOR_BLACK,
-            height = Screen:scaleBySize(8),
-            margin_h = Screen:scaleBySize(1),
-            width = progress_bar_width,
-            radius = Size.border.thin,
-            bordersize = Size.border.default,
+            bgcolor = Blitbuffer.COLOR_GRAY_E,
+            fillcolor = Blitbuffer.COLOR_GRAY_6,
         }
     end
 end
 
 function MosaicMenu:_updateItemsBuildUI()
     -- Build our grid
+    local grid_timer = ptdbg:new()
+    local line_width = self.width or self.screen_w
+    table.insert(self.item_group, ptutil.darkLine(line_width))
     local cur_row = nil
     local idx_offset = (self.page - 1) * self.perpage
     local line_layout = {}
+    local select_number
+    local half_margin_size = margin_size / 2
     for idx = 1, self.perpage do
+        local itm_timer = ptdbg:new()
         local index = idx_offset + idx
         local entry = self.item_table[index]
         if entry == nil then break end
         entry.idx = index
-        -- Keyboard shortcuts, as done in Menu
-        local item_shortcut, shortcut_style
-        if self.is_enable_shortcut then
-            item_shortcut = self.item_shortcuts[idx]
-            shortcut_style = (idx < 11 or idx > 20) and "square" or "grey_square"
+        if index == self.itemnumber then -- focused item
+            select_number = idx
         end
-
         if idx % self.nb_cols == 1 then -- new row
+            table.insert(self.item_group, VerticalSpan:new { width = Screen:scaleBySize(half_margin_size) })
             if idx > 1 then
                 table.insert(self.layout, line_layout)
+                table.insert(self.item_group, ptutil.lightLine(line_width))
+                table.insert(self.item_group, VerticalSpan:new { width = Screen:scaleBySize(half_margin_size) })
             end
             line_layout = {}
-            table.insert(self.item_group, VerticalSpan:new{ width = self.item_margin })
-            cur_row = HorizontalGroup:new{}
+            cur_row = HorizontalGroup:new {}
             -- Have items on the possibly non-fully filled last row aligned to the left
             local container = self._do_center_partial_rows and CenterContainer or LeftContainer
-            table.insert(self.item_group, container:new{
-                dimen = Geom:new{
+            table.insert(self.item_group, container:new {
+                dimen = Geom:new {
                     w = self.inner_dimen.w,
                     h = self.item_height
                 },
@@ -915,21 +1223,18 @@ function MosaicMenu:_updateItemsBuildUI()
             })
             table.insert(cur_row, HorizontalSpan:new({ width = self.item_margin }))
         end
-
-        local item_tmp = MosaicMenuItem:new{
-                height = self.item_height,
-                width = self.item_width,
-                entry = entry,
-                text = getMenuText(entry),
-                show_parent = self.show_parent,
-                mandatory = entry.mandatory,
-                dimen = self.item_dimen:copy(),
-                shortcut = item_shortcut,
-                shortcut_style = shortcut_style,
-                menu = self,
-                do_cover_image = self._do_cover_images,
-                do_hint_opened = self._do_hint_opened,
-            }
+        local item_tmp = MosaicMenuItem:new {
+            height = self.item_height,
+            width = self.item_width,
+            entry = entry,
+            text = getMenuText(entry),
+            show_parent = self.show_parent,
+            mandatory = entry.mandatory,
+            dimen = self.item_dimen:copy(),
+            menu = self,
+            do_cover_image = self._do_cover_images,
+            do_hint_opened = self._do_hint_opened,
+        }
         table.insert(cur_row, item_tmp)
         table.insert(cur_row, HorizontalSpan:new({ width = self.item_margin }))
 
@@ -940,9 +1245,12 @@ function MosaicMenu:_updateItemsBuildUI()
             -- Register this item for update
             table.insert(self.items_to_update, item_tmp)
         end
+        itm_timer:report("Draw grid item " .. getMenuText(entry))
     end
     table.insert(self.layout, line_layout)
-    table.insert(self.item_group, VerticalSpan:new{ width = self.item_margin }) -- bottom padding
+    table.insert(self.item_group, VerticalSpan:new { width = Screen:scaleBySize(3) }) -- bottom padding
+    grid_timer:report("Draw cover grid page " .. self.perpage)
+    return select_number
 end
 
 return MosaicMenu

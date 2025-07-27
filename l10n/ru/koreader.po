@@ -1,0 +1,136 @@
+msgid ""
+msgstr ""
+"projecttitle/ru/>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+# covermenu.lua
+msgid "Library"
+msgstr "Библиотека"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "Папки"
+
+msgid "Book"
+msgstr "Книга"
+
+# main.lua
+msgid "Cover List"
+msgstr "Список с обложками"
+
+msgid "Cover Grid"
+msgstr "Сетка обложек"
+
+msgid "Details List"
+msgstr "Детальный список"
+
+msgid "Filenames List"
+msgstr "Список файлов"
+
+msgid "Project: Title settings"
+msgstr "Проект: Настройки заголовков"
+
+msgid "Portrait cover grid mode"
+msgstr "Портретная сетка обложек"
+
+msgid "Landscape cover grid mode"
+msgstr "Альбомная сетка обложек"
+
+msgid "List modes"
+msgstr "Режимы списка"
+
+msgid "Folder display"
+msgstr "Отображение папки"
+
+msgid "Auto-generate cover images from books"
+msgstr "Автоматически создавать обложки из книг"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Показывать название и детали на обложке"
+
+msgid "Book display"
+msgstr "Отображение книги"
+
+msgid "Show series"
+msgstr "Показывать серии"
+
+msgid "Show pages read instead of progress %"
+msgstr "Показывать прочитанные страницы вместо процентов"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Показывать информацию о файле вместо страниц или %"
+
+msgid "Always show maximum length progress bars"
+msgstr "Всегда показывать максимальную длину прогресс-бара"
+
+msgid "Use custom book status screen"
+msgstr "Использовать собственный экран статуса книги"
+
+msgid "Footer"
+msgstr "Нижняя панель"
+
+msgid "Replace folder name with device info"
+msgstr "Заменить имя папки на информацию об устройстве"
+
+msgid "Show page controls in left corner"
+msgstr "Показывать управление страницами в левом углу"
+
+msgid "Library mode"
+msgstr "Режим библиотеки"
+
+msgid "Show opened books first"
+msgstr "Показывать сначала открытые книги"
+
+msgid "Cache database"
+msgstr "Кешировать базу данных"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Автоматически искать новые книги в домашней папке"
+
+msgid "Empty cache"
+msgstr "Очистить кеш"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "Вы уверенны, что хотите удалить кеш обложек и метаданных?"
+
+msgid "Cache emptied."
+msgstr "Кеш очищен."
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"Будут извлечены метаданные и обложки из книг в текущей папке.\n"
+"После начала можно остановить процесс в любой момент, просто нажав на экран.\n"
+"\n"
+"Процесс может быть долгим и разряжать батарею — лучше держать устройство на зарядке."
+
+msgid "Found %1 books.\nLooking for new books…"
+msgstr "Найдено книг: %1.\nИщем новые…"
+
+msgid "No new books found."
+msgstr "Новых книг не найдено."
+
+msgid "Do you want to stop?"
+msgstr "Вы хотите остановить?"
+
+msgid "Continue Indexing"
+msgstr "Продолжить индексацию"
+
+msgid "Stop Indexing"
+msgstr "Остановить индексацию"
+
+msgid "Tap anywhere to stop"
+msgstr "Нажмите в любом месте, чтобы остановить"

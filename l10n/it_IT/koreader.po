@@ -1,0 +1,146 @@
+msgid ""
+msgstr ""
+"projecttitle/it/>\n"
+"Language: it_IT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+# covermenu.lua
+msgid "Library"
+msgstr "Libreria"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "Cartelle"
+
+msgid "Book"
+msgstr "Libro"
+
+# main.lua
+msgid "Project: Title"
+msgstr "Project: Title"
+
+msgid "Decrease Items Per Page"
+msgstr "Riduci elementi per pagina"
+
+msgid "Increase Items Per Page"
+msgstr "Aumenta elementi per pagina"
+
+msgid "Cover List"
+msgstr "Lista Copertine"
+
+msgid "Cover Grid"
+msgstr "Griglia Copertine"
+
+msgid "Details List"
+msgstr "Lista Dettagliata"
+
+msgid "Filenames List"
+msgstr "Lista Nomi File"
+
+msgid "Project: Title settings"
+msgstr "Impostazioni Project: Title"
+
+msgid "Portrait cover grid mode"
+msgstr "Modalità griglia copertine verticale"
+
+msgid "Landscape cover grid mode"
+msgstr "Modalità griglia copertine orizzontale"
+
+msgid "List modes"
+msgstr "Modalità lista"
+
+msgid "Folder display"
+msgstr "Visualizzazione cartelle"
+
+msgid "Auto-generate cover images from books"
+msgstr "Genera automaticamente le copertine dai libri"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Sovrapponi nome e dettagli nella griglia copertine"
+
+msgid "Book display"
+msgstr "Visualizzazione libri"
+
+msgid "Show series"
+msgstr "Mostra le serie"
+
+msgid "Show pages read instead of progress %"
+msgstr "Mostra pagine lette invece del progresso %"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Mostra progresso % al posto della barra di progresso"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Mostra info file invece di pagine o progresso %"
+
+msgid "Always show maximum length progress bars"
+msgstr "Mostra barre di avanzamento a lunghezza massima"
+
+msgid "Use custom book status screen"
+msgstr "Usa schermata personalizzata di stato libro"
+
+msgid "Footer"
+msgstr "Piè di pagina"
+
+msgid "Replace folder name with device info"
+msgstr "Sostituisci nome cartella con info dispositivo"
+
+msgid "Show page controls in left corner"
+msgstr "Mostra controlli di pagina nell'angolo sinistro"
+
+msgid "Library mode"
+msgstr "Modalità libreria"
+
+msgid "Show opened books first"
+msgstr "Mostra libri aperti per primi"
+
+msgid "Cache database"
+msgstr "Cache del database"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Scansiona automaticamente la home per nuovi libri"
+
+msgid "Empty cache"
+msgstr "Svuota cache"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "Vuoi eliminare la cache delle copertine e dei metadati?"
+
+msgid "Cache emptied."
+msgstr "Cache svuotata."
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"Questo estrarrà metadati e copertine dai libri nella directory corrente.\n"
+"Una volta iniziata l'estrazione, puoi interromperla in qualsiasi momento toccando lo schermo.\n"
+"\n"
+"L'estrazione potrebbe richiedere tempo e consumare batteria: potresti voler tenere il dispositivo collegato all'alimentazione."
+
+msgid "Found %1 books.\nLooking for new books…"
+msgstr "Trovati %1 libri.\nRicerca  nuovi libri…"
+
+msgid "No new books found."
+msgstr "Nessun nuovo libro trovato."
+
+msgid "Do you want to stop?"
+msgstr "Vuoi interrompere?"
+
+msgid "Continue Indexing"
+msgstr "Continua Indicizzazione"
+
+msgid "Stop Indexing"
+msgstr "Interrompi Indicizzazione"
+
+msgid "Tap anywhere to stop"
+msgstr "Tocca ovunque per interrompere"

@@ -15,9 +15,10 @@ local logger = require("logger")
 local util = require("util")
 local zstd = require("ffi/zstd")
 local time = require("ui/time")
-local _ = require("gettext")
+local _ = require("l10n.gettext")
 local N_ = _.ngettext
 local T = FFIUtil.template
+local ptdbg = require("ptdbg")
 
 -- Database definition
 local BOOKINFO_DB_VERSION = 20201210
@@ -76,35 +77,35 @@ local BOOKINFO_DB_SCHEMA = [[
 ]]
 
 local BOOKINFO_COLS_SET = {
-        "directory",
-        "filename",
-        "filesize",
-        "filemtime",
-        "in_progress",
-        "unsupported",
-        "cover_fetched",
-        "has_meta",
-        "has_cover",
-        "cover_sizetag",
-        "ignore_meta",
-        "ignore_cover",
-        "pages",
-        "title",
-        "authors",
-        "series",
-        "series_index",
-        "language",
-        "keywords",
-        "description",
-        "cover_w",
-        "cover_h",
-        "cover_bb_type",
-        "cover_bb_stride",
-        "cover_bb_data",
-    }
+    "directory",
+    "filename",
+    "filesize",
+    "filemtime",
+    "in_progress",
+    "unsupported",
+    "cover_fetched",
+    "has_meta",
+    "has_cover",
+    "cover_sizetag",
+    "ignore_meta",
+    "ignore_cover",
+    "pages", -- 13: start index for getDocProps()
+    "title",
+    "authors",
+    "series",
+    "series_index",
+    "language",
+    "keywords",
+    "description", -- 20: end index for getDocProps()
+    "cover_w",
+    "cover_h",
+    "cover_bb_type",
+    "cover_bb_stride",
+    "cover_bb_data",
+}
 
 local bookinfo_values_sql = {} -- for "VALUES (?, ?, ?,...)" insert sql part
-for i=1, #BOOKINFO_COLS_SET do
+for i = 1, #BOOKINFO_COLS_SET do
     table.insert(bookinfo_values_sql, "?")
 end
 
@@ -112,21 +113,22 @@ local max_cover_dimen = 600 -- tested 400, 600, and 800
 
 -- Build our most often used SQL queries according to columns
 local BOOKINFO_INSERT_SQL = "INSERT OR REPLACE INTO bookinfo " ..
-                            "(" .. table.concat(BOOKINFO_COLS_SET, ",") .. ") " ..
-                            "VALUES (" .. table.concat(bookinfo_values_sql, ",") .. ");"
+    "(" .. table.concat(BOOKINFO_COLS_SET, ",") .. ") " ..
+    "VALUES (" .. table.concat(bookinfo_values_sql, ",") .. ");"
 local BOOKINFO_SELECT_SQL = "SELECT " .. table.concat(BOOKINFO_COLS_SET, ",") .. " FROM bookinfo " ..
-                            "WHERE directory=? AND filename=? AND in_progress=0;"
-local BOOKINFO_IN_PROGRESS_SQL = "SELECT in_progress, filename, unsupported FROM bookinfo WHERE directory=? AND filename=?;"
+    "WHERE directory=? AND filename=? AND in_progress=0;"
+local BOOKINFO_IN_PROGRESS_SQL =
+"SELECT in_progress, filename, unsupported FROM bookinfo WHERE directory=? AND filename=?;"
 
 -- We need these _ litterals for them to be made available to translators. the english "string" is
 -- what is inserted in the DB, and it will be translated only when read from the DB and displayed.
 local UNSUPPORTED_REASONS = {
     not_readable_by_engine = {
-               string = "not readable by engine",
+        string = "not readable by engine",
         translation = _("not readable by engine")
     },
     too_many_interruptions_or_crashes = {
-               string = "too many interruptions or crashes",
+        string = "too many interruptions or crashes",
         translation = _("too many interruptions or crashes")
     }
 }
@@ -137,7 +139,7 @@ function BookInfoManager:init()
     self.db_location = DataStorage:getSettingsDir() .. "/PT_bookinfo_cache.sqlite3"
     self.db_created = false
     self.db_conn = nil
-    self.max_extract_tries = 3 -- don't try more than that to extract info from a same book
+    self.max_extract_tries = 3              -- don't try more than that to extract info from a same book
     self.subprocesses_collector = nil
     self.subprocesses_collect_interval = 10 -- do that every 10 seconds
     self.subprocesses_pids = {}
@@ -160,7 +162,7 @@ function BookInfoManager:getDbSize()
     if res then
         num_books = string.match(tostring(res[1][1]), "^(%d+)")
     end
-    return friendly_file_size .. "  —  " .. num_books .. " Book(s)"
+    return friendly_file_size .. "  —  " .. num_books .. " " .. _("Books")
 end
 
 function BookInfoManager:createDB()
@@ -177,8 +179,8 @@ function BookInfoManager:createDB()
     -- Check version
     local db_version = tonumber(db_conn:rowexec("PRAGMA user_version;"))
     if db_version < BOOKINFO_DB_VERSION then
-        logger.warn("BookInfo cache DB schema updated from version", db_version, "to version", BOOKINFO_DB_VERSION)
-        logger.warn("Deleting existing", self.db_location, "to recreate it")
+        logger.warn(ptdbg.logprefix, "BookInfo cache DB schema updated from version", db_version, "to version", BOOKINFO_DB_VERSION)
+        logger.warn(ptdbg.logprefix, "Deleting existing", self.db_location, "to recreate it")
 
         -- We'll try to preserve settings, though
         self:loadSettings(db_conn)
@@ -202,7 +204,7 @@ function BookInfoManager:createDB()
         db_conn:exec(string.format("PRAGMA user_version=%d;", BOOKINFO_DB_VERSION))
 
         -- Say hi!
-        UIManager:show(InfoMessage:new{text =_("Book info cache database updated."), timeout = 3 })
+        UIManager:show(InfoMessage:new { text = _("Book info cache database updated."), timeout = 3 })
     end
     db_conn:close()
     self.db_created = true
@@ -235,7 +237,7 @@ function BookInfoManager:deleteDb()
     self:openDbConnection()
     local query = "DELETE FROM bookinfo;"
     local stmt = self.db_conn:prepare(query)
-    stmt:step() -- commited
+    stmt:step()              -- commited
     stmt:clearbind():reset() -- cleanup
 end
 
@@ -257,7 +259,7 @@ function BookInfoManager:compactDb()
         return T(_("Failed compacting database: %1"), errmsg)
     end
     local cur_size = self:getDbSize()
-    return T(_("Cache size reduced from\n%1\nto\n%2."), prev_size, cur_size)
+    return T(_("Cache database size reduced from %1 to %2."), prev_size, cur_size)
 end
 
 -- Settings management, stored in 'config' table
@@ -312,13 +314,13 @@ function BookInfoManager:saveSetting(key, value, db_conn, skip_reload)
 
     local query = "INSERT OR REPLACE INTO config (key, value) VALUES (?, ?);"
     local stmt = my_db_conn:prepare(query)
-    if value == false then -- convert false to NULL
+    if value == false then    -- convert false to NULL
         value = nil
     elseif value == true then -- convert true to "Y"
         value = "Y"
     end
     stmt:bind(key, value)
-    stmt:step() -- commited
+    stmt:step()              -- commited
     stmt:clearbind():reset() -- cleanup
 
     -- Optionally, reload settings, so we may get (or not if it failed) what we just saved
@@ -368,7 +370,7 @@ function BookInfoManager:getBookInfo(filepath, get_cover)
     -- NOTE: We do not reset right now because we'll be querying a BLOB,
     --       so we need the data it points to to still be there ;).
 
-    if not row then -- filepath not in db
+    if not row then                       -- filepath not in db
         self.get_stmt:clearbind():reset() -- get ready for next query
         return nil
     end
@@ -379,30 +381,33 @@ function BookInfoManager:getBookInfo(filepath, get_cover)
             -- See http://scilua.org/ljsqlite3.html "SQLite Type Mappings"
             bookinfo[col] = tonumber(row[num]) -- convert cdata<int64_t> to lua number
         else
-            bookinfo[col] = row[num] -- as is
+            bookinfo[col] = row[num]           -- as is
         end
         -- specific processing for cover columns
         if col == "cover_w" then
             bookinfo["cover_w"] = tonumber(row[num])
-            bookinfo["cover_h"] = tonumber(row[num+1])
+            bookinfo["cover_h"] = tonumber(row[num + 1])
             if not get_cover then
                 -- don't bother making a blitbuffer
                 break
             end
             bookinfo["cover_bb"] = nil
             if bookinfo["has_cover"] then
-                local bbtype = tonumber(row[num+2])
-                local bbstride = tonumber(row[num+3])
+                local bbtype = tonumber(row[num + 2])
+                local bbstride = tonumber(row[num + 3])
                 -- This is a blob_mt table! Essentially, a (ptr, size) tuple.
-                local cover_blob = row[num+4]
+                local cover_blob = row[num + 4]
                 -- The pointer returned by SQLite is only valid until the next step/reset/finalize!
                 -- (which means its memory management is entirely in the hands of SQLite)
                 local cover_data, cover_size = zstd.zstd_uncompress_ctx(cover_blob[1], cover_blob[2])
                 -- Double-check that the size of the uncompressed BB is as expected...
                 local expected_cover_size = bbstride * bookinfo["cover_h"]
-                assert(cover_size == expected_cover_size, "Uncompressed a " .. tonumber(cover_size) .. "b BB instead of the expected " .. tonumber(expected_cover_size) .. "b")
+                assert(cover_size == expected_cover_size,
+                    "Uncompressed a " ..
+                    tonumber(cover_size) .. "b BB instead of the expected " .. tonumber(expected_cover_size) .. "b")
                 -- That one, on the other hand, is on the heap, so we can use it without making a copy.
-                local cover_bb = Blitbuffer.new(bookinfo["cover_w"], bookinfo["cover_h"], bbtype, cover_data, bbstride, bookinfo["cover_w"])
+                local cover_bb = Blitbuffer.new(bookinfo["cover_w"], bookinfo["cover_h"], bbtype, cover_data, bbstride,
+                    bookinfo["cover_w"])
                 -- Mark its data pointer as safe to free() on GC
                 cover_bb:setAllocated(1)
                 bookinfo["cover_bb"] = cover_bb
@@ -415,7 +420,24 @@ function BookInfoManager:getBookInfo(filepath, get_cover)
     return bookinfo
 end
 
+function BookInfoManager:getDocProps(filepath)
+    local bookinfo
+    local directory, filename = util.splitFilePathName(filepath)
+    self:openDbConnection()
+    local row = self.get_stmt:bind(directory, filename):step()
+    if row ~= nil then
+        bookinfo = {}
+        for i = 13, 20 do
+            bookinfo[BOOKINFO_COLS_SET[i]] = row[i]
+        end
+        bookinfo.pages = tonumber(bookinfo.pages)
+    end
+    self.get_stmt:clearbind():reset()
+    return bookinfo
+end
+
 function BookInfoManager:extractBookInfo(filepath, cover_specs)
+    local timer = ptdbg:new()
     -- This will be run in a subprocess
     -- We use a temporary directory for cre cache (that will not affect parent process),
     -- so we don't fill the main cache with books we're not actually reading
@@ -429,7 +451,7 @@ function BookInfoManager:extractBookInfo(filepath, cover_specs)
         -- But it's best to use a cache for quicker and less memory
         -- usage when opening big books:
         local default_cre_storage_size_factor = 20 -- note: keep in sync with the one in credocument.lua
-        cre.initCache(self.tmpcr3cache, 0, -- 0 = previous book caches are removed when opening a book
+        cre.initCache(self.tmpcr3cache, 0,         -- 0 = previous book caches are removed when opening a book
             true, G_reader_settings:readSetting("cre_storage_size_factor") or default_cre_storage_size_factor)
         self.cre_cache_overriden = true
     end
@@ -437,7 +459,7 @@ function BookInfoManager:extractBookInfo(filepath, cover_specs)
     local directory, filename = util.splitFilePathName(filepath)
 
     -- Initialize the new row that we will INSERT
-    local dbrow = { }
+    local dbrow = {}
     -- Actually no need to initialize with nil values:
     -- for dummy, col in ipairs(BOOKINFO_COLS_SET) do
     --     dbrow[col] = nil
@@ -463,11 +485,11 @@ function BookInfoManager:extractBookInfo(filepath, cover_specs)
     -- Increment it and check if we have already tried enough
     if prev_tries < self.max_extract_tries then
         if prev_tries > 0 then
-            logger.dbg("Seen", prev_tries, "previous attempts at info extraction", filepath , ", trying again")
+            logger.dbg(ptdbg.logprefix, "Seen", prev_tries, "previous attempts at info extraction", filepath, ", trying again")
         end
         dbrow.in_progress = prev_tries + 1 -- extraction not yet successful
     else
-        logger.info("Seen", prev_tries, "previous attempts at info extraction", filepath, ", too many, ignoring it.")
+        logger.info(ptdbg.logprefix, "Seen", prev_tries, "previous attempts at info extraction", filepath, ", too many, ignoring it.")
         tried_enough = true
         dbrow.in_progress = 0     -- row will exist, we'll never be called again
         dbrow.unsupported = UNSUPPORTED_REASONS.too_many_interruptions_or_crashes.string
@@ -477,10 +499,10 @@ function BookInfoManager:extractBookInfo(filepath, cover_specs)
     for num, col in ipairs(BOOKINFO_COLS_SET) do
         self.set_stmt:bind1(num, dbrow[col])
     end
-    self.set_stmt:step() -- commited
+    self.set_stmt:step()              -- commited
     self.set_stmt:clearbind():reset() -- get ready for next query
     if tried_enough then
-        return -- Last insert done for this book, we're giving up
+        return                        -- Last insert done for this book, we're giving up
     end
 
     -- Update this on each extraction attempt. Might be useful to reset the counter in case file gets updated.
@@ -489,11 +511,13 @@ function BookInfoManager:extractBookInfo(filepath, cover_specs)
     dbrow.filemtime = file_attr.modification
 
     -- Proceed with extracting info
-    local document = DocumentRegistry:openDocument(filepath)
+    local ReaderUI = require("apps/reader/readerui")
+    local provider = ReaderUI:extendProvider(filepath, DocumentRegistry:getProvider(filepath))
+    local document = DocumentRegistry:openDocument(filepath, provider)
     local loaded = true
     if document then
         local pages
-        if document.loadDocument then -- needed for crengine
+        if document.loadDocument then                -- needed for crengine
             if not document:loadDocument(false) then -- load only metadata
                 -- failed loading, calling other methods would segfault
                 loaded = false
@@ -502,46 +526,106 @@ function BookInfoManager:extractBookInfo(filepath, cover_specs)
                 -- so instead, try finding pagecount in filename or calibre metadata
                 local function getEstimatedPagecount(fname)
                     local filename_without_suffix, filetype = filemanagerutil.splitFileNameType(fname)
+
                     local fn_pagecount = string.match(filename_without_suffix, "P%((%d+)%)")
                     if fn_pagecount and fn_pagecount ~= "0" then
+                        logger.dbg(ptdbg.logprefix, "Pagecount found in filename", fname, fn_pagecount)
                         return fn_pagecount
                     end
-                    if filetype ~= "epub" then return nil end
-                    local std_out = io.popen("unzip ".."-lqq \""..fname.."\" \"*.opf\"")
-                    local opf_file
-                    if std_out then
-                        opf_file = string.match(std_out:read(), "%s+%d+%s+%S+%s+%S+%s+(.+%.[^.]+)$")
-                        std_out:close()
+
+                    if filetype ~= "epub" then
+                        logger.dbg(ptdbg.logprefix, "Skipping pagecount, not epub", fname)
+                        return nil
                     end
-                    if opf_file then
-                        std_out = io.popen("unzip ".."-p \""..fname.."\" ".."\""..opf_file.."\"")
-                        local found_pages = nil
-                        local found_value = nil
+
+                    local opf_file = nil
+                    local locate_opf_command = "unzip " .. "-lqq \"" .. fname .. "\" \"*.opf\""
+                    local opf_match_pattern = "(%S+%.opf)$"
+
+                    if Device:isAndroid() then
+                        -- fh style for Android
+                        local fh = io.popen(locate_opf_command, "r")
+                        while true and fh ~= nil do
+                            local line = fh:read()
+                            if line == nil or opf_file ~= nil then
+                                break
+                            end
+                            opf_file = string.match(line, opf_match_pattern)
+                            logger.dbg(ptdbg.logprefix, line)
+                        end
+                    else
+                        -- std_out style for POSIX
+                        local std_out = nil
+                        std_out = io.popen("unzip " .. "-lqq \"" .. fname .. "\" \"*.opf\"")
                         if std_out then
-                            for line in std_out:lines() do
-                                if found_pages then
-                                    -- multiline format, keep looking for the #values# line
-                                    found_value = string.match(line, "\"#value#\": (%d+),")
-                                    if found_value then break end
-                                    -- why category_sort? because it's always there and the props are stored alphabetically
-                                    -- so if we reach that before finding #value# it means there isn't one, which can happen
-                                    if string.match(line, "\"category_sort\":") then break end
-                                else
-                                    found_pages = string.match(line, "#pages")
-                                    -- check for single line format
-                                    found_value = string.match(line, "&quot;#value#&quot;: (%d+),")
-                                    if found_value then break end
-                                end
-                            end
+                            local line = std_out:read()
+                            opf_file = string.match(line, opf_match_pattern)
+                            logger.dbg(ptdbg.logprefix, line)
                             std_out:close()
-                            if found_value ~= "0" then
-                                return found_value
-                            end
                         end
                     end
+
+                    if opf_file then
+                        local expand_opf_command = "unzip " .. "-p \"" .. fname .. "\" " .. "\"" .. opf_file .. "\""
+                        local found_pages = nil
+                        local found_value = nil
+                        local do_break = false
+
+                        local function parse_opf_file(fp, fv, l)
+                            if fp then
+                                -- multiline format, keep looking for the #values# line
+                                fv = string.match(l, "\"#value#\": (%d+),")
+                                if fv then
+                                    return fp, fv, true
+                                end
+                                -- why category_sort? because it's always there and the props are stored alphabetically
+                                -- so if we reach that before finding #value# it means there isn't one, which can happen
+                                if string.match(l, "\"category_sort\":") then
+                                    return fp, fv, true
+                                end
+                            else
+                                fp = string.match(l, "#pages")
+                                -- check for single line format
+                                fv = string.match(l, "&quot;#value#&quot;: (%d+),")
+                                if fv then
+                                    return fp, fv, true
+                                end
+                            end
+                            return fp, fv, false
+                        end
+
+                        if Device:isAndroid() then
+                            -- fh style for Android
+                            local fh = io.popen(expand_opf_command, "r")
+                            while true and fh ~= nil do
+                                local line = fh:read()
+                                if line == nil then
+                                    break
+                                end
+                                found_pages, found_value, do_break = parse_opf_file(found_pages, found_value, line)
+                                if do_break then break end
+                            end
+                        else
+                            -- std_out style for POSIX
+                            local std_out = io.popen(expand_opf_command)
+                            if std_out then
+                                for line in std_out:lines() do
+                                    found_pages, found_value, do_break = parse_opf_file(found_pages, found_value, line)
+                                    if do_break then break end
+                                end
+                                std_out:close()
+                            end
+                        end
+                        if found_value and found_value ~= "0" then
+                            logger.dbg(ptdbg.logprefix, "Pagecount found in opf metadata ", fname, found_value)
+                            return found_value
+                        end
+                    end
+                    logger.dbg(ptdbg.logprefix, "Pagecount not found", fname)
                     return nil
                 end
-                pages = getEstimatedPagecount(filepath)
+                local success, response = pcall(getEstimatedPagecount, filepath)
+                if success then pages = response end
             end
         else
             -- for all others than crengine, we seem to get an accurate nb of pages
@@ -569,7 +653,8 @@ function BookInfoManager:extractBookInfo(filepath, cover_specs)
                     dbrow.cover_sizetag = cbb_w .. "x" .. cbb_h -- store original cover size
                     if cbb_w > spec_max_cover_w or cbb_h > spec_max_cover_h then
                         -- scale down if bigger than what we will display
-                        cbb_w, cbb_h = BookInfoManager.getCachedCoverSize(cbb_w, cbb_h, spec_max_cover_w, spec_max_cover_h)
+                        cbb_w, cbb_h = BookInfoManager.getCachedCoverSize(cbb_w, cbb_h, spec_max_cover_w,
+                            spec_max_cover_h)
                         cover_bb = RenderImage:scaleBlitBuffer(cover_bb, cbb_w, cbb_h, true)
                     end
                     dbrow.cover_w = cover_bb.w
@@ -579,8 +664,8 @@ function BookInfoManager:extractBookInfo(filepath, cover_specs)
                     local cover_size = cover_bb.stride * cover_bb.h
                     local cover_zst_ptr, cover_zst_size = zstd.zstd_compress(cover_bb.data, cover_size)
                     dbrow.cover_bb_data = SQ3.blob(cover_zst_ptr, cover_zst_size) -- cast to blob for sqlite
-                    logger.dbg("cover for", filename, "scaled from", dbrow.cover_sizetag, "to", cover_bb.w, "x", cover_bb.h,
-                        ", compressed from", tonumber(cover_size), "to", tonumber(cover_zst_size))
+                    logger.dbg(ptdbg.logprefix, "cover for", filename, "scaled from", dbrow.cover_sizetag, "to", cover_bb.w, "x",
+                        cover_bb.h, ", compressed from", tonumber(cover_size), "to", tonumber(cover_zst_size))
                     -- We're done with the uncompressed bb now, and the compressed one has been managed by SQLite ;)
                     cover_bb:free()
                 end
@@ -594,12 +679,13 @@ function BookInfoManager:extractBookInfo(filepath, cover_specs)
         dbrow.unsupported = UNSUPPORTED_REASONS.not_readable_by_engine.string
         dbrow.cover_fetched = 'Y' -- so we don't try again if we're called later if cover_specs
     end
-    dbrow.in_progress = 0 -- extraction completed (successful or definitive failure)
+    dbrow.in_progress = 0         -- extraction completed (successful or definitive failure)
     for num, col in ipairs(BOOKINFO_COLS_SET) do
         self.set_stmt:bind1(num, dbrow[col])
     end
     self.set_stmt:step()
     self.set_stmt:clearbind():reset() -- get ready for next query
+    timer:report("Cache book " .. filepath)
     return loaded
 end
 
@@ -614,11 +700,11 @@ function BookInfoManager:setBookInfoProperties(filepath, props)
     for k, v in pairs(props) do
         local this_prop_query = string.format(base_query, k) -- add column name to query
         local stmt = self.db_conn:prepare(this_prop_query)
-        if v == false then -- convert false to nil (NULL)
+        if v == false then                                   -- convert false to nil (NULL)
             v = nil
         end
         stmt:bind(v, directory, filename)
-        stmt:step() -- commited
+        stmt:step()              -- commited
         stmt:clearbind():reset() -- cleanup
     end
 end
@@ -629,7 +715,7 @@ function BookInfoManager:deleteBookInfo(filepath)
     local query = "DELETE FROM bookinfo WHERE directory=? AND filename=?;"
     local stmt = self.db_conn:prepare(query)
     stmt:bind(directory, filename)
-    stmt:step() -- commited
+    stmt:step()              -- commited
     stmt:clearbind():reset() -- cleanup
 end
 
@@ -649,9 +735,9 @@ function BookInfoManager:removeNonExistantEntries()
     end
     local query = "DELETE FROM bookinfo WHERE bcid=?;"
     local stmt = self.db_conn:prepare(query)
-    for i=1, #bcids_to_remove do
+    for i = 1, #bcids_to_remove do
         stmt:bind(bcids_to_remove[i])
-        stmt:step() -- commited
+        stmt:step()              -- commited
         stmt:clearbind():reset() -- cleanup
     end
     return T(_("Removed %1 / %2 entries from cache."), #bcids_to_remove, #bcids)
@@ -689,7 +775,7 @@ function BookInfoManager:collectSubprocesses()
             -- have caused a terminateBackgroundJobs() - if we're here, it's
             -- that user has left reader in FileBrower and went away)
             if time.now() > self.subprocesses_last_added_time + self.subprocesses_killall_timeout_time then
-                logger.warn("Some subprocesses were running for too long, killing them")
+                logger.warn(ptdbg.logprefix, "Some subprocesses were running for too long, killing them")
                 self:terminateBackgroundJobs()
                 -- we'll collect them next time we're run
             end
@@ -710,8 +796,8 @@ function BookInfoManager:collectSubprocesses()
 end
 
 function BookInfoManager:terminateBackgroundJobs()
-    logger.dbg("terminating", #self.subprocesses_pids, "subprocesses")
-    for i=1, #self.subprocesses_pids do
+    logger.dbg(ptdbg.logprefix, "terminating", #self.subprocesses_pids, "subprocesses")
+    for i = 1, #self.subprocesses_pids do
         FFIUtil.terminateSubProcess(self.subprocesses_pids[i])
     end
 end
@@ -734,14 +820,14 @@ function BookInfoManager:extractInBackground(files)
 
     -- Define task that will be run in subprocess
     local task = function()
-        logger.dbg("  BG extraction started")
+        logger.dbg(ptdbg.logprefix, "  BG extraction started")
         for idx = 1, #files do
             local filepath = files[idx].filepath
             local cover_specs = files[idx].cover_specs
-            logger.dbg("  BG extracting:", filepath)
+            logger.dbg(ptdbg.logprefix, "  BG extracting:", filepath)
             self:extractBookInfo(filepath, cover_specs)
         end
-        logger.dbg("  BG extraction done")
+        logger.dbg(ptdbg.logprefix, "  BG extraction done")
     end
 
     self.cleanup_needed = true -- so we will remove temporary cache directory created by subprocess
@@ -754,7 +840,7 @@ function BookInfoManager:extractInBackground(files)
     -- Run task in sub-process, and remember its pid
     local task_pid = FFIUtil.runInSubProcess(task)
     if not task_pid then
-        logger.warn("Failed lauching background extraction sub-process (fork failed)")
+        logger.warn(ptdbg.logprefix, "Failed lauching background extraction sub-process (fork failed)")
         return false -- let caller know it failed
     end
     -- No straight control flow exists for background task completion here, so we bump prevent
@@ -786,14 +872,14 @@ function BookInfoManager:cleanUp()
         return
     end
     if self.cleanup_needed then
-        logger.dbg("Removing directory", self.tmpcr3cache)
+        logger.dbg(ptdbg.logprefix, "Removing directory", self.tmpcr3cache)
         FFIUtil.purgeDir(self.tmpcr3cache)
         self.cleanup_needed = false
     end
 end
 
 local function findFilesInDir(path, recursive)
-    local dirs = {path}
+    local dirs = { path }
     local files = {}
     while #dirs ~= 0 do
         local new_dirs = {}
@@ -801,12 +887,12 @@ local function findFilesInDir(path, recursive)
         for __, d in pairs(dirs) do
             -- handle files in d
             for f in lfs.dir(d) do
-                local fullpath = d.."/"..f
+                local fullpath = d .. "/" .. f
                 local attributes = lfs.attributes(fullpath)
                 -- Don't traverse hidden folders if we're not showing them
                 if recursive and attributes.mode == "directory" and f ~= "." and f ~= ".." and (G_reader_settings:isTrue("show_hidden") or not util.stringStartsWith(f, ".")) then
                     table.insert(new_dirs, fullpath)
-                -- Always ignore macOS resource forks, too.
+                    -- Always ignore macOS resource forks, too.
                 elseif attributes.mode == "file" and not util.stringStartsWith(f, "._") and DocumentRegistry:hasProvider(fullpath) then
                     table.insert(files, fullpath)
                 end
@@ -867,7 +953,7 @@ Do you want to prune the cache of removed books?]]
     end
 
     local confirm_abort = function()
-        return Trapper:confirm(_("Do you want to stop?"), _("Keep Indexing"), _("Stop Indexing"))
+        return Trapper:confirm(_("Do you want to stop?"), _("Continue Indexing"), _("Stop Indexing"))
     end
     -- Cancel any background job, before we launch new ones
     self:terminateBackgroundJobs()
@@ -876,7 +962,7 @@ Do you want to prune the cache of removed books?]]
     if prune then
         local summary
         while true do
-            info = InfoMessage:new{text = _("Pruning cache of removed books…")}
+            info = InfoMessage:new { text = _("Pruning cache of removed books…") }
             if not automatic_mode then UIManager:show(info) end
             UIManager:forceRePaint()
             completed, summary = Trapper:dismissableRunInSubprocess(function()
@@ -889,7 +975,7 @@ Do you want to prune the cache of removed books?]]
             else
                 self:compactDb() -- compact
                 UIManager:close(info)
-                info = InfoMessage:new{text = summary}
+                info = InfoMessage:new { text = summary }
                 UIManager:show(info)
                 UIManager:forceRePaint()
                 FFIUtil.sleep(2) -- Let the user see that
@@ -901,7 +987,7 @@ Do you want to prune the cache of removed books?]]
 
     local files
     while true do
-        info = InfoMessage:new{text = _("Looking for books to index…")}
+        info = InfoMessage:new { text = _("Looking for books to index…") }
         if not automatic_mode then UIManager:show(info) end
         UIManager:forceRePaint()
         completed, files = Trapper:dismissableRunInSubprocess(function()
@@ -915,7 +1001,7 @@ Do you want to prune the cache of removed books?]]
             end
         elseif not files or #files == 0 then
             UIManager:close(info)
-            if not automatic_mode then info = InfoMessage:new{text = _("No books were found.")} end
+            if not automatic_mode then info = InfoMessage:new { text = _("No books were found.") } end
             UIManager:show(info)
             return
         else
@@ -925,14 +1011,14 @@ Do you want to prune the cache of removed books?]]
     UIManager:close(info)
 
     if refresh_existing then
-        info = InfoMessage:new{text = T(N_("Found 1 book to index.", "Found %1 books to index.", #files), #files)}
+        info = InfoMessage:new { text = T(N_("Found 1 book to index.", "Found %1 books to index.", #files), #files) }
         if not automatic_mode then UIManager:show(info) end
         UIManager:forceRePaint()
         FFIUtil.sleep(2) -- Let the user see that
     else
         local all_files = files
         while true do
-            info = InfoMessage:new{text = T(_("Found %1 books.\nLooking for new books…"), #all_files)}
+            info = InfoMessage:new { text = T(_("Found %1 books.\nLooking for new books…"), #all_files) }
             UIManager:show(info)
             UIManager:forceRePaint()
             FFIUtil.sleep(2) -- Let the user see that
@@ -944,7 +1030,7 @@ Do you want to prune the cache of removed books?]]
                     if bookinfo and cover_specs and not bookinfo.ignore_cover then
                         if bookinfo.cover_fetched then
                             --if bookinfo.has_cover and BookInfoManager.isCachedCoverInvalid(bookinfo, cover_specs) then
-                                -- skip this. we're storing a single thumbnail res and that's it.
+                            -- skip this. we're storing a single thumbnail res and that's it.
                             --end
                         else
                             to_extract = true
@@ -962,7 +1048,7 @@ Do you want to prune the cache of removed books?]]
                 end
             elseif not files or #files == 0 then
                 UIManager:close(info)
-                info = InfoMessage:new{text = _("No new books found.")}
+                info = InfoMessage:new { text = _("No new books found.") }
                 if not automatic_mode then UIManager:show(info) end
                 return
             else
@@ -970,7 +1056,7 @@ Do you want to prune the cache of removed books?]]
             end
         end
         UIManager:close(info)
-        info = InfoMessage:new{text = T(N_("Found 1 book to index.", "Found %1 books to index."), #files)}
+        info = InfoMessage:new { text = T(N_("Found 1 book to index.", "Found %1 books to index."), #files) }
         if not automatic_mode then UIManager:show(info) end
         UIManager:forceRePaint()
         if not automatic_mode then FFIUtil.sleep(2) end -- Let the user see that
@@ -984,7 +1070,7 @@ Do you want to prune the cache of removed books?]]
 
     -- We use a little hack to InfoMessage for a consistent height and
     -- fast refresh to avoid flicking
-    info = InfoMessage:new{text = "dummy"}
+    info = InfoMessage:new { text = "dummy" }
     UIManager:show(info) -- but not yet painted
     local info_max_seen_height = 0
     local success
@@ -995,15 +1081,15 @@ Do you want to prune the cache of removed books?]]
 
         local orig_moved_offset = info.movable:getMovedOffset()
         info:free()
-        info.text = T(_("Indexing %1 / %2…\n\nTap anywhere to stop.\n\n%3"), i, nb_files, BD.filename(filename))
+        info.text = T(_("Indexing %1 / %2…\n\n%3"), i, nb_files, BD.filename(filename)) .. "\n\n" .. _("Tap anywhere to stop")
         info:init()
         local text_widget = table.remove(info.movable[1][1], 3)
         local text_widget_size = text_widget:getSize()
         if text_widget_size.h > info_max_seen_height then
             info_max_seen_height = text_widget_size.h
         end
-        table.insert(info.movable[1][1], TopContainer:new{
-            dimen = Geom:new{
+        table.insert(info.movable[1][1], TopContainer:new {
+            dimen = Geom:new {
                 w = text_widget_size.w,
                 h = info_max_seen_height,
             },
@@ -1011,7 +1097,7 @@ Do you want to prune the cache of removed books?]]
         })
         info.movable[1][1]._size = nil -- reset HorizontalGroup size
         info.movable:setMovedOffset(orig_moved_offset)
-        info:paintTo(Screen.bb, 0,0)
+        info:paintTo(Screen.bb, 0, 0)
         local d = info.movable[1].dimen
         Screen.refreshUI(Screen, d.x, d.y, d.w, d.h)
 
@@ -1023,7 +1109,7 @@ Do you want to prune the cache of removed books?]]
                 break
             end
             -- Recreate the infomessage that was dismissed
-            info = InfoMessage:new{text = "dummy"}
+            info = InfoMessage:new { text = "dummy" }
             info.movable:setMovedOffset(orig_moved_offset)
             UIManager:show(info) -- but not yet painted
             -- don't increment i, re-process the one we interrupted
@@ -1036,7 +1122,7 @@ Do you want to prune the cache of removed books?]]
         end
     end
     UIManager:close(info)
-    info = InfoMessage:new{text = T(_("Processed %1 / %2 books."), nb_done, nb_files) .. "\n" .. T(N_("One extracted successfully.", "%1 extracted successfully.", nb_success), nb_success)}
+    info = InfoMessage:new { text = T(_("Processed %1 / %2 books."), nb_done, nb_files) .. "\n" .. T(N_("One extracted successfully.", "%1 extracted successfully.", nb_success), nb_success) }
     UIManager:show(info)
 end
 
@@ -1053,24 +1139,24 @@ function BookInfoManager.getCachedCoverSize(img_w, img_h, max_img_w, max_img_h)
     return max_img_w, max_img_h, scale_factor
 end
 
-function BookInfoManager.isCachedCoverInvalid(bookinfo, cover_specs)
-    if not bookinfo.cover_w or not bookinfo.cover_h then -- no thumbnail yet
-        return true
-    end
-    local img_w, img_h = bookinfo.cover_sizetag:match("(%d+)x(%d+)") -- original image
-    if not img_w or not img_h then -- old or bad cover_sizetag
-        return true
-    end
-    img_w, img_h = tonumber(img_w), tonumber(img_h)
-    local max_img_w = cover_specs.max_cover_w
-    local max_img_h = cover_specs.max_cover_h
-    if img_w > max_img_w or img_h > max_img_h then -- original image bigger than placeholder
-        local new_cover_w, new_cover_h = BookInfoManager.getCachedCoverSize(img_w, img_h, max_img_w, max_img_h)
-        if new_cover_w > bookinfo.cover_w or new_cover_h > bookinfo.cover_h then -- bigger thumbnail needed
-            return true
-        end
-    end
-end
+-- function BookInfoManager.isCachedCoverInvalid(bookinfo, cover_specs)
+--     if not bookinfo.cover_w or not bookinfo.cover_h then -- no thumbnail yet
+--         return true
+--     end
+--     local img_w, img_h = bookinfo.cover_sizetag:match("(%d+)x(%d+)") -- original image
+--     if not img_w or not img_h then                                   -- old or bad cover_sizetag
+--         return true
+--     end
+--     img_w, img_h = tonumber(img_w), tonumber(img_h)
+--     local max_img_w = cover_specs.max_cover_w
+--     local max_img_h = cover_specs.max_cover_h
+--     if img_w > max_img_w or img_h > max_img_h then                               -- original image bigger than placeholder
+--         local new_cover_w, new_cover_h = BookInfoManager.getCachedCoverSize(img_w, img_h, max_img_w, max_img_h)
+--         if new_cover_w > bookinfo.cover_w or new_cover_h > bookinfo.cover_h then -- bigger thumbnail needed
+--             return true
+--         end
+--     end
+-- end
 
 BookInfoManager:init()
 

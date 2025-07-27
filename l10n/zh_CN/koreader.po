@@ -1,0 +1,363 @@
+msgid ""
+msgstr ""
+"projecttitle/zh_CN/>\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Progress"
+msgstr "进度"
+
+msgid "Description"
+msgstr "描述"
+
+msgid "%1 et al."
+msgstr "%1 等"
+
+msgid "Reading"
+msgstr "阅读中"
+
+msgid "%1%"
+msgstr "%1%"
+
+msgid "not readable by engine"
+msgstr "引擎无法读取"
+
+msgid "too many interruptions or crashes"
+msgstr "中断或崩溃次数过多"
+
+msgid "Books"
+msgstr "书籍"
+
+msgid "Book info cache database updated."
+msgstr "书籍信息缓存数据库已更新。"
+
+msgid "Failed compacting database: %1"
+msgstr "压缩数据库失败：%1"
+
+msgid "Cache database size reduced from %1 to %2."
+msgstr "缓存数据库大小已从 %1 缩减到 %2。"
+
+msgid "Cache is empty. Nothing to prune."
+msgstr "缓存为空，无需修剪。"
+
+msgid "Removed %1 / %2 entries from cache."
+msgstr "已从缓存中移除 %1 / %2 条目。"
+
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"这将从当前目录中的书籍提取元数据和封面图像。\n"
+"开始提取后，您可以随时点击屏幕中止操作。\n"
+"\n"
+"此过程可能需要一些时间并耗电，建议将设备连接电源。"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Continue"
+msgstr "继续"
+
+msgid "Also extract book information from books in subdirectories?"
+msgstr "是否同时提取子目录中的书籍信息？"
+
+msgid "Here only"
+msgstr "仅此处"
+
+msgid "Here and under"
+msgstr "此处及子目录"
+
+msgid ""
+"Do you want to refresh metadata and covers that have already been extracted?"
+msgstr "是否刷新已提取的元数据和封面？"
+
+msgid "Don't refresh"
+msgstr "不刷新"
+
+msgid "Refresh"
+msgstr "刷新"
+
+msgid ""
+"If you have removed many books, or have renamed some directories, it is good "
+"to remove them from the cache database.\n"
+"\n"
+"Do you want to prune the cache of removed books?"
+msgstr ""
+"如果您已删除了许多书籍或重命名了目录，建议从缓存数据库中移除它们。\n"
+"\n"
+"是否修剪已移除书籍的缓存？"
+
+msgid "Don't prune"
+msgstr "不修剪"
+
+msgid "Prune"
+msgstr "修剪"
+
+msgid "Do you want to stop?"
+msgstr "您确定要停止吗？"
+
+msgid "Continue Indexing"
+msgstr "继续索引"
+
+msgid "Stop Indexing"
+msgstr "停止索引"
+
+msgid "Pruning cache of removed books…"
+msgstr "正在修剪已移除书籍的缓存…"
+
+msgid "Looking for books to index…"
+msgstr "正在查找要索引的书籍…"
+
+msgid "No books were found."
+msgstr "未找到任何书籍。"
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"已找到 %1 本书。\n"
+"正在查找新书…"
+
+msgid "No new books found."
+msgstr "未找到新书。"
+
+msgid ""
+"Indexing %1 / %2…\n"
+"\n"
+"%3"
+msgstr ""
+"索引中 %1 / %2…\n"
+"\n"
+"%3"
+
+msgid "Tap anywhere to stop"
+msgstr "点击任意位置以停止"
+
+msgid "Processed %1 / %2 books."
+msgstr "已处理 %1 / %2 本书。"
+
+msgid ""
+"Start-up of background extraction job failed.\n"
+"Please restart KOReader or your device."
+msgstr ""
+"后台提取任务启动失败。\n"
+"请重启 KOReader 或设备。"
+
+msgid "Select"
+msgstr "选择"
+
+msgid "Rename"
+msgstr "重命名"
+
+msgid "Delete"
+msgstr "删除"
+
+msgid "Cut"
+msgstr "剪切"
+
+msgid "Open with…"
+msgstr "使用…打开"
+
+msgid "Set as HOME folder"
+msgstr "设为主文件夹"
+
+msgid "%1Off"
+msgstr "%1关闭"
+
+msgid "Home"
+msgstr "主目录"
+
+msgid "Library"
+msgstr "书库"
+
+msgid "Folder"
+msgstr "文件夹"
+
+msgid "Book"
+msgstr "书籍"
+
+msgid "Folders"
+msgstr "文件夹"
+
+msgid "Finished"
+msgstr "已完成"
+
+msgid "On hold"
+msgstr "暂停中"
+
+msgid "New"
+msgstr "新书"
+
+msgid "Page %1 of %2"
+msgstr "第 %1 页，共 %2 页"
+
+msgid "%1 pages left"
+msgstr "剩余 %1 页"
+
+msgid "(no book information: %1)"
+msgstr "（无书籍信息：%1）"
+
+msgid "(deleted)"
+msgstr "（已删除）"
+
+msgid "Cover List"
+msgstr "封面列表"
+
+msgid "Cover Grid"
+msgstr "封面网格"
+
+msgid "Details List"
+msgstr "详细列表"
+
+msgid "Filenames List"
+msgstr "文件名列表"
+
+msgid "Project: Title - Decrease Items Per Page"
+msgstr "项目：标题 - 减少每页项目数"
+
+msgid "Project: Title - Increase Items Per Page"
+msgstr "项目：标题 - 增加每页项目数"
+
+msgid "Use this mode everywhere"
+msgstr "在所有地方使用此模式"
+
+msgid "History display mode"
+msgstr "历史显示模式"
+
+msgid "Collections display mode"
+msgstr "合集显示模式"
+
+msgid "Display mode"
+msgstr "显示模式"
+
+msgid "Project: Title settings"
+msgstr "项目：标题设置"
+
+msgid "Items per page"
+msgstr "每页项目数"
+
+msgid "Portrait cover grid mode"
+msgstr "竖屏封面网格模式"
+
+msgid ": %1 × %2"
+msgstr "：%1 × %2"
+
+msgid "Columns"
+msgstr "列数"
+
+msgid "Rows"
+msgstr "行数"
+
+msgid "Landscape cover grid mode"
+msgstr "横屏封面网格模式"
+
+msgid "List modes"
+msgstr "列表模式"
+
+msgid ": %1"
+msgstr "：%1"
+
+msgid "Folder display"
+msgstr "文件夹显示"
+
+msgid "Auto-generate cover images from books"
+msgstr "自动从书籍生成封面"
+
+msgid "Overlay name and details in cover grid"
+msgstr "在封面网格上覆盖名称和详情"
+
+msgid "Book display"
+msgstr "书籍显示"
+
+msgid "Show series"
+msgstr "显示系列"
+
+msgid "Show pages read instead of progress %"
+msgstr "显示已读页数而非进度百分比"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "显示文件信息而非页数或进度"
+
+msgid "Always show maximum length progress bars"
+msgstr "始终显示全长进度条"
+
+msgid "Use custom book status screen"
+msgstr "使用自定义书籍状态界面"
+
+msgid "Footer"
+msgstr "页脚"
+
+msgid "Replace folder name with device info"
+msgstr "用设备信息替换文件夹名称"
+
+msgid "Show page controls in left corner"
+msgstr "在左下角显示页码控件"
+
+msgid "Library mode"
+msgstr "书库模式"
+
+msgid "Show opened books first"
+msgstr "优先显示已打开的书籍"
+
+msgid "Cache database"
+msgstr "缓存数据库"
+
+msgid "Scan home folder for new books automatically"
+msgstr "自动扫描主文件夹中的新书"
+
+msgid "Prune cache"
+msgstr "修剪缓存"
+
+msgid ""
+"Are you sure that you want to prune cache of removed books?\n"
+"(This may take a while.)"
+msgstr ""
+"确定要修剪已移除书籍的缓存吗？\n"
+"（此操作可能需要一些时间。）"
+
+msgid "Empty cache"
+msgstr "清空缓存"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "确定要删除封面和元数据缓存吗？"
+
+msgid "Cache emptied."
+msgstr "缓存已清空。"
+
+msgid "Cache size"
+msgstr "缓存大小"
+
+msgid "Extract and cache book information"
+msgstr "提取并缓存书籍信息"
+
+msgid "Refresh cached book information"
+msgstr "刷新已缓存的书籍信息"
+
+msgid "Unignore cover"
+msgstr "取消忽略封面"
+
+msgid "Ignore cover"
+msgstr "忽略封面"
+
+msgid "Unignore metadata"
+msgstr "取消忽略元数据"
+
+msgid "Ignore metadata"
+msgstr "忽略元数据"
+
+msgid " %1 of %2 "
+msgstr " %1 / %2 "
+
+msgid "Project: Title"
+msgstr "项目：标题"
+
+msgid "All new user interface for browsing books."
+msgstr "全新浏览书籍的用户界面。"

@@ -21,16 +21,12 @@ local VerticalGroup = require("ui/widget/verticalgroup")
 local VerticalSpan = require("ui/widget/verticalspan")
 local logger = require("logger")
 local util = require("util")
-local _ = require("gettext")
+local _ = require("l10n.gettext")
 local Screen = Device.screen
 local T = require("ffi/util").template
-
 local BookInfoManager = require("bookinfomanager")
-
-local function findLast(haystack, needle)
-    local i = haystack:match(".*" .. needle .. "()")
-    if i == nil then return nil else return i - 1 end
-end
+local ptutil = require("ptutil")
+local ptdbg = require("ptdbg")
 
 local AltBookStatusWidget = {}
 
@@ -45,9 +41,9 @@ function AltBookStatusWidget:getStatusContent(width)
         align = "left",
         title_bar,
         self:genBookInfoGroup(),
-        self:genHeader("Progress"),
+        self:genHeader(_("Progress")),
         self:genStatisticsGroup(width),
-        self:genHeader("Description"),
+        self:genHeader(_("Description")),
         self:genSummaryGroup(width),
     }
     return content
@@ -101,17 +97,17 @@ end
 
 function AltBookStatusWidget:genBookInfoGroup()
     -- override the original fonts with our included fonts
-    self.small_font_face = Font:getFace("source/SourceSerif4-Regular.ttf", 18)
-    self.medium_font_face = Font:getFace("source/SourceSerif4-Regular.ttf", 22)
-    self.large_font_face = Font:getFace("source/SourceSerif4-Regular.ttf", 30)
+    self.small_font_face = Font:getFace(ptutil.good_serif, 18)
+    self.medium_font_face = Font:getFace(ptutil.good_serif, 22)
+    self.large_font_face = Font:getFace(ptutil.good_serif, 30)
 
     -- and set up our own as well
-    self.header_font = Font:getFace("source/SourceSans3-Regular.ttf", 24)
-    self.small_serif_font = Font:getFace("source/SourceSerif4-Regular.ttf", 18)
-    self.large_serif_font = Font:getFace("source/SourceSerif4-BoldIt.ttf", 30)
+    self.header_font = Font:getFace(ptutil.good_sans, 24)
+    self.small_serif_font = Font:getFace(ptutil.good_serif, 18)
+    self.large_serif_font = Font:getFace(ptutil.title_serif, 30)
 
-    -- padding at 3% per side to match the 94% total width used in listview
-    self.padding = Screen:getSize().w * 0.03
+    -- padding to match the width used in cover list and grid
+    self.padding = Screen:scaleBySize(10)
 
     local screen_width = Screen:getWidth()
     local split_span_width = math.floor(screen_width * 0.05)
@@ -158,7 +154,7 @@ function AltBookStatusWidget:genBookInfoGroup()
     if show_series then
         local series_text = props.series
         if string.match(props.series, ": ") then
-            series_text = string.sub(series_text, findLast(series_text, ": ") + 1, -1)
+            series_text = string.sub(series_text, util.lastIndexOf(series_text, ": ") + 1, -1)
         end
         if props.series_index then
             series_text = "#" .. props.series_index .. " – " .. BD.auto(series_text)
@@ -201,14 +197,15 @@ function AltBookStatusWidget:genBookInfoGroup()
     }
 
     -- progress text
+    local read_text = _("Reading")
     local progress_text = TextWidget:new {
-        text = T(_("%1% Read"),
-            string.format("%1.f", read_percentage * 100)),
+        text = read_text .. " - " .. T(_("%1%"),string.format("%1.f", read_percentage * 100)),
         face = self.small_serif_font,
     }
 
     -- title box (done last to calculate the max available height)
-    local max_title_height = height - bookinfo:getSize().h - progress_bar:getSize().h - progress_text:getSize().h - Size.padding.default
+    local max_title_height = height - bookinfo:getSize().h - progress_bar:getSize().h - progress_text:getSize().h -
+        Size.padding.default
     local booktitle = TextBoxWidget:new {
         text = props.display_title,
         lang = lang,
@@ -221,9 +218,9 @@ function AltBookStatusWidget:genBookInfoGroup()
     }
 
     -- padding
-    local meta_padding_height = math.max(Size.padding.default, height - booktitle:getSize().h - bookinfo:getSize().h - progress_bar:getSize().h - progress_text:getSize().h)
+    local meta_padding_height = math.max(Size.padding.default,
+        height - booktitle:getSize().h - bookinfo:getSize().h - progress_bar:getSize().h - progress_text:getSize().h)
     local meta_padding = VerticalSpan:new { width = meta_padding_height }
-    logger.info("meta_padding ", meta_padding)
 
     -- build metadata column (adjacent to cover)
     local book_meta_info_group = VerticalGroup:new {
@@ -293,13 +290,13 @@ function AltBookStatusWidget:genSummaryGroup(width)
         height = Screen:scaleBySize(265)
     end
 
-    local html_contents
+    local html_contents = ""
     local props = self.ui.doc_props
     if props.description then
         html_contents = "<html lang='" .. props.language .. "'><body>" .. props.description .. "</body></html>"
-        --html_contents = "<html><body>" .. props.description .. "</body></html>"
     else
-        html_contents = "<html><body><h2 style='font-style: italic; color: #CCCCCC;'>No description.</h3></body></html>"
+        html_contents = "<html><body><h3 style='font-style: italic; color: #CCCCCC;'>" ..
+        _("No book description available.") .. "</h3></body></html>"
     end
     self.input_note = ScrollHtmlWidget:new {
         width = width - Screen:scaleBySize(60),
