@@ -168,8 +168,8 @@ local function build_cover_images(db_res, max_img_w, max_img_h)
         local directories = db_res[1]
         local filenames = db_res[2]
         if BookInfoManager:getSetting("use_stacked_foldercovers") then
-            max_img_w = max_img_w - max_img_w / 4 - Size.border.thin * 4
-            max_img_h = max_img_h - max_img_h / 4 - Size.border.thin * 4
+            max_img_w = max_img_w - (max_img_w / 4) - (Size.border.thin * 2)
+            max_img_h = max_img_h - (max_img_h / 4) - (Size.border.thin * 2)
         else
             max_img_w = (max_img_h - (Size.border.thin * 4) - Size.padding.small) / 2
             max_img_h = (max_img_h - (Size.border.thin * 4) - Size.padding.small) / 2
@@ -228,35 +228,47 @@ end
 
 -- Build the diagonal stack layout using OverlapGroup
 local function build_diagonal_stack(images, max_img_w, max_img_h)
-    local image_size = images[#images]:getSize()
-    local stack = OverlapGroup:new {
-        dimen = Geom:new { w = max_img_w, h = max_img_h }
-    }
+    local top_image_size = images[#images]:getSize()
 
     -- total padding is a quarter of the max container size
-    local padding_w = max_img_w / 12
-    local padding_h = max_img_h / 12
+    local padding_unit_h = max_img_h / 12
+    local padding_unit_w = max_img_w / 12
 
     -- Pad images to ensure at least 4 are present
     local target_count = 4
     for i = 1, target_count - #images do
         table.insert(images, 1,
-            create_blank_cover(image_size.w - Size.border.thin * 2, image_size.h - Size.border.thin * 2, i % 2 + 2))
+            create_blank_cover((top_image_size.w - Size.border.thin * 2), (top_image_size.h - Size.border.thin * 2), (i % 2 + 2)))
     end
 
+    local stack_items = {}
+    local stack_height = 0
+    local stack_width = 0
     for i, img in ipairs(images) do
+        local inset_top = (i - 1) * padding_unit_h
+        local inset_left = (i - 1) * padding_unit_w
         local frame = FrameContainer:new {
             margin = 0,
-            padding_top = (i - 1) * padding_h,
-            padding_left = (i - 1) * padding_w,
             bordersize = 0,
-            color = Blitbuffer.COLOR_WHITE,
+            padding = nil,
+            padding_top = inset_top,
+            padding_left = inset_left,
             img,
         }
-        table.insert(stack, frame)
+        stack_height = math.max(stack_height, frame:getSize().h)
+        stack_width = math.max(stack_width, frame:getSize().w)
+        table.insert(stack_items, frame)
     end
 
-    return stack
+    local stack = OverlapGroup:new {
+        dimen = Geom:new { w = stack_width, h = stack_height },
+    }
+    table.move(stack_items, 1, #stack_items, #stack + 1, stack)
+    local centered_stack = CenterContainer:new {
+        dimen = Geom:new { w = max_img_w, h = max_img_h },
+        stack,
+    }
+    return centered_stack
 end
 
 -- Build a 2x2 grid layout using nested horizontal & vertical groups
