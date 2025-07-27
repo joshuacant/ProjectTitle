@@ -37,7 +37,7 @@ local changeLang = function(new_lang)
                 end
         end
     else
-        logger.info(ptdbg.logprefix, string.format("Failed to parse the PO file for lang %s: %s", tostring(new_lang), tostring(err)))
+        logger.info(ptdbg.logprefix, string.format("Failed to parse the MO file for lang %s: %s", tostring(new_lang), tostring(err)))
     end
 
     GetText.context = original_context

@@ -399,11 +399,8 @@ function MosaicMenuItem:update()
         self.menu.cover_specs = false
     end
 
-    -- test to see what style to draw (pathchooser vs "detailed list view mode")
-    is_pathchooser = false
-    if (self.title_bar and self.title_bar.title ~= "") or (self.menu and self.menu.title ~= "") then
-        is_pathchooser = true
-    end
+    -- test to see what style to draw (pathchooser vs one of our fancy modes)
+    is_pathchooser = ptutil.isPathChooser(self)
 
     self.is_directory = not (self.entry.is_file or self.entry.file)
     if self.is_directory then
@@ -425,8 +422,8 @@ function MosaicMenuItem:update()
                 subfolder_cover_image = ptutil.getSubfolderCoverImages(self.filepath, max_img_w, max_img_h)
             end
             -- use stock folder icon
-            local stock_image = sourcedir .. "/resources/folder.svg"
             if subfolder_cover_image == nil then
+                local stock_image = sourcedir .. "/resources/folder.svg"
                 local _, _, scale_factor = BookInfoManager.getCachedCoverSize(250, 500, max_img_w * 1.1, max_img_h * 1.1)
                 subfolder_cover_image = FrameContainer:new {
                     width = dimen.w,
@@ -1054,11 +1051,8 @@ function MosaicMenu:_recalculateDimen()
     -- fix current page if out of range
     if self.page_num > 0 and self.page > self.page_num then self.page = self.page_num end
 
-    -- test to see what style to draw (pathchooser vs "detailed list view mode")
-    is_pathchooser = false
-    if self.title_bar.title ~= "" then
-        is_pathchooser = true
-    end
+    -- test to see what style to draw (pathchooser vs one of our fancy modes)
+    is_pathchooser = ptutil.isPathChooser(self)
 
     -- Find out available height from other UI elements made in Menu
     self.others_height = 0

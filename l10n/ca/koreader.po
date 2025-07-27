@@ -1,0 +1,149 @@
+msgid ""
+msgstr ""
+"projecttitle/ca/>\n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+# covermenu.lua
+msgid "Library"
+msgstr "Llibreria"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "Carpetes"
+
+msgid "Book"
+msgstr "Llibre"
+
+# main.lua
+msgid "Project: Title"
+msgstr "Project: Title"
+
+msgid "Decrease Items Per Page"
+msgstr "Disminuir els elements per pàgina"
+
+msgid "Increase Items Per Page"
+msgstr "Incrementar els elements per pàgina"
+
+msgid "Cover List"
+msgstr "Llista de cobertes"
+
+msgid "Cover Grid"
+msgstr "Graella de cobertes"
+
+msgid "Details List"
+msgstr "Llista de detalls"
+
+msgid "Filenames List"
+msgstr "Llista de noms de fitxers"
+
+msgid "Project: Title settings"
+msgstr "Configuració de Project: Title"
+
+msgid "Portrait cover grid mode"
+msgstr "Mode de graella de cobertes en vertical"
+
+msgid "Landscape cover grid mode"
+msgstr "Mode de graella de cobertes en horitzontal"
+
+msgid "List modes"
+msgstr "Modes de llista"
+
+msgid "Folder display"
+msgstr "Mostrar carpetes"
+
+msgid "Auto-generate cover images from books"
+msgstr "Generar automàticament imatges de cobertes des de llibres"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Superposar el nom i els detalls en la graella de cobertes"
+
+msgid "Book display"
+msgstr "Mostrar llibres"
+
+msgid "Show series"
+msgstr "Mostrar sèries"
+
+msgid "Show pages read instead of progress %"
+msgstr "Mostrar pàgines llegides en comptes de % de progrés"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Mostrar informació del fitxer en comptes de pàgines o % deprogrés"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Mostrar % progrés en comptes de barres de progrés"
+
+msgid "Always show maximum length progress bars"
+msgstr "Mostrar sempre barres de progrés de longitud màxima"
+
+msgid "Use custom book status screen"
+msgstr "Utilitzar pantalla personalitzada d'estat de llibre"
+
+msgid "Footer"
+msgstr "Peu de pàgina"
+
+msgid "Replace folder name with device info"
+msgstr "Reemplaçar el nom de la carpeta amb la informació del dispositiu"
+
+msgid "Show page controls in left corner"
+msgstr "Mostrar controls de pàgina a l'angle esquerre"
+
+msgid "Library mode"
+msgstr "Mode de biblioteca"
+
+msgid "Show opened books first"
+msgstr "Mostrar primers els llibres oberts"
+
+msgid "Cache database"
+msgstr "Banc de dades de la memòria cau"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Escanejar carpeta d'inici per a nous llibres automàticament"
+
+msgid "Empty cache"
+msgstr "Buidar memòria cau"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "Estàs segur que vols esborrar la memòria cau de les cobertes i metadades?"
+
+msgid "Cache emptied."
+msgstr "Memòria cau buida."
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"Això extraurà les metadades i les imatges de portada dels llibres del directori "
+"actual.\n"
+"Un cop iniciada l'extracció, podeu interrompre-la en qualsevol moment tocant la "
+"pantalla.\n"
+"\n"
+"Aquesta extracció pot trigar temps i consumir part de la bateria: és recomanable "
+"mantenir el dispositiu connectat."
+
+msgid "Found %1 books.\nLooking for new books…"
+msgstr "S'han trobat %1 llibres.\nBuscant nous llibres…"
+
+msgid "No new books found."
+msgstr "No s'han trobat nous llibres."
+
+msgid "Do you want to stop?"
+msgstr "Vols aturar?"
+
+msgid "Continue Indexing"
+msgstr "Continuar l'indexació"
+
+msgid "Stop Indexing"
+msgstr "Aturar l'indexació"
+
+msgid "Tap anywhere to stop"
+msgstr "Toca qualsevol part per aturar"

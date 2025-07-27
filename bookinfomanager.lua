@@ -1139,24 +1139,24 @@ function BookInfoManager.getCachedCoverSize(img_w, img_h, max_img_w, max_img_h)
     return max_img_w, max_img_h, scale_factor
 end
 
-function BookInfoManager.isCachedCoverInvalid(bookinfo, cover_specs)
-    if not bookinfo.cover_w or not bookinfo.cover_h then -- no thumbnail yet
-        return true
-    end
-    local img_w, img_h = bookinfo.cover_sizetag:match("(%d+)x(%d+)") -- original image
-    if not img_w or not img_h then                                   -- old or bad cover_sizetag
-        return true
-    end
-    img_w, img_h = tonumber(img_w), tonumber(img_h)
-    local max_img_w = cover_specs.max_cover_w
-    local max_img_h = cover_specs.max_cover_h
-    if img_w > max_img_w or img_h > max_img_h then                               -- original image bigger than placeholder
-        local new_cover_w, new_cover_h = BookInfoManager.getCachedCoverSize(img_w, img_h, max_img_w, max_img_h)
-        if new_cover_w > bookinfo.cover_w or new_cover_h > bookinfo.cover_h then -- bigger thumbnail needed
-            return true
-        end
-    end
-end
+-- function BookInfoManager.isCachedCoverInvalid(bookinfo, cover_specs)
+--     if not bookinfo.cover_w or not bookinfo.cover_h then -- no thumbnail yet
+--         return true
+--     end
+--     local img_w, img_h = bookinfo.cover_sizetag:match("(%d+)x(%d+)") -- original image
+--     if not img_w or not img_h then                                   -- old or bad cover_sizetag
+--         return true
+--     end
+--     img_w, img_h = tonumber(img_w), tonumber(img_h)
+--     local max_img_w = cover_specs.max_cover_w
+--     local max_img_h = cover_specs.max_cover_h
+--     if img_w > max_img_w or img_h > max_img_h then                               -- original image bigger than placeholder
+--         local new_cover_w, new_cover_h = BookInfoManager.getCachedCoverSize(img_w, img_h, max_img_w, max_img_h)
+--         if new_cover_w > bookinfo.cover_w or new_cover_h > bookinfo.cover_h then -- bigger thumbnail needed
+--             return true
+--         end
+--     end
+-- end
 
 BookInfoManager:init()
 

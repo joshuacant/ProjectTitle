@@ -13,7 +13,7 @@ local OverlapGroup = require("ui/widget/overlapgroup")
 local logger = require("logger")
 local Device = require("device")
 local Screen = Device.screen
-local lfs = require("libs/libkoreader-lfs")
+local util = require("util")
 local _ = require("l10n.gettext")
 local ptdbg = require("ptdbg")
 local BookInfoManager = require("bookinfomanager")
@@ -142,6 +142,8 @@ local function query_cover_paths(folder, include_subfolders)
     local db_conn = SQ3.open(DataStorage:getSettingsDir() .. "/PT_bookinfo_cache.sqlite3")
     db_conn:set_busy_timeout(5000)
 
+    if not util.pathExists(folder) then return nil end
+
     local query
     if include_subfolders then
         query = string.format([[
@@ -171,12 +173,12 @@ local function build_cover_images(db_res, max_img_w, max_img_h)
             max_img_w = max_img_w - (max_img_w / 4) - (Size.border.thin * 2)
             max_img_h = max_img_h - (max_img_h / 4) - (Size.border.thin * 2)
         else
-            max_img_w = (max_img_h - (Size.border.thin * 4) - Size.padding.small) / 2
+            max_img_w = (max_img_w - (Size.border.thin * 4) - Size.padding.small) / 2
             max_img_h = (max_img_h - (Size.border.thin * 4) - Size.padding.small) / 2
         end
         for i, filename in ipairs(filenames) do
             local fullpath = directories[i] .. filename
-            if lfs.attributes(fullpath, "mode") == "file" then
+            if util.fileExists(fullpath) then
                 local book = BookInfoManager:getBookInfo(fullpath, true)
                 if book then
                     local _, _, scale_factor = BookInfoManager.getCachedCoverSize(
@@ -371,10 +373,18 @@ function ptutil.showProgressBar(pages)
     local est_page_count = pages or nil
     if BookInfoManager:getSetting("force_max_progressbars") then est_page_count = "700" end
     show_progress_bar = est_page_count ~= nil and
-        not BookInfoManager:getSetting("show_pages_read_as_progress") and
-        not BookInfoManager:getSetting("hide_page_info") and
-        not BookInfoManager:getSetting("force_no_progressbars")
+        BookInfoManager:getSetting("hide_file_info") and                    -- "show file info"
+        not BookInfoManager:getSetting("show_pages_read_as_progress") and   -- "show pages read"
+        not BookInfoManager:getSetting("force_no_progressbars")             -- "show progress %"
     return est_page_count, show_progress_bar
+end
+
+function ptutil.isPathChooser(self)
+    local is_pathchooser = false
+    if (self.title_bar and self.title_bar.title ~= "") or (self.menu and self.menu.title ~= "") then
+        is_pathchooser = true
+    end
+    return is_pathchooser
 end
 
 return ptutil

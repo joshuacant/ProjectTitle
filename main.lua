@@ -9,32 +9,30 @@
 --]]
 
 local DataStorage = require("datastorage")
-local lfs = require("libs/libkoreader-lfs")
 local logger = require("logger")
 local Version = require("version")
 local ptutil = require("ptutil")
+local util = require("util")
 local ptdbg = require("ptdbg")
 
--- data_dir is separate from lfs.currentdir() on Android.
--- Will be `.` on Kobo devices but a full path on Android.
 local data_dir = DataStorage:getDataDir()
 logger.info(ptdbg.logprefix, "Checking requirements in '" .. data_dir .. "'")
 
 -- Disable this entire plugin if: fonts missing
 local font1_missing = true
-if lfs.attributes(data_dir .. "/fonts/source/SourceSans3-Regular.ttf") ~= nil then
+if util.fileExists(data_dir .. "/fonts/source/SourceSans3-Regular.ttf") then
     font1_missing = false
 else
     logger.warn(ptdbg.logprefix, "Font1 missing")
 end
 local font2_missing = true
-if lfs.attributes(data_dir .. "/fonts/source/SourceSerif4-Regular.ttf") ~= nil then
+if util.fileExists(data_dir .. "/fonts/source/SourceSerif4-Regular.ttf") then
     font2_missing = false
 else
     logger.warn(ptdbg.logprefix, "Font2 missing")
 end
 local font3_missing = true
-if lfs.attributes(data_dir .. "/fonts/source/SourceSerif4-BoldIt.ttf") ~= nil then
+if util.fileExists(data_dir .. "/fonts/source/SourceSerif4-BoldIt.ttf") then
     font3_missing = false
 else
     logger.warn(ptdbg.logprefix, "Font3 missing")
@@ -42,7 +40,7 @@ end
 
 -- Disable this entire plugin if: icons missing
 local icons_missing = true
-if lfs.attributes(data_dir .. "/icons/hero.svg") ~= nil then
+if util.fileExists(data_dir .. "/icons/hero.svg") then
     icons_missing = false -- check for one icon and assume the rest are there too
 else
     logger.warn(ptdbg.logprefix, "Icons missing")
@@ -69,7 +67,7 @@ end
 local safe_version = 202504000000
 local cv_int, cv_hash = Version:getNormalizedCurrentVersion()
 local version_unsafe = true
-if (cv_int == safe_version or lfs.attributes(data_dir .. "/settings/pt-skipversioncheck.txt") ~= nil) then
+if (cv_int == safe_version or util.fileExists(data_dir .. "/settings/pt-skipversioncheck.txt")) then
     version_unsafe = false
 else
     logger.warn(ptdbg.logprefix, "Version not safe ", tostring(cv_int))
@@ -282,7 +280,7 @@ function CoverBrowser:init()
 
     local home_dir = G_reader_settings:readSetting("home_dir")
     if home_dir then logger.info(ptdbg.logprefix, "Home directory is set to: ", home_dir) end
-    if home_dir and lfs.attributes(home_dir, "mode") == "directory" and BookInfoManager:getSetting("autoscan_on_eject") then
+    if home_dir and util.pathExists(home_dir) and BookInfoManager:getSetting("autoscan_on_eject") then
         local cover_specs = { max_cover_w = 1, max_cover_h = 1, }
         Trapper:wrap(function()
             BookInfoManager:extractBooksInDirectory(home_dir, cover_specs, true)
@@ -296,6 +294,7 @@ end
 
 function CoverBrowser:addToMainMenu(menu_items)
     local sub_item_table, history_sub_item_table, collection_sub_item_table = {}, {}, {}
+    local fc = self.ui.file_chooser
     for i, v in ipairs(self.modes) do
         local text, mode = unpack(v)
         sub_item_table[i] = {
@@ -348,23 +347,14 @@ function CoverBrowser:addToMainMenu(menu_items)
     })
     table.insert(sub_item_table, {
         text = _("Collections display mode"),
+        separator = true,
         enabled_func = function()
             return not BookInfoManager:getSetting("unified_display_mode")
         end,
         sub_item_table = collection_sub_item_table,
     })
-    menu_items.filemanager_display_mode = {
-        text = _("Display mode"),
-        sub_item_table = sub_item_table,
-    }
-
-    -- add Mosaic / Detailed list mode settings to File browser Settings submenu
-    -- next to Classic mode settings
-    if menu_items.filebrowser_settings == nil then return end
-    local fc = self.ui.file_chooser
-    table.insert(menu_items.filebrowser_settings.sub_item_table, 5, {
-        text = _("Project: Title settings"),
-        separator = true,
+    table.insert(sub_item_table, {
+        text = _("Advanced settings"),
         sub_item_table = {
             -- {
             --     text = _("Show focus indicator on touchscreen devices"),
@@ -553,36 +543,20 @@ function CoverBrowser:addToMainMenu(menu_items)
                 text = _("Book display"),
                 sub_item_table = {
                     {
-                        text = _("Show series"),
-                        checked_func = function() return series_mode == "series_in_separate_line" end,
-                        callback = function()
-                            if series_mode == "series_in_separate_line" then
-                                series_mode = nil
-                            else
-                                series_mode = "series_in_separate_line"
-                            end
-                            BookInfoManager:saveSetting("series_mode", series_mode)
-                            fc:updateItems(1, true)
-                        end,
-                    },
-                    {
                         text = _("Show file info instead of pages or progress %"),
-                        checked_func = function()
-                            return not BookInfoManager:getSetting("hide_file_info")
-                        end,
+                        checked_func = function() return not BookInfoManager:getSetting("hide_file_info") end,
                         callback = function()
                             BookInfoManager:toggleSetting("hide_file_info")
-                            if not BookInfoManager:getSetting("hide_file_info") then
-                                BookInfoManager:saveSetting("hide_page_info", true)
-                            else
-                                BookInfoManager:saveSetting("hide_page_info", false)
-                            end
                             fc:updateItems(1, true)
                         end,
                     },
                     {
                         text = _("Show pages read instead of progress %"),
-                        enabled_func = function() return not BookInfoManager:getSetting("hide_page_info") end,
+                        enabled_func = function()
+                            return not (
+                                    not BookInfoManager:getSetting("hide_file_info")
+                                )
+                        end,
                         checked_func = function() return BookInfoManager:getSetting("show_pages_read_as_progress") end,
                         callback = function()
                             BookInfoManager:toggleSetting("show_pages_read_as_progress")
@@ -592,8 +566,10 @@ function CoverBrowser:addToMainMenu(menu_items)
                     {
                         text = _("Show progress % instead of progress bars"),
                         enabled_func = function()
-                            return not (BookInfoManager:getSetting("hide_page_info") or
-                                        BookInfoManager:getSetting("show_pages_read_as_progress"))
+                            return not (
+                                    BookInfoManager:getSetting("show_pages_read_as_progress") or
+                                    not BookInfoManager:getSetting("hide_file_info")
+                                )
                         end,
                         checked_func = function() return BookInfoManager:getSetting("force_no_progressbars") end,
                         callback = function()
@@ -603,14 +579,30 @@ function CoverBrowser:addToMainMenu(menu_items)
                     },
                     {
                         text = _("Always show maximum length progress bars"),
+                        separator = true,
                         enabled_func = function()
-                            return not (BookInfoManager:getSetting("hide_page_info") or
-                                        BookInfoManager:getSetting("force_no_progressbars") or
-                                        BookInfoManager:getSetting("show_pages_read_as_progress"))
+                            return not (
+                                    BookInfoManager:getSetting("force_no_progressbars") or
+                                    BookInfoManager:getSetting("show_pages_read_as_progress") or
+                                    not BookInfoManager:getSetting("hide_file_info")
+                                )
                         end,
                         checked_func = function() return BookInfoManager:getSetting("force_max_progressbars") end,
                         callback = function()
                             BookInfoManager:toggleSetting("force_max_progressbars")
+                            fc:updateItems(1, true)
+                        end,
+                    },
+                    {
+                        text = _("Show series"),
+                        checked_func = function() return series_mode == "series_in_separate_line" end,
+                        callback = function()
+                            if series_mode == "series_in_separate_line" then
+                                series_mode = nil
+                            else
+                                series_mode = "series_in_separate_line"
+                            end
+                            BookInfoManager:saveSetting("series_mode", series_mode)
                             fc:updateItems(1, true)
                         end,
                     },
@@ -728,6 +720,11 @@ function CoverBrowser:addToMainMenu(menu_items)
             },
         },
     })
+    menu_items.filemanager_display_mode = {
+        text = _("Project: Title settings"),
+        sub_item_table = sub_item_table,
+        separator = true,
+    }
 end
 
 function CoverBrowser:genExtractBookInfoButton(close_dialog_callback) -- for FileManager Plus dialog
