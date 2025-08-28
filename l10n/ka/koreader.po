@@ -1,0 +1,165 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the projecttitle.koplugin package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/ka/>\n"
+"Language: ka\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# This is the template for localizing the additional strings found in Project: Title.
+# The strings below will be added to the full l10n file from KOReader.
+# When submitting this file, please indicate what KOReader language code the
+# translation is for. See: https://github.com/koreader/koreader-translations for a list.
+# Keep translations concise. Due to screen space limits, long strings may be truncated.
+# This is especially true of the setting names located in main.lua
+# covermenu.lua
+msgid "Library"
+msgstr "ბიბლიოთეკა"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "კატალოგები"
+
+msgid "Book"
+msgstr "წიგნი"
+
+# main.lua
+msgid "Project: Title"
+msgstr "პროექტი: სახელი"
+
+msgid "Decrease Items Per Page"
+msgstr "ფურცელზე ელემენტების შემცირება"
+
+msgid "Increase Items Per Page"
+msgstr "ფურცელზე ელემენტების ზრდა"
+
+msgid "Cover List"
+msgstr "საშლელების სია"
+
+msgid "Cover Grid"
+msgstr "საშლელების კვადრატი"
+
+msgid "Details List"
+msgstr "მონაწილეობის სია"
+
+msgid "Filenames List"
+msgstr "ფაილების სახელების სია"
+
+msgid "Project: Title settings"
+msgstr "პროექტი: სახელის პარამეტრები"
+
+msgid "Portrait cover grid mode"
+msgstr "პორტრეტის საშლელი კვადრატული რეჟიმი"
+
+msgid "Landscape cover grid mode"
+msgstr "ლანდშაფტის საშლელი კვადრატული რეჟიმი"
+
+msgid "List modes"
+msgstr "სიის რეჟიმები"
+
+msgid "Folder display"
+msgstr "კატალოგის ჩვენება"
+
+msgid "Auto-generate cover images from books"
+msgstr "საშლელების გამოსახულების ავტომატური შექმნა წიგნებიდან"
+
+msgid "Overlay name and details in cover grid"
+msgstr "სახელის და დეტალების ზედას მიფენა საშლელების კვადრატში"
+
+msgid "Book display"
+msgstr "წიგნის ჩვენება"
+
+msgid "Show series"
+msgstr "სერიების ჩვენება"
+
+msgid "Show pages read instead of progress %"
+msgstr "გაჩერდით ერთი წაკითხული ფურცლის სანაცვლოდ %"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "ფაილის ინფორმაციით დონე ან პროგრესი %"
+
+msgid "Show progress % instead of progress bars"
+msgstr "დონესი % პროგრესული ბარების ნაცვლად"
+
+msgid "Always show maximum length progress bars"
+msgstr "მუდმივად გამოაჩინეთ მაქსიმალური სიგრძის პროგრესი"
+
+msgid "Use custom book status screen"
+msgstr "გამოიყენეთ სპეციალური წიგნის სტატუსის ეკრანი"
+
+msgid "Footer"
+msgstr "ქვედა ნაწილი"
+
+msgid "Replace folder name with device info"
+msgstr "კატალოგის სახელი შეიცვალოს მოწყობილობის ინფორმაციის სახით"
+
+msgid "Show page controls in left corner"
+msgstr "ფურცლის კონტროლების ჩვენება მარცხენ კუთხეში"
+
+msgid "Library mode"
+msgstr "ბიბლიოთეკის რეჟიმი"
+
+msgid "Show opened books first"
+msgstr "წიგნების გამოჩენა პირველი"
+
+msgid "Cache database"
+msgstr "კოში ბაზა"
+
+msgid "Scan home folder for new books automatically"
+msgstr "ახალი წიგნების ავტომატური სკანირება მთავარი კატალოგში"
+
+msgid "Empty cache"
+msgstr "კოში ცარიელი"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "დარწმუნებული ხართ, რომ გსურთ  საშლელის და მეტატფორმის კოშის წაშლა?"
+
+msgid "Cache emptied."
+msgstr "კოში ცარიელია."
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"ეს გამოიტანოს მეტატფორმა და საშლელის გამოსახულებები ნალექში არსებული "
+"წიგნებიდან.\n"
+"ერთხელ გასასვლელი დაწყებულია, ნებისმიერ დროს შეგიძლიათ დაასრულოთ ეკრანზე "
+"დაჭერით.\n"
+"\n"
+"ეს გადმოწერა შეიძლება დრო მოითხოვოს და გარკვეული ენერგიის გამოყენება: გსურთ "
+"ნამდვილად არ გამოიყენოთ მოწყობილობა."
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"გვეპოვნა %1 წიგნი.\n"
+"ახალი წიგნების ძიება…"
+
+msgid "No new books found."
+msgstr "ახალი წიგნები არ იქნა ნაპოვნი."
+
+msgid "Do you want to stop?"
+msgstr "გსურთ შეწყვიტოთ?"
+
+msgid "Continue Indexing"
+msgstr "შემოიფაროს ინდექსირება"
+
+msgid "Stop Indexing"
+msgstr "შეწყვიტოს ინდექსირება"
+
+msgid "Tap anywhere to stop"
+msgstr "დაჭერით ყველგან შეწყვიტეთ"

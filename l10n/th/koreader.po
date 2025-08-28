@@ -1,0 +1,157 @@
+# TEMPLATE สำหรับการแปลข้อความเพิ่มเติมที่พบในโครงการ: ชื่อ
+# ข้อความด้านล่างจะถูกเพิ่มไปยังไฟล์ l10n เต็มรูปแบบจาก KOReader
+# เมื่อส่งไฟล์นี้ กรุณาระบุรหัสภาษาของ KOReader ที่การแปลนี้ใช้ 
+# ดู: https://github.com/koreader/koreader-translations เพื่อดูรายชื่อ
+# รักษาการแปลให้กระชับ เนื่องจากข้อจำกัดของพื้นที่บนหน้าจอ ข้อความยาวอาจถูกตัด
+# นี้เป็นจริงโดยเฉพาะอย่างยิ่งกับชื่อการตั้งค่าใน main.lua
+# covermenu.lua
+msgid ""
+msgstr ""
+"projecttitle/th/>\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Library"
+msgstr "ห้องสมุด"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "โฟลเดอร์"
+
+msgid "Book"
+msgstr "หนังสือ"
+
+# main.lua
+msgid "Project: Title"
+msgstr "โครงการ: ชื่อ"
+
+msgid "Decrease Items Per Page"
+msgstr "ลดจำนวนรายการต่อหน้า"
+
+msgid "Increase Items Per Page"
+msgstr "เพิ่มจำนวนรายการต่อหน้า"
+
+msgid "Cover List"
+msgstr "รายการปก"
+
+msgid "Cover Grid"
+msgstr "ตารางปก"
+
+msgid "Details List"
+msgstr "รายการรายละเอียด"
+
+msgid "Filenames List"
+msgstr "รายการชื่อไฟล์"
+
+msgid "Project: Title settings"
+msgstr "การตั้งค่าโครงการ: ชื่อ"
+
+msgid "Portrait cover grid mode"
+msgstr "โหมดกริดปกแบบแนวตั้ง"
+
+msgid "Landscape cover grid mode"
+msgstr "โหมดกริดปกแบบแนวนอน"
+
+msgid "List modes"
+msgstr "โหมดรายการ"
+
+msgid "Folder display"
+msgstr "การแสดงโฟลเดอร์"
+
+msgid "Auto-generate cover images from books"
+msgstr "สร้างภาพปกจากหนังสออัตโนมัติ"
+
+msgid "Overlay name and details in cover grid"
+msgstr "ซ้อนชื่อและรายละเอียดในกริดปก"
+
+msgid "Book display"
+msgstr "การแสดงหนังสือ"
+
+msgid "Show series"
+msgstr "แสดงซีรีส์"
+
+msgid "Show pages read instead of progress %"
+msgstr "แสดงจำนวนหน้าที่อ่านแทนความก้าวหน้า %"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "แสดงข้อมูลไฟล์แทนหน้าหรือความก้าวหน้า %"
+
+msgid "Show progress % instead of progress bars"
+msgstr "แสดงความก้าวหน้า % แทนแถบความก้าวหน้า"
+
+msgid "Always show maximum length progress bars"
+msgstr "แสดงแถบความก้าวนาสูงสุดเสมอ"
+
+msgid "Use custom book status screen"
+msgstr "ใช้หน้าจอสถานะหนังสือที่กำหนดเอง"
+
+msgid "Footer"
+msgstr "ส่วนล่าง"
+
+msgid "Replace folder name with device info"
+msgstr "แทนที่ชื่อโฟลเดอร์ด้วยข้อมูลอุปกรณ์"
+
+msgid "Show page controls in left corner"
+msgstr "แสดงการควบคุมหน้าที่มุมซ้าย"
+
+msgid "Library mode"
+msgstr "โหมดห้องสมุด"
+
+msgid "Show opened books first"
+msgstr "แสดงหนังสือที่เปิดอยู่ก่อน"
+
+msgid "Cache database"
+msgstr "ฐานข้อมูลแคช"
+
+msgid "Scan home folder for new books automatically"
+msgstr "สแกนโฟลเดอร์หลักเพื่อหาหนังสือใหม่โดยอัตโนมัติ"
+
+msgid "Empty cache"
+msgstr "ล้างแคช"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "คุณแน่ใจว่าต้องการลบแคชปกและข้อมูลเมตาหรือไม่?"
+
+msgid "Cache emptied."
+msgstr "แคชถูกล้างเรียบร้อยแล้ว."
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"จะทำการดึงข้อมูลเมตาและภาพปกจากหนังสือในไดเรกทอรีปัจจุบัน\n"
+"เมื่อเริ่มการดึงข้อมูลแล้ว คุณสามารถยกเลิกได้ทุกเมื่อโดยการแตะที่ หน้าจอ\n"
+"\n"
+"การดึงข้อมูลนี้อาจใช้เวลานานและใช้พลังงานแบตเตอรี่บางส่วน: คุณอาจต้องการ "
+"ให้เชื่อมต่ออุปกรณ์ของคุณ."
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"พบหนังสือ %1 เล่ม.\n"
+"กำลังมองหาหนังสือใหม่…"
+
+msgid "No new books found."
+msgstr "ไม่พบหนังสือใหม่."
+
+msgid "Do you want to stop?"
+msgstr "คุณต้องการหยุดไหม?"
+
+msgid "Continue Indexing"
+msgstr "ดำเนินการดัชนีต่อ"
+
+msgid "Stop Indexing"
+msgstr "หยุดดัชนี"
+
+msgid "Tap anywhere to stop"
+msgstr "แตะที่ใดก็ได้เพื่อหยุด"

@@ -1,0 +1,173 @@
+# ALGÚN TÍTULO DESCRIPTIVO.
+# Copyright (C) ANO O TITULAR DOS DEREITOS DE AUTOR DO PAQUETE
+# Este ficheiro distribúese baixo a mesma licenza que o paquete projecttitle.koplugin.
+# PRIMEIRO AUTOR <EMAIL@ADDRESS>, ANO.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/gl/>\n"
+"Language: gl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Esta é a plantilla para localizar as cadeas adicionais que se atopan en Proyecto: Título.
+# As cadeas abaixo engadiránse ao ficheiro completo de l10n de KOReader.
+# Cando se envíe este ficheiro, indique o código de idioma de KOReader para o que
+# é a tradución. Vexa: https://github.com/koreader/koreader-translations para unha lista.
+# Manteña as traducións concisas. Debido a límites de espazo na pantalla, as cadeas longas
+# poden ser truncadas. Isto é especialmente verdadeiro para os nomes das configuracións
+# localizadas en main.lua
+# covermenu.lua
+msgid "Library"
+msgstr "Biblioteca"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "Cartafoles"
+
+msgid "Book"
+msgstr "Libro"
+
+# main.lua
+msgid "Project: Title"
+msgstr "Proxecto: Título"
+
+msgid "Decrease Items Per Page"
+msgstr "Diminuír elementos por páxina"
+
+msgid "Increase Items Per Page"
+msgstr "Aumentar elementos por páxina"
+
+msgid "Cover List"
+msgstr "Lista de cubertas"
+
+msgid "Cover Grid"
+msgstr "Grelha de cubertas"
+
+msgid "Details List"
+msgstr "Lista de detalles"
+
+msgid "Filenames List"
+msgstr "Lista de nomes de ficheiros"
+
+msgid "Project: Title settings"
+msgstr "Configuracións do Proxecto: Título"
+
+msgid "Portrait cover grid mode"
+msgstr "Modo de grelha de cubertas vertical"
+
+msgid "Landscape cover grid mode"
+msgstr "Modo de grelha de cubertas horizontal"
+
+msgid "List modes"
+msgstr "Modos de lista"
+
+msgid "Folder display"
+msgstr "Visualización de cartafoles"
+
+msgid "Auto-generate cover images from books"
+msgstr "Xerar imaxes de cubertas automáticamente"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Superpoñer nome e detalles na grelha de cubertas"
+
+msgid "Book display"
+msgstr "Visualización de libros"
+
+msgid "Show series"
+msgstr "Mostrar series"
+
+msgid "Show pages read instead of progress %"
+msgstr "Mostrar páxinas lidas en vez de progreso %"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Mostrar información do ficheiro en vez de páxinas ou progreso %"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Mostrar progreso % en vez de barras de progreso"
+
+msgid "Always show maximum length progress bars"
+msgstr "Sempre mostrar barras de progreso de lonxitude máxima"
+
+msgid "Use custom book status screen"
+msgstr "Usar pantalla de estado do libro personalizada"
+
+msgid "Footer"
+msgstr "Rodapé"
+
+msgid "Replace folder name with device info"
+msgstr "Substituír o nome da cartafol coas informacións do dispositivo"
+
+msgid "Show page controls in left corner"
+msgstr "Mostrar controis de páxina na esquina esquerda"
+
+msgid "Library mode"
+msgstr "Modo de Biblioteca"
+
+msgid "Show opened books first"
+msgstr "Mostrar primeiro os libros abertos"
+
+msgid "Cache database"
+msgstr "Base de datos de caché"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Escanear cartafol de inicio para novos libros automáticamente"
+
+msgid "Empty cache"
+msgstr "Expurgar caché"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "Estás seguro de que queres eliminar a caché de cubertas e metadatos?"
+
+msgid "Cache emptied."
+msgstr "Caché expurgada."
+
+# bookinfomanager.lua
+msgid ""
+"Este procederá a extraer metadatos e imaxes de cubertas dos libros na "
+"directorio actual.\n"
+"Unha vez que a extracción comece, podes abortar en calquera momento tocando "
+"na pantalla.\n"
+"\n"
+"Esta extracción pode levar tempo e usar algo de batería: pode que queiras "
+"manter o teu dispositivo conectado."
+msgstr ""
+
+msgid ""
+"Atopáronse %1 libros.\n"
+"Buscando novos libros…"
+msgstr ""
+
+msgid "No new books found."
+msgstr "Non se atoparon novos libros."
+
+msgid "Do you want to stop?"
+msgstr "Queres parar?"
+
+msgid "Continue Indexing"
+msgstr "Continuar indexando"
+
+msgid "Stop Indexing"
+msgstr "Parar indexación"
+
+msgid "Tap anywhere to stop"
+msgstr "Toca en calquera lugar para parar"
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""

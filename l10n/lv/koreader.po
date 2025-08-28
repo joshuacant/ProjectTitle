@@ -1,0 +1,164 @@
+# LOCALIZATION TEMPLATE FOR PROJECTTITLE.KOPLUGIN.
+# Copyright (C) 2025 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the projecttitle.koplugin package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/lv/>\n"
+"Language: lv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# This is the template for localizing the additional strings found in Project: Title.
+# The strings below will be added to the full l10n file from KOReader.
+# When submitting this file, please indicate what KOReader language code the
+# translation is for. See: https://github.com/koreader/koreader-translations for a list.
+# Keep translations concise. Due to screen space limits, long strings may be truncated.
+# This is especially true of the setting names located in main.lua
+# covermenu.lua
+msgid "Library"
+msgstr "Bibliotēka"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "Mapes"
+
+msgid "Book"
+msgstr "Grāmata"
+
+# main.lua
+msgid "Project: Title"
+msgstr "Projekts: Nosaukums"
+
+msgid "Decrease Items Per Page"
+msgstr "Samazināt vienību skaitu lapā"
+
+msgid "Increase Items Per Page"
+msgstr "Palielināt vienību skaitu lapā"
+
+msgid "Cover List"
+msgstr "Vāku saraksts"
+
+msgid "Cover Grid"
+msgstr "Vāku režģis"
+
+msgid "Details List"
+msgstr "Sīkdatņu saraksts"
+
+msgid "Filenames List"
+msgstr "Failu nosaukumu saraksts"
+
+msgid "Project: Title settings"
+msgstr "Projekta: Nosaukuma iestatījumi"
+
+msgid "Portrait cover grid mode"
+msgstr "Portretu vāka režģa režīms"
+
+msgid "Landscape cover grid mode"
+msgstr "Ainavas vāka režģa režīms"
+
+msgid "List modes"
+msgstr "Saraksta režīmi"
+
+msgid "Folder display"
+msgstr "Mapes displejs"
+
+msgid "Auto-generate cover images from books"
+msgstr "Automātiski ģenerēt vāku attēlus no grāmatām"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Pārklāt nosaukumu un detaļas vāku režģī"
+
+msgid "Book display"
+msgstr "Grāmatu displejs"
+
+msgid "Show series"
+msgstr "Rādīt sērijas"
+
+msgid "Show pages read instead of progress %"
+msgstr "Rādīt izlasītas lapas, nevis progresu %"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Rādīt faila informāciju, nevis lappuses vai progresu %"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Rādīt progresu % vietā, nevis progresu joslas"
+
+msgid "Always show maximum length progress bars"
+msgstr "Vienmēr rādīt maksimāla garuma progresu joslas"
+
+msgid "Use custom book status screen"
+msgstr "Izmantot pielāgotu grāmatu statusa ekrānu"
+
+msgid "Footer"
+msgstr "Kājenes"
+
+msgid "Replace folder name with device info"
+msgstr "Aizvietot mapes nosaukumu ar ierīces informāciju"
+
+msgid "Show page controls in left corner"
+msgstr "Rādīt lapas vadības elementus kreisajā stūrī"
+
+msgid "Library mode"
+msgstr "Bibliotēkas režīms"
+
+msgid "Show opened books first"
+msgstr "Vispirms rādīt atvērtās grāmatas"
+
+msgid "Cache database"
+msgstr "Keša datubāze"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Automātiski skenēt sākuma mapīti jaunām grāmatām"
+
+msgid "Empty cache"
+msgstr "Iztukšot kešu"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "Vai tiešām vēlaties izdzēst vāku un metadatu kešu?"
+
+msgid "Cache emptied."
+msgstr "Keša iztukšota."
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"Šis izvilks metadatus un vāku attēlus no grāmatām pašreizējā direktorijā.\n"
+"Kad izvilkšana ir uzsākta, jūs varat to pārtraukt jebkurā brīdī, nospiežot "
+"uz ekrāna.\n"
+"\n"
+"Šī izvilkšana var aizņemt laiku un patērēt nedaudz enerģijas: ieteicams "
+"ierīci turēt pievērstu strāvai."
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"Atrast %1 grāmatas.\n"
+"Meistarot jaunas grāmatas…"
+
+msgid "No new books found."
+msgstr "Jaunas grāmatas neatrastas."
+
+msgid "Do you want to stop?"
+msgstr "Vai vēlaties apstāties?"
+
+msgid "Continue Indexing"
+msgstr "Turpināt indeksošanu"
+
+msgid "Stop Indexing"
+msgstr "Apstāt indeksošanu"
+
+msgid "Tap anywhere to stop"
+msgstr "Nospiediet jebkur, lai apturētu"

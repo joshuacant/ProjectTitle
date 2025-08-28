@@ -1,0 +1,155 @@
+# TEMPLATE VOOR LOKALISATIE VAN TOEVOEGERLIJKE STRINGEN IN PROJECT: TITEL.
+# Copyright (C) JAAR DE AUTEUR VAN HET PAKKET
+# Dit bestand wordt verspreid onder dezelfde licentie als het projecttitle.koplugin-pakket.
+# EERSTE AUTEUR <EMAIL@ADRES>, JAAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/nl_NL/>\n"
+"Language: nl_NL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Library"
+msgstr "Bibliotheek"
+
+msgid "Folders"
+msgstr "Mappen"
+
+msgid "Book"
+msgstr "Boek"
+
+msgid "Project: Title"
+msgstr "Project: Titel"
+
+msgid "Decrease Items Per Page"
+msgstr "Verminder Aantal Items Per Pagina"
+
+msgid "Increase Items Per Page"
+msgstr "Verhoog Aantal Items Per Pagina"
+
+msgid "Cover List"
+msgstr "Omslaglijst"
+
+msgid "Cover Grid"
+msgstr "Omslagrooster"
+
+msgid "Details List"
+msgstr "Detailslijst"
+
+msgid "Filenames List"
+msgstr "Bestandsnamenlijst"
+
+msgid "Project: Title settings"
+msgstr "Project: Titelinstellingen"
+
+msgid "Portrait cover grid mode"
+msgstr "Portret omslagrooster modus"
+
+msgid "Landscape cover grid mode"
+msgstr "Landschap omslagrooster modus"
+
+msgid "List modes"
+msgstr "Lijstmodi"
+
+msgid "Folder display"
+msgstr "Mapweergave"
+
+msgid "Auto-generate cover images from books"
+msgstr "Automatisch omslagafbeeldingen genereren uit boeken"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Naam en details overlappen in omslagrooster"
+
+msgid "Book display"
+msgstr "Boekweergave"
+
+msgid "Show series"
+msgstr "Toon series"
+
+msgid "Show pages read instead of progress %"
+msgstr "Toon gelezen pagina's in plaats van voortgang %"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Toon bestandsinfo in plaats van pagina's of voortgang %"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Toon voortgang % in plaats van voortgangsbalken"
+
+msgid "Always show maximum length progress bars"
+msgstr "Altijd de maximale lengte van voortgangsbalken tonen"
+
+msgid "Use custom book status screen"
+msgstr "Gebruik aangepast boekstatusscherm"
+
+msgid "Footer"
+msgstr "Voettekst"
+
+msgid "Replace folder name with device info"
+msgstr "Vervang mapnaam met apparaatinformatie"
+
+msgid "Show page controls in left corner"
+msgstr "Toon paginacontroles in de linkerhoek"
+
+msgid "Library mode"
+msgstr "Bibliotheekmodus"
+
+msgid "Show opened books first"
+msgstr "Toon geopende boeken eerst"
+
+msgid "Cache database"
+msgstr "Cache-database"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Automatisch de hoofdmap scannen op nieuwe boeken"
+
+msgid "Empty cache"
+msgstr "Legen cache"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "Weet u zeker dat u de omslag- en metadata-cache wilt verwijderen?"
+
+msgid "Cache emptied."
+msgstr "Cache geleegd."
+
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"Dit zal metadata en omslagafbeeldingen extraheren uit boeken in de huidige "
+"map.\n"
+"Zodra de extractie is gestart, kunt u op elk moment afbreken door op het "
+"scherm te tikken.\n"
+"\n"
+"Deze extractie kan tijd kosten en wat batterijvermogen gebruiken: u wilt "
+"misschien uw apparaat aansluiten."
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"Vond %1 boeken.\n"
+"Zoeken naar nieuwe boeken…"
+
+msgid "No new books found."
+msgstr "Geen nieuwe boeken gevonden."
+
+msgid "Do you want to stop?"
+msgstr "Wilt u stoppen?"
+
+msgid "Continue Indexing"
+msgstr "Vervolg Indexeren"
+
+msgid "Stop Indexing"
+msgstr "Stop Indexeren"
+
+msgid "Tap anywhere to stop"
+msgstr "Tik ergens om te stoppen"

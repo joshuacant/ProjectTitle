@@ -1,0 +1,165 @@
+# Текстов файл за локализация на проект: Title.
+# Авторски права (C) ГОДИНА ДЪРЖАТЕЛ НА АВТОРСКИТЕ ПРАВА
+# Този файл е разпространен под същата лицензия като пакета projecttitle.koplugin.
+# ПЪРВИ АВТОР <EMAIL@ADDRESS>, ГОДИНА.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/bg_BG/>\n"
+"Language: bg_BG\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Това е шаблон за локализиране на допълнителни низове, намерени в проект: Title.
+# Низовете по-долу ще бъдат добавени към файла с пълна локализация от KOReader.
+# При подаване на този файл, моля посочете кода на езика на KOReader, за който е
+# преводът. Вижте: https://github.com/koreader/koreader-translations за списък.
+# Дръжте преводите кратки. Поради ограничения в пространството на екрана, дългите низове могат да бъдат съкратени.
+# Това е особено вярно за имената на настройките, разположени в main.lua
+# covermenu.lua
+msgid "Library"
+msgstr "Библиотека"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "Папки"
+
+msgid "Book"
+msgstr "Книга"
+
+# main.lua
+msgid "Project: Title"
+msgstr "Проект: Заглавие"
+
+msgid "Decrease Items Per Page"
+msgstr "Намаляване на елементите на страница"
+
+msgid "Increase Items Per Page"
+msgstr "Увеличаване на елементите на страница"
+
+msgid "Cover List"
+msgstr "Списък с корици"
+
+msgid "Cover Grid"
+msgstr "Мрежа с корици"
+
+msgid "Details List"
+msgstr "Списък с детайли"
+
+msgid "Filenames List"
+msgstr "Списък с имена на файлове"
+
+msgid "Project: Title settings"
+msgstr "Настройки на проект: Заглавие"
+
+msgid "Portrait cover grid mode"
+msgstr "Портретен режим на мрежата с корици"
+
+msgid "Landscape cover grid mode"
+msgstr "Пейзажен режим на мрежата с корици"
+
+msgid "List modes"
+msgstr "Режими на списъка"
+
+msgid "Folder display"
+msgstr "Показване на папките"
+
+msgid "Auto-generate cover images from books"
+msgstr "Автоматично генериране на корици от книги"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Наложи име и детайли в мрежата с корици"
+
+msgid "Book display"
+msgstr "Показване на книгата"
+
+msgid "Show series"
+msgstr "Показвай серии"
+
+msgid "Show pages read instead of progress %"
+msgstr "Показвай прочетените страници вместо процент на напредъка"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Показвай информация за файла вместо страници или процент на напредъка"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Показвай процент на напредъка вместо ленти за напредък"
+
+msgid "Always show maximum length progress bars"
+msgstr "Винаги показвай ленти за напредък с максимална дължина"
+
+msgid "Use custom book status screen"
+msgstr "Използвай персонализиран екран за статус на книгата"
+
+msgid "Footer"
+msgstr "Долна част"
+
+msgid "Replace folder name with device info"
+msgstr "Замени името на папката с информация за устройството"
+
+msgid "Show page controls in left corner"
+msgstr "Показвай контроли за страници в левия ъгъл"
+
+msgid "Library mode"
+msgstr "Режим на библиотеката"
+
+msgid "Show opened books first"
+msgstr "Показвай отворените книги първо"
+
+msgid "Cache database"
+msgstr "Кеш база данни"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Автоматично сканиране на домашната папка за нови книги"
+
+msgid "Empty cache"
+msgstr "Изчистване на кеша"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "Сигурни ли сте, че искате да изтриете кеша с корици и метаданни?"
+
+msgid "Cache emptied."
+msgstr "Кешът е изчистен."
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"Това ще извлече метаданни и изображения на корици от книги в текущата "
+"директория.\n"
+"След започването на извличането, можете да прекратите по всяко време, като "
+"натиснете на екрана.\n"
+"\n"
+" Това извличане може да отнеме време и да използва малко батерия: "
+"препоръчително е да оставите устройството включено в мрежата."
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"Намерени са %1 книги.\n"
+"Търсене на нови книги…"
+
+msgid "No new books found."
+msgstr "Не са намерени нови книги."
+
+msgid "Do you want to stop?"
+msgstr "Искате ли да спрете?"
+
+msgid "Continue Indexing"
+msgstr "Продължи индексирането"
+
+msgid "Stop Indexing"
+msgstr "Спри индексирането"
+
+msgid "Tap anywhere to stop"
+msgstr "Докоснете навсякъде, за да спрете"

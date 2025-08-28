@@ -1,0 +1,163 @@
+# プロジェクトタイトルのローカライズ用テンプレート
+# Copyright (C) YEAR パッケージの著作権保有者
+# このファイルはprojecttitle.kopluginパッケージと同じライセンスの下で配布されます。
+# 第1著者 <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/ja/>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# このテンプレートはProject: Titleに見つかった追加の文字列をローカライズするためのものです。
+# 下記の文字列はKOReaderからの完全なl10nファイルに追加されます。
+# このファイルを提出する際には、翻訳のKOReader言語コードを明記してください。
+# 参照: https://github.com/koreader/koreader-translations
+# 翻訳は簡潔に保ってください。画面スペースの制限のため、長い文字列は切り捨てられることがあります。
+# 特にmain.luaにある設定名に関してはその傾向があります。
+# covermenu.lua
+msgid "Library"
+msgstr "ライブラリ"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "フォルダ"
+
+msgid "Book"
+msgstr "本"
+
+# main.lua
+msgid "Project: Title"
+msgstr "プロジェクト: タイトル"
+
+msgid "Decrease Items Per Page"
+msgstr "ページあたりのアイテムを減らす"
+
+msgid "Increase Items Per Page"
+msgstr "ページあたりのアイテムを増やす"
+
+msgid "Cover List"
+msgstr "カバーリスト"
+
+msgid "Cover Grid"
+msgstr "カバーグリッド"
+
+msgid "Details List"
+msgstr "詳細リスト"
+
+msgid "Filenames List"
+msgstr "ファイル名リスト"
+
+msgid "Project: Title settings"
+msgstr "プロジェクト: タイトル設定"
+
+msgid "Portrait cover grid mode"
+msgstr "ポートレートカバーグリッドモード"
+
+msgid "Landscape cover grid mode"
+msgstr "ランドスケープカバーグリッドモード"
+
+msgid "List modes"
+msgstr "リストモード"
+
+msgid "Folder display"
+msgstr "フォルダ表示"
+
+msgid "Auto-generate cover images from books"
+msgstr "本からカバー画像を自動生成"
+
+msgid "Overlay name and details in cover grid"
+msgstr "カバーグリッドに名前と詳細を重ねて表示"
+
+msgid "Book display"
+msgstr "本の表示"
+
+msgid "Show series"
+msgstr "シリーズを表示"
+
+msgid "Show pages read instead of progress %"
+msgstr "進捗%の代わりに読了ページを表示"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "ページまたは進捗%の代わりにファイル情報を表示"
+
+msgid "Show progress % instead of progress bars"
+msgstr "進捗バーの代わりに進捗%を表示"
+
+msgid "Always show maximum length progress bars"
+msgstr "常に最大長の進捗バーを表示"
+
+msgid "Use custom book status screen"
+msgstr "カスタム本ステータス画面を使用"
+
+msgid "Footer"
+msgstr "フッター"
+
+msgid "Replace folder name with device info"
+msgstr "フォルダ名をデバイス情報に置き換え"
+
+msgid "Show page controls in left corner"
+msgstr "左上隅にページコントロールを表示"
+
+msgid "Library mode"
+msgstr "ライブラリモード"
+
+msgid "Show opened books first"
+msgstr "開いている本を最初に表示"
+
+msgid "Cache database"
+msgstr "キャッシュデータベース"
+
+msgid "Scan home folder for new books automatically"
+msgstr "ホームフォルダを自動で新しい本をスキャン"
+
+msgid "Empty cache"
+msgstr "キャッシュを空にする"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "カバーとメタデータのキャッシュを削除してもよろしいですか？"
+
+msgid "Cache emptied."
+msgstr "キャッシュが空になりました。"
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"これは現在のディレクトリにある本からメタデータとカバー画像を抽出します。\n"
+"抽出が始まったら、画面をタップすることでいつでも中止できます。\n"
+"\n"
+"この抽出は時間がかかる可能性があり、バッテリーを消耗することがありますので、"
+"デバイスを接続したままにすることをお勧めします。"
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"%1 冊の本が見つかりました。\n"
+"新しい本を探しています…"
+
+msgid "No new books found."
+msgstr "新しい本は見つかりませんでした。"
+
+msgid "Do you want to stop?"
+msgstr "停止しますか？"
+
+msgid "Continue Indexing"
+msgstr "インデックス作成を続ける"
+
+msgid "Stop Indexing"
+msgstr "インデックス作成を停止する"
+
+msgid "Tap anywhere to stop"
+msgstr "停止するにはどこでもタップしてください"

@@ -1,0 +1,153 @@
+# قالب لتوطين السلاسل الإضافية الموجودة في المشروع: العنوان.
+# يتم توزيع هذا الملف بموجب نفس الترخيص مثل حزمة projecttitle.koplugin.
+# المؤلف الأول <EMAIL@ADDRESS>، السنة.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/ar/>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Library"
+msgstr "المكتبة"
+
+msgid "Folders"
+msgstr "المجلدات"
+
+msgid "Book"
+msgstr "كتاب"
+
+msgid "Project: Title"
+msgstr "المشروع: العنوان"
+
+msgid "Decrease Items Per Page"
+msgstr "تقليل العناصر في الصفحة"
+
+msgid "Increase Items Per Page"
+msgstr "زيادة العناصر في الصفحة"
+
+msgid "Cover List"
+msgstr "قائمة الأغطية"
+
+msgid "Cover Grid"
+msgstr "شبكة الأغطية"
+
+msgid "Details List"
+msgstr "قائمة التفاصيل"
+
+msgid "Filenames List"
+msgstr "قائمة أسماء الملفات"
+
+msgid "Project: Title settings"
+msgstr "إعدادات المشروع: العنوان"
+
+msgid "Portrait cover grid mode"
+msgstr "وضع شبكة الأغطية الرأسي"
+
+msgid "Landscape cover grid mode"
+msgstr "وضع شبكة الأغطية الأفقي"
+
+msgid "List modes"
+msgstr "أوضاع القائمة"
+
+msgid "Folder display"
+msgstr "عرض المجلد"
+
+msgid "Auto-generate cover images from books"
+msgstr "إنشاء صور الأغطية تلقائياً من الكتب"
+
+msgid "Overlay name and details in cover grid"
+msgstr "تراكب الاسم والتفاصيل في شبكة الأغطية"
+
+msgid "Book display"
+msgstr "عرض الكتاب"
+
+msgid "Show series"
+msgstr "عرض السلاسل"
+
+msgid "Show pages read instead of progress %"
+msgstr "عرض الصفحات المقروءة بدلاً من النسبة المئوية للتقدم"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "عرض معلومات الملف بدلاً من الصفحات أو النسبة المئوية للتقدم"
+
+msgid "Show progress % instead of progress bars"
+msgstr "عرض النسبة المئوية للتقدم بدلاً من شريط التقدم"
+
+msgid "Always show maximum length progress bars"
+msgstr "دائمًا عرض شرائط التقدم بأقصى طول"
+
+msgid "Use custom book status screen"
+msgstr "استخدام شاشة حالة الكتاب المخصصة"
+
+msgid "Footer"
+msgstr "التذييل"
+
+msgid "Replace folder name with device info"
+msgstr "استبدال اسم المجلد بمعلومات الجهاز"
+
+msgid "Show page controls in left corner"
+msgstr "عرض عناصر التحكم في الصفحات في الزاوية اليسرى"
+
+msgid "Library mode"
+msgstr "وضع المكتبة"
+
+msgid "Show opened books first"
+msgstr "عرض الكتب المفتوحة أولاً"
+
+msgid "Cache database"
+msgstr "قاعدة بيانات ذاكرة التخزين المؤقت"
+
+msgid "Scan home folder for new books automatically"
+msgstr "مسح المجلد الرئيسي بحثًا عن كتب جديدة تلقائيًا"
+
+msgid "Empty cache"
+msgstr "إفراغ ذاكرة التخزين المؤقت"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr ""
+"هل أنت متأكد أنك تريد حذف ذاكرة التخزين المؤقت للأغراض والبيانات الوصفية؟"
+
+msgid "Cache emptied."
+msgstr "تم إفراغ ذاكرة التخزين المؤقت."
+
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"سيتم استخراج البيانات الوصفية وصور الأغطية من الكتب في المجلد الحالي.\n"
+"بمجرد بدء الاستخراج، يمكنك الإلغاء في أي وقت من خلال النقر على الشاشة.\n"
+"\n"
+"قد يستغرق هذا الاستخراج وقتًا ويستخدم بعض الطاقة من البطارية: قد ترغب في "
+"إبقاء جهازك موصولاً بالشاحن."
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"تم العثور على %1 كتاب.\n"
+"البحث عن كتب جديدة…"
+
+msgid "No new books found."
+msgstr "لم يتم العثور على كتب جديدة."
+
+msgid "Do you want to stop?"
+msgstr "هل تريد التوقف؟"
+
+msgid "Continue Indexing"
+msgstr "متابعة الفهرسة"
+
+msgid "Stop Indexing"
+msgstr "إيقاف الفهرسة"
+
+msgid "Tap anywhere to stop"
+msgstr "اضغط في أي مكان للتوقف"

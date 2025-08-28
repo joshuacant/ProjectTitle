@@ -1,0 +1,165 @@
+# TIOJ LOKALIZHADO POR LA KOReader PROJEKTO
+# Copyright (C) 2025 LA COPYRIGHT-HAVANTO DE LA PAKETO
+# Ĉi tiu dosiero estas distribuita sub la sama permesilo kiel la projekttitle.koplugin paketo.
+# UNUA AUTORO <EMAIL@ADRESO>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/eo/>\n"
+"Language: eo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Ĉi tio estas la ŝablono por lokalizado de la aldonaj vortoj trovita en Projekto: Titolo.
+# La vortoj sube estos aldonitaj al la plena l10n dosiero de KOReader.
+# Kiam submetas ĉi tiun dosieron, bonvolu indiki kiun KOReader lingvokodon la
+# traduko estas por. Vidu: https://github.com/koreader/koreader-translations por listo.
+# Konservu tradukojn koncizaj. Ĉar ekzistas limigoj pri ekrano, longaj vortoj povas esti mallongigitaj.
+# Ĉi tio estas precipe vera por la nomoj de agordoj lokitaj en main.lua
+# covermenu.lua
+msgid "Library"
+msgstr "Biblioteko"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "Dosieroj"
+
+msgid "Book"
+msgstr "Libro"
+
+# main.lua
+msgid "Project: Title"
+msgstr "Projekto: Titolo"
+
+msgid "Decrease Items Per Page"
+msgstr "Malvastigi Elementojn Po Paĝo"
+
+msgid "Increase Items Per Page"
+msgstr "Plivastigi Elementojn Po Paĝo"
+
+msgid "Cover List"
+msgstr "Kovro Listo"
+
+msgid "Cover Grid"
+msgstr "Kovro Grido"
+
+msgid "Details List"
+msgstr "Detala Listo"
+
+msgid "Filenames List"
+msgstr "Dosiernoma Listo"
+
+msgid "Project: Title settings"
+msgstr "Agordoj de Projekto: Titolo"
+
+msgid "Portrait cover grid mode"
+msgstr "Portreta kovra grida reĝimo"
+
+msgid "Landscape cover grid mode"
+msgstr "Pejzaĝa kovra grida reĝimo"
+
+msgid "List modes"
+msgstr "Listaj reĝimoj"
+
+msgid "Folder display"
+msgstr "Dosiera montrado"
+
+msgid "Auto-generate cover images from books"
+msgstr "Aŭtomate generi kovrajn bildojn el libroj"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Supermetu nomon kaj detalojn en kovra grido"
+
+msgid "Book display"
+msgstr "Libro montrado"
+
+msgid "Show series"
+msgstr "Montri serialojn"
+
+msgid "Show pages read instead of progress %"
+msgstr "Montri legatajn paĝojn anstataŭ progreso %"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Montri dosierajn informojn anstataŭ paĝoj aŭ progreso %"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Montri progreson % anstataŭ progreso-barat"
+
+msgid "Always show maximum length progress bars"
+msgstr "Ĉiam montri maksimumlongajn progreso-barat"
+
+msgid "Use custom book status screen"
+msgstr "Uzi customan libron staton ekrano"
+
+msgid "Footer"
+msgstr "Subaĵo"
+
+msgid "Replace folder name with device info"
+msgstr "Anstataŭigi dosiernomon kun aparata informo"
+
+msgid "Show page controls in left corner"
+msgstr "Montri paĝkontrolojn en maldekstra angulo"
+
+msgid "Library mode"
+msgstr "Biblioteka reĝimo"
+
+msgid "Show opened books first"
+msgstr "Montri malfermitajn librojn unue"
+
+msgid "Cache database"
+msgstr "Kaŝu datumbazon"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Skani hejmen dosieron por novaj libroj aŭtomate"
+
+msgid "Empty cache"
+msgstr "Malplenigi kaŝon"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "Ĉu vi certas, ke vi volas forigi kovron kaj metadatan kaŝon?"
+
+msgid "Cache emptied."
+msgstr "Kaŝo malplenigita."
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"Ĉi tio ekstraktos metadatojn kaj kovrajn bildojn el libroj en la nuna "
+"direktorio.\n"
+"Post kiam la ekstraktado komenciĝis, vi povas ĉesi je ajna momento per "
+"tuŝado de la ekrano.\n"
+"\n"
+"Ĉi tiu ekstraktado povas preni tempon kaj uzi iom da bateripotenco: vi eble "
+"volas teni vian aparaton kuiranta."
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"Trovita %1 libroj.\n"
+"Serĉante novajn librojn…"
+
+msgid "No new books found."
+msgstr "Neniuj novaj libroj trovitaj."
+
+msgid "Do you want to stop?"
+msgstr "Ĉu vi volas ĉesi?"
+
+msgid "Continue Indexing"
+msgstr "Daŭrigi Indekson"
+
+msgid "Stop Indexing"
+msgstr "Ĉesu Indekson"
+
+msgid "Tap anywhere to stop"
+msgstr "Tuŝu ie por ĉesi"

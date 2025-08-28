@@ -1,0 +1,165 @@
+# MỘT TIÊU ĐỀ MÔ TẢ.
+# Bản quyền (C) NĂM CHỦ SỞ HỮU BẢN QUYỀN CỦA GÓI
+# Tệp này được phân phối theo giấy phép giống như gói projecttitle.koplugin.
+# TÁC GIẢ ĐẦU TIÊN <EMAIL@ADDRESS>, NĂM.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/vi/>\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Đây là mẫu để địa phương hóa các chuỗi bổ sung được tìm thấy trong Dự án: Tiêu đề.
+# Các chuỗi dưới đây sẽ được thêm vào tệp l10n đầy đủ từ KOReader.
+# Khi gửi tệp này, vui lòng cho biết mã ngôn ngữ KOReader mà
+# bản dịch này áp dụng cho. Xem: https://github.com/koreader/koreader-translations để biết danh sách.
+# Giữ cho các bản dịch ngắn gọn. Do giới hạn không gian màn hình, các chuỗi dài có thể bị cắt ngắn.
+# Điều này đặc biệt đúng với các tên cài đặt nằm trong main.lua
+# covermenu.lua
+msgid "Library"
+msgstr "Thư viện"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "Thư mục"
+
+msgid "Book"
+msgstr "Sách"
+
+# main.lua
+msgid "Project: Title"
+msgstr "Dự án: Tiêu đề"
+
+msgid "Decrease Items Per Page"
+msgstr "Giảm số mục trên trang"
+
+msgid "Increase Items Per Page"
+msgstr "Tăng số mục trên trang"
+
+msgid "Cover List"
+msgstr "Danh sách bìa"
+
+msgid "Cover Grid"
+msgstr "Lưới bìa"
+
+msgid "Details List"
+msgstr "Danh sách thông tin"
+
+msgid "Filenames List"
+msgstr "Danh sách tên tệp"
+
+msgid "Project: Title settings"
+msgstr "Cài đặt Dự án: Tiêu đề"
+
+msgid "Portrait cover grid mode"
+msgstr "Chế độ lưới bìa dọc"
+
+msgid "Landscape cover grid mode"
+msgstr "Chế độ lưới bìa ngang"
+
+msgid "List modes"
+msgstr "Chế độ danh sách"
+
+msgid "Folder display"
+msgstr "Hiển thị thư mục"
+
+msgid "Auto-generate cover images from books"
+msgstr "Tự động tạo hình ảnh bìa từ sách"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Chồng tên và thông tin trong lưới bìa"
+
+msgid "Book display"
+msgstr "Hiển thị sách"
+
+msgid "Show series"
+msgstr "Hiển thị sê-ri"
+
+msgid "Show pages read instead of progress %"
+msgstr "Hiển thị số trang đã đọc thay vì phần trăm"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Hiển thị thông tin tệp thay vì số trang hoặc phần trăm"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Hiển thị phần trăm thay vì thanh tiến trình"
+
+msgid "Always show maximum length progress bars"
+msgstr "Luôn hiển thị thanh tiến trình dài nhất"
+
+msgid "Use custom book status screen"
+msgstr "Sử dụng màn hình trạng thái sách tùy chỉnh"
+
+msgid "Footer"
+msgstr "Chân trang"
+
+msgid "Replace folder name with device info"
+msgstr "Thay thế tên thư mục bằng thông tin thiết bị"
+
+msgid "Show page controls in left corner"
+msgstr "Hiển thị điều khiển trang ở góc trái"
+
+msgid "Library mode"
+msgstr "Chế độ thư viện"
+
+msgid "Show opened books first"
+msgstr "Hiển thị sách đã mở trước"
+
+msgid "Cache database"
+msgstr "Cơ sở dữ liệu bộ nhớ cache"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Quét thư mục chính để tìm sách mới tự động"
+
+msgid "Empty cache"
+msgstr "Làm rỗng bộ nhớ cache"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "Bạn có chắc chắn muốn xóa bộ nhớ cache bìa và siêu dữ liệu không?"
+
+msgid "Cache emptied."
+msgstr "Bộ nhớ cache đã được làm rỗng."
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"Điều này sẽ trích xuất siêu dữ liệu và hình ảnh bìa từ sách trong thư mục "
+"hiện tại.\n"
+"Khi quá trình trích xuất bắt đầu, bạn có thể hủy bất kỳ lúc nào bằng cách "
+"chạm vào màn hình.\n"
+"\n"
+"Quá trình trích xuất này có thể mất thời gian và tiêu tốn một chút pin: bạn "
+"có thể muốn giữ thiết bị của mình được cắm điện."
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"Tìm thấy %1 cuốn sách.\n"
+"Đang tìm sách mới…"
+
+msgid "No new books found."
+msgstr "Không tìm thấy sách mới."
+
+msgid "Do you want to stop?"
+msgstr "Bạn có muốn dừng lại không?"
+
+msgid "Continue Indexing"
+msgstr "Tiếp tục lập chỉ mục"
+
+msgid "Stop Indexing"
+msgstr "Dừng lập chỉ mục"
+
+msgid "Tap anywhere to stop"
+msgstr "Chạm bất kỳ đâu để dừng lại"

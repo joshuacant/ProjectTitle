@@ -1,0 +1,157 @@
+# 추가 문자열 현지화 템플릿입니다.
+# 이 파일은 KOReader의 전체 l10n 파일에 추가됩니다.
+# 이 파일을 제출할 때 번역이 어떤 KOReader 언어 코드에 해당하는지 명시해 주십시오.
+# 참고: https://github.com/koreader/koreader-translations에서 목록을 확인할 수 있습니다.
+# 번역은 간결하게 유지하십시오. 화면 공간 제한으로 인해 긴 문자열은 잘릴 수 있습니다.
+# 이는 main.lua에 위치한 설정 이름에 특히 해당됩니다.
+# covermenu.lua
+msgid ""
+msgstr ""
+"projecttitle/ko_KR/>\n"
+"Language: ko_KR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Library"
+msgstr "도서관"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "폴더"
+
+msgid "Book"
+msgstr "책"
+
+# main.lua
+msgid "Project: Title"
+msgstr "프로젝트: 제목"
+
+msgid "Decrease Items Per Page"
+msgstr "페이지당 항목 감소"
+
+msgid "Increase Items Per Page"
+msgstr "페이지당 항목 증가"
+
+msgid "Cover List"
+msgstr "표지 목록"
+
+msgid "Cover Grid"
+msgstr "표지 그리드"
+
+msgid "Details List"
+msgstr "세부정보 목록"
+
+msgid "Filenames List"
+msgstr "파일명 목록"
+
+msgid "Project: Title settings"
+msgstr "프로젝트: 제목 설정"
+
+msgid "Portrait cover grid mode"
+msgstr "세로 표지 그리드 모드"
+
+msgid "Landscape cover grid mode"
+msgstr "가로 표지 그리드 모드"
+
+msgid "List modes"
+msgstr "목록 모드"
+
+msgid "Folder display"
+msgstr "폴더 표시"
+
+msgid "Auto-generate cover images from books"
+msgstr "책에서 표지 이미지를 자동 생성"
+
+msgid "Overlay name and details in cover grid"
+msgstr "표지 그리드에 이름과 세부정보 오버레이"
+
+msgid "Book display"
+msgstr "책 표시"
+
+msgid "Show series"
+msgstr "시리즈 표시"
+
+msgid "Show pages read instead of progress %"
+msgstr "진행률 % 대신 읽은 페이지 표시"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "페이지나 진행률 % 대신 파일 정보 표시"
+
+msgid "Show progress % instead of progress bars"
+msgstr "진행률 바 대신 진행률 % 표시"
+
+msgid "Always show maximum length progress bars"
+msgstr "항상 최대 길이 진행률 바 표시"
+
+msgid "Use custom book status screen"
+msgstr "사용자 정의 책 상태 화면 사용"
+
+msgid "Footer"
+msgstr "바닥글"
+
+msgid "Replace folder name with device info"
+msgstr "폴더 이름을 장치 정보로 교체"
+
+msgid "Show page controls in left corner"
+msgstr "왼쪽 모서리에 페이지 제어 표시"
+
+msgid "Library mode"
+msgstr "도서관 모드"
+
+msgid "Show opened books first"
+msgstr "열린 책을 먼저 표시"
+
+msgid "Cache database"
+msgstr "캐시 데이터베이스"
+
+msgid "Scan home folder for new books automatically"
+msgstr "홈 폴더에서 새 책을 자동으로 스캔"
+
+msgid "Empty cache"
+msgstr "캐시 비우기"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "표지 및 메타데이터 캐시를 삭제하시겠습니까?"
+
+msgid "Cache emptied."
+msgstr "캐시가 비워졌습니다."
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"현재 디렉토리의 책에서 메타데이터 및 표지 이미지를 추출합니다.\n"
+"추출이 시작되면 언제든지 화면을 탭하여 중단할 수 있습니다.\n"
+"\n"
+"이 추출은 시간이 걸릴 수 있으며 일부 배터리 전력을 사용할 수 있습니다: 장치"
+"를 연결해 두는 것이 좋습니다."
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"%1권의 책이 발견되었습니다.\n"
+"새 책을 찾는 중…"
+
+msgid "No new books found."
+msgstr "새로운 책이 없습니다."
+
+msgid "Do you want to stop?"
+msgstr "중지하시겠습니까?"
+
+msgid "Continue Indexing"
+msgstr "색인 계속하기"
+
+msgid "Stop Indexing"
+msgstr "색인 중지하기"
+
+msgid "Tap anywhere to stop"
+msgstr "어딘가를 탭하여 중지"

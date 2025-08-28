@@ -1,0 +1,155 @@
+# TEMPLATE PARA LOCALIZAÇÃO DAS STRING ADICIONAIS ENCONTRADAS EM Project: Title.
+# Copyright (C) 2025 O DETENTOR DOS DIREITOS AUTORAIS DO PACOTE
+# Este arquivo é distribuído sob a mesma licença que o pacote projecttitle.koplugin.
+# PRIMEIRO AUTOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/pt_PT/>\n"
+"Language: pt_PT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Library"
+msgstr "Biblioteca"
+
+msgid "Folders"
+msgstr "Pastas"
+
+msgid "Book"
+msgstr "Livro"
+
+msgid "Project: Title"
+msgstr "Projeto: Título"
+
+msgid "Decrease Items Per Page"
+msgstr "Diminuir Itens Por Página"
+
+msgid "Increase Items Per Page"
+msgstr "Aumentar Itens Por Página"
+
+msgid "Cover List"
+msgstr "Lista de Capas"
+
+msgid "Cover Grid"
+msgstr "Grade de Capas"
+
+msgid "Details List"
+msgstr "Lista de Detalhes"
+
+msgid "Filenames List"
+msgstr "Lista de Nomes de Arquivos"
+
+msgid "Project: Title settings"
+msgstr "Configurações do Projeto: Título"
+
+msgid "Portrait cover grid mode"
+msgstr "Modo de grade de capa retrato"
+
+msgid "Landscape cover grid mode"
+msgstr "Modo de grade de capa paisagem"
+
+msgid "List modes"
+msgstr "Modos de lista"
+
+msgid "Folder display"
+msgstr "Exibição de Pastas"
+
+msgid "Auto-generate cover images from books"
+msgstr "Gerar imagens de capa automaticamente a partir de livros"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Sobrepor nome e detalhes na grade de capas"
+
+msgid "Book display"
+msgstr "Exibição do Livro"
+
+msgid "Show series"
+msgstr "Mostrar séries"
+
+msgid "Show pages read instead of progress %"
+msgstr "Mostrar páginas lidas ao invés de progresso %"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Mostrar informações do arquivo ao invés de páginas ou progresso %"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Mostrar progresso % ao invés de barras de progresso"
+
+msgid "Always show maximum length progress bars"
+msgstr "Sempre mostrar barras de progresso de comprimento máximo"
+
+msgid "Use custom book status screen"
+msgstr "Usar tela de status do livro personalizada"
+
+msgid "Footer"
+msgstr "Rodapé"
+
+msgid "Replace folder name with device info"
+msgstr "Substituir nome da pasta por informações do dispositivo"
+
+msgid "Show page controls in left corner"
+msgstr "Mostrar controles de página no canto esquerdo"
+
+msgid "Library mode"
+msgstr "Modo Biblioteca"
+
+msgid "Show opened books first"
+msgstr "Mostrar livros abertos primeiro"
+
+msgid "Cache database"
+msgstr "Banco de dados de cache"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Escanear pasta inicial em busca de novos livros automaticamente"
+
+msgid "Empty cache"
+msgstr "Limpar cache"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "Você tem certeza que deseja deletar o cache de capas e metadados?"
+
+msgid "Cache emptied."
+msgstr "Cache limpo."
+
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"Isso irá extrair metadados e imagens de capas dos livros no diretório "
+"atual.\n"
+"Uma vez que a extração tenha iniciado, você pode abortar a qualquer momento "
+"tocando na tela.\n"
+"\n"
+"Essa extração pode levar tempo e usar alguma carga da bateria: você pode "
+"querer mantê-lo conectado à energia."
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"Encontrados %1 livros.\n"
+"Buscando novos livros…"
+
+msgid "No new books found."
+msgstr "Nenhum novo livro encontrado."
+
+msgid "Do you want to stop?"
+msgstr "Você deseja parar?"
+
+msgid "Continue Indexing"
+msgstr "Continuar Indexação"
+
+msgid "Stop Indexing"
+msgstr "Parar Indexação"
+
+msgid "Tap anywhere to stop"
+msgstr "Toque em qualquer lugar para parar"

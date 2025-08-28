@@ -1,0 +1,181 @@
+# TEMPLATE PENTRU LOCALIZARE
+# Copyright (C) ANUL DEȚINĂTORUL DE DREPTURI AL PACHETULUI
+# Acest fișier este distribuit sub aceeași licență ca pachetul projecttitle.koplugin.
+# PRIMUL AUTOR <EMAIL@ADDRESS>, ANUL.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/ro/>\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Acesta este template-ul pentru localizarea stringurilor suplimentare găsite în Proiect: Titlu.
+# Stringurile de mai jos vor fi adăugate în fișierul complet de l10n din KOReader.
+# Atunci când trimiteți acest fișier, vă rugăm să indicați codul de limbă KOReader pentru care
+# este traducerea. Consultați: https://github.com/koreader/koreader-translations pentru o listă.
+# Mențineți traducerile concise. Din cauza limitărilor de spațiu pe ecran, stringurile lungi pot fi tăiate.
+# Acest lucru este valabil mai ales pentru numele setărilor din main.lua
+# covermenu.lua
+msgid "Library"
+msgstr "Bibliotecă"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "Foldere"
+
+msgid "Book"
+msgstr "Carte"
+
+# main.lua
+msgid "Project: Title"
+msgstr "Proiect: Titlu"
+
+msgid "Decrease Items Per Page"
+msgstr "Scade elementele pe pagină"
+
+msgid "Increase Items Per Page"
+msgstr "Crește elementele pe pagină"
+
+msgid "Cover List"
+msgstr "Lista coperților"
+
+msgid "Cover Grid"
+msgstr "Grilă coperți"
+
+msgid "Details List"
+msgstr "Lista detaliilor"
+
+msgid "Filenames List"
+msgstr "Lista numelui fișierelor"
+
+msgid "Project: Title settings"
+msgstr "Setări Proiect: Titlu"
+
+msgid "Portrait cover grid mode"
+msgstr "Mod grilă copertă pe verticală"
+
+msgid "Landscape cover grid mode"
+msgstr "Mod grilă copertă pe orizontală"
+
+msgid "List modes"
+msgstr "Moduri listă"
+
+msgid "Folder display"
+msgstr "Afișare folder"
+
+msgid "Auto-generate cover images from books"
+msgstr "Generare automată a imaginilor de copertă din cărți"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Săgeată numele și detaliile în grila de coperți"
+
+msgid "Book display"
+msgstr "Afișare carte"
+
+msgid "Show series"
+msgstr "Afișează serii"
+
+msgid "Show pages read instead of progress %"
+msgstr "Afișează paginile citite în loc de progres %"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Afișează informații fișier în loc de pagini sau progres %"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Afișează progres % în loc de bare de progres"
+
+msgid "Always show maximum length progress bars"
+msgstr "Afișează întotdeauna bare de progres de lungime maximă"
+
+msgid "Use custom book status screen"
+msgstr "Folosește ecran personalizat pentru starea cărții"
+
+msgid "Footer"
+msgstr "Subsol"
+
+msgid "Replace folder name with device info"
+msgstr "Înlocuiește numele folderului cu informații despre dispozitiv"
+
+msgid "Show page controls in left corner"
+msgstr "Afișează controalele paginii în colțul din stânga"
+
+msgid "Library mode"
+msgstr "Mod bibliotecă"
+
+msgid "Show opened books first"
+msgstr "Afișează întâi cărțile deschise"
+
+msgid "Cache database"
+msgstr "Cache baza de date"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Scanează folderul de acasă pentru cărți noi automat"
+
+msgid "Empty cache"
+msgstr "Golire cache"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr ""
+"Ești sigur că vrei să ștergi cache-ul imaginilor de copertă și al "
+"metadatelor?"
+
+msgid "Cache emptied."
+msgstr "Cache golit."
+
+# bookinfomanager.lua
+msgid ""
+"Aceasta va extrage metadate și imagini de copertă din cărțile din directorul "
+"curent.\n"
+"Odată ce extragerea a început, poți anula în orice moment atingând ecranul.\n"
+"\n"
+"Această extragere poate dura timp și poate consuma energie a bateriei: ar "
+"putea fi mai bine să ții dispozitivul conectat."
+msgstr ""
+"Aceasta va extrage metadate și imagini de copertă din cărțile din directorul "
+"curent.\n"
+"Odată ce extragerea a început, poți anula în orice moment atingând ecranul.\n"
+"\n"
+"Această extragere poate dura timp și poate consuma energie a bateriei: ar "
+"putea fi mai bine să ții dispozitivul conectat."
+
+msgid ""
+"Găsite %1 cărți.\n"
+"Caută cărți noi…"
+msgstr ""
+"Găsite %1 cărți.\n"
+"Caută cărți noi…"
+
+msgid "No new books found."
+msgstr "Nu au fost găsite cărți noi."
+
+msgid "Do you want to stop?"
+msgstr "Vrei să te oprești?"
+
+msgid "Continue Indexing"
+msgstr "Continuă indexarea"
+
+msgid "Stop Indexing"
+msgstr "Oprește indexarea"
+
+msgid "Tap anywhere to stop"
+msgstr "Atinge orice pentru a opri"
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""

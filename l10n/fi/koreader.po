@@ -1,0 +1,164 @@
+# LOCALIZATION FILE FOR KOReader: Suomi
+# Copyright (C) 2025 KOReader Translation Team
+# This file is distributed under the same license as the projecttitle.koplugin package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/fi/>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# This is the template for localizing the additional strings found in Project: Title.
+# The strings below will be added to the full l10n file from KOReader.
+# When submitting this file, please indicate what KOReader language code the
+# translation is for. See: https://github.com/koreader/koreader-translations for a list.
+# Keep translations concise. Due to screen space limits, long strings may be truncated.
+# This is especially true of the setting names located in main.lua
+# covermenu.lua
+msgid "Library"
+msgstr "Kirjasto"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "Kansiot"
+
+msgid "Book"
+msgstr "Kirja"
+
+# main.lua
+msgid "Project: Title"
+msgstr "Projekti: Otsikko"
+
+msgid "Decrease Items Per Page"
+msgstr "Vähennä kohteita sivulla"
+
+msgid "Increase Items Per Page"
+msgstr "Lisää kohteita sivulla"
+
+msgid "Cover List"
+msgstr "Kannet lista"
+
+msgid "Cover Grid"
+msgstr "Kansiruutu"
+
+msgid "Details List"
+msgstr "Tietolistat"
+
+msgid "Filenames List"
+msgstr "Tiedostonimet lista"
+
+msgid "Project: Title settings"
+msgstr "Projekti: Otsikko asetukset"
+
+msgid "Portrait cover grid mode"
+msgstr "Pystyakselin kansiruutumoode"
+
+msgid "Landscape cover grid mode"
+msgstr "Vaakakulman kansiruutumoode"
+
+msgid "List modes"
+msgstr "Listamuodot"
+
+msgid "Folder display"
+msgstr "Kansioesitys"
+
+msgid "Auto-generate cover images from books"
+msgstr "Automaattisesti luo kansikuvia kirjoista"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Päivitä nimi ja tiedot kansiruudukossa"
+
+msgid "Book display"
+msgstr "Kirjaesitys"
+
+msgid "Show series"
+msgstr "Näytä sarjat"
+
+msgid "Show pages read instead of progress %"
+msgstr "Näytä luetut sivut sen sijaan, että prosentti"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Näytä tiedoston tieto sen sijaan, että sivut tai prosentti"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Näytä prosentti sen sijaan, että edistyspalkit"
+
+msgid "Always show maximum length progress bars"
+msgstr "Näytä aina maksimipituuden edistyspalkit"
+
+msgid "Use custom book status screen"
+msgstr "Käytä mukautettua kirjan tilan näyttöä"
+
+msgid "Footer"
+msgstr "Alatunniste"
+
+msgid "Replace folder name with device info"
+msgstr "Korvaa kansion nimi laitetiedoilla"
+
+msgid "Show page controls in left corner"
+msgstr "Näytä sivuohjaimet vasemmassa kulmassa"
+
+msgid "Library mode"
+msgstr "Kirjastotila"
+
+msgid "Show opened books first"
+msgstr "Näytä ensin avatut kirjat"
+
+msgid "Cache database"
+msgstr "Välimuistidatabas"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Skannaa kotikansio uusien kirjojen löytämiseksi automaattisesti"
+
+msgid "Empty cache"
+msgstr "Tyhjennä välimuisti"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "Oletko varma, että haluat poistaa kanteen ja metatiedot välimuistin?"
+
+msgid "Cache emptied."
+msgstr "Välimuisti tyhjennetty."
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"Tämä purkaa metatiedot ja kansikuvat kirjoista nykyisessä kansiossa.\n"
+"Kun purku on aloitettu, voit keskeyttää sen milloin tahansa napauttamalla "
+"näyttöä.\n"
+"\n"
+"Tämä purku saattaa kestää aikaa ja käyttää hieman akkua: saatat haluta pitää "
+"laitteen liitettynä."
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"Löydettiin %1 kirjaa.\n"
+"Etsitään uusia kirjoja…"
+
+msgid "No new books found."
+msgstr "Uusia kirjoja ei löytynyt."
+
+msgid "Do you want to stop?"
+msgstr "Haluatko lopettaa?"
+
+msgid "Continue Indexing"
+msgstr "Jatka indeksointia"
+
+msgid "Stop Indexing"
+msgstr "Lopeta indeksointi"
+
+msgid "Tap anywhere to stop"
+msgstr "Napauta mihin tahansa lopettaaksesi"

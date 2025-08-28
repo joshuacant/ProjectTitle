@@ -1,0 +1,165 @@
+# БҰЛ ФАЙЛДА ЖЕРГІЛІКТІЛЕУ ҮШІН ҚОЛДАНЫЛАТЫН СТРОКТАР БАР.
+# Авторлық құқық (C) ЖЫЛ ПАКЕТТІҢ АВТОРЛЫҚ ҚҰҚЫҚ ИЕСІ
+# Бұл файл проектtitle.koplugin пакетінің лицензиясы бойынша таратылды.
+# БІРІНШІ АВАҚТАР <EMAIL@ADDRESS>, ЖЫЛ.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/kk/>\n"
+"Language: kk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Бұл файлда проект: тақырыбының қосымша мәтіндерін жергіліктендіру үшін шаблон бар.
+# Төмендегі жолдар KOReader-дің толық l10n файлына қосылады.
+# Бұл файлды тапсыру кезінде KOReader тіл кодын көрсетуді сұраймыз.
+# Тізім үшін: https://github.com/koreader/koreader-translations.
+# Аударма қысқа әрі нұсқа болу керек. Экранда көрсетілім шектеулеріне байланысты, ұзын жолдар қысқартылуы мүмкін.
+# Бұл ерекше түрде main.lua файлындағы параметрлер аттарына касается.
+# covermenu.lua
+msgid "Library"
+msgstr "Кітапхана"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "Папкалар"
+
+msgid "Book"
+msgstr "Кітап"
+
+# main.lua
+msgid "Project: Title"
+msgstr "Жоба: Тақырып"
+
+msgid "Decrease Items Per Page"
+msgstr "Бетке элементтер санын азайту"
+
+msgid "Increase Items Per Page"
+msgstr "Бетке элементтер санын арттыру"
+
+msgid "Cover List"
+msgstr "Мультимедиялық тізім"
+
+msgid "Cover Grid"
+msgstr "Мультимедиялық тор"
+
+msgid "Details List"
+msgstr "Мәліметтер тізімі"
+
+msgid "Filenames List"
+msgstr "Файл атаулары тізімі"
+
+msgid "Project: Title settings"
+msgstr "Жоба: Тақырып параметрлері"
+
+msgid "Portrait cover grid mode"
+msgstr "Портрет мультимедиялық тор режимі"
+
+msgid "Landscape cover grid mode"
+msgstr "Ландшафт мультимедиялық тор режимі"
+
+msgid "List modes"
+msgstr "Тізім режимдері"
+
+msgid "Folder display"
+msgstr "Папка көрінісі"
+
+msgid "Auto-generate cover images from books"
+msgstr "Кітаптардан мультимедиялық суреттерді автоматты түрде жасау"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Мультимедиялық торда атты және мәліметтерді көрсету"
+
+msgid "Book display"
+msgstr "Кітап көрінісі"
+
+msgid "Show series"
+msgstr "Жинақтарды көрсету"
+
+msgid "Show pages read instead of progress %"
+msgstr "Прогресс % орнына оқылған беттерді көрсету"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Беттер немесе прогресс % орнына файл туралы мәліметтерді көрсету"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Прогресс жолақтары орнына прогресс % көрсету"
+
+msgid "Always show maximum length progress bars"
+msgstr "Әрқашан максималды ұзындықтағы прогресс жолақтарын көрсету"
+
+msgid "Use custom book status screen"
+msgstr "Дербес кітап статус экранын пайдалану"
+
+msgid "Footer"
+msgstr "Аяққы"
+
+msgid "Replace folder name with device info"
+msgstr "Папка атын құрылғының мәліметтерімен ауыстыру"
+
+msgid "Show page controls in left corner"
+msgstr "Сол жақ бұрышта бет басқаруын көрсету"
+
+msgid "Library mode"
+msgstr "Кітапхана режимі"
+
+msgid "Show opened books first"
+msgstr "Әуелгі ашылған кітаптарды көрсету"
+
+msgid "Cache database"
+msgstr "Кэш мәліметтер базасы"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Жаңа кітаптарды автоматты түрде үй папкасынан сканерлеу"
+
+msgid "Empty cache"
+msgstr "Кэшті тазарту"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "Мультимедиялық және метадата кэшін жоюға сенімдісіз бе?"
+
+msgid "Cache emptied."
+msgstr "Кэш тазартылды."
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"Бұл қазіргі каталогтағы кітаптардан метадата мен мультимедиялық суреттерді "
+"шығарады.\n"
+"Шығару басталғаннан кейін, экранға басу арқылы кез келген уақытта тоқтатуға "
+"болады.\n"
+"\n"
+"Бұл шығару уақытты алуы мүмкін және батарея қуатын пайдалануы мүмкін: "
+"құрылғыңызды қуатқа қосып қоюды ұсынамыз."
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"%1 кітап табылды.\n"
+"Жаңа кітаптарды іздеу…"
+
+msgid "No new books found."
+msgstr "Жаңа кітаптар табылмады."
+
+msgid "Do you want to stop?"
+msgstr "Тоқтатқыңыз келе ме?"
+
+msgid "Continue Indexing"
+msgstr "Индексацияны жалғастыру"
+
+msgid "Stop Indexing"
+msgstr "Индексацияны тоқтату"
+
+msgid "Tap anywhere to stop"
+msgstr "Тоқтату үшін кез келген жерге басыңыз"

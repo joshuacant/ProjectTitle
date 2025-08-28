@@ -1,0 +1,163 @@
+# PROJEKTO PAVADINIMAS: TITULAS.
+# Autorinės teisės (C) METAI PROJEKTO TURĖTOJUI
+# Šis failas platinamas pagal tą pačią licenciją kaip projektas.koplugin paketas.
+# PIRMAS AUTORĖS VARDAS <ELPASTAS@ADRESU>, METAI.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/lt_LT/>\n"
+"Language: lt_LT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Tai yra šablonas lokalizuoti papildomus tekstus, rastus projekte: Titulas.
+# Žemiau esantys tekstai bus pridėti prie pilno l10n failo iš KOReader.
+# Teikdami šį failą, prašome nurodyti, kuriai KOReader kalbai priklauso 
+# vertimas. Žiūrėkite: https://github.com/koreader/koreader-translations dėl sąrašo.
+# Laikykite vertimus glaustus. Dėl ekrano vietos apribojimų ilgos eilutės gali būti sutrumpintos.
+# Tai ypač pasakytina apie nustatymų pavadinimus, esančius main.lua
+# covermenu.lua
+msgid "Library"
+msgstr "Biblioteka"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "Katalogai"
+
+msgid "Book"
+msgstr "Knyga"
+
+# main.lua
+msgid "Project: Title"
+msgstr "Projektas: Titulas"
+
+msgid "Decrease Items Per Page"
+msgstr "Mažinti elementų skaičių puslapyje"
+
+msgid "Increase Items Per Page"
+msgstr "Didinti elementų skaičių puslapyje"
+
+msgid "Cover List"
+msgstr "Viršelio sąrašas"
+
+msgid "Cover Grid"
+msgstr "Viršelio tinklelis"
+
+msgid "Details List"
+msgstr "Detalių sąrašas"
+
+msgid "Filenames List"
+msgstr "Failų vardų sąrašas"
+
+msgid "Project: Title settings"
+msgstr "Projekto: Titulas nustatymai"
+
+msgid "Portrait cover grid mode"
+msgstr "Portretinis viršelio tinklelio režimas"
+
+msgid "Landscape cover grid mode"
+msgstr "Peizažinis viršelio tinklelio režimas"
+
+msgid "List modes"
+msgstr "Sąrašo režimai"
+
+msgid "Folder display"
+msgstr "Katalogo rodymas"
+
+msgid "Auto-generate cover images from books"
+msgstr "Automatiškai generuoti viršelių vaizdus iš knygų"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Persidengti pavadinimu ir detalėmis viršelio tinklelyje"
+
+msgid "Book display"
+msgstr "Knygos rodymas"
+
+msgid "Show series"
+msgstr "Rodyti serijas"
+
+msgid "Show pages read instead of progress %"
+msgstr "Rodyti perskaitytas puslapius vietoje progreso %"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Rodyti failo informaciją vietoje puslapių ar progreso %"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Rodyti progresą % vietoje progreso juostų"
+
+msgid "Always show maximum length progress bars"
+msgstr "Visada rodyti maksimalios ilgio progreso juostas"
+
+msgid "Use custom book status screen"
+msgstr "Naudoti pasirinktą knygos būsenos ekraną"
+
+msgid "Footer"
+msgstr "Porba"
+
+msgid "Replace folder name with device info"
+msgstr "Pakeisti katalogo pavadinimą į įrenginio informaciją"
+
+msgid "Show page controls in left corner"
+msgstr "Rodyti puslapio valdymą kairiajame kampe"
+
+msgid "Library mode"
+msgstr "Bibliotekos režimas"
+
+msgid "Show opened books first"
+msgstr "Pirmiausia rodyti atidarytas knygas"
+
+msgid "Cache database"
+msgstr "Cache duomenų bazė"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Automatiškai skenuoti pagrindinį katalogą naujoms knygoms"
+
+msgid "Empty cache"
+msgstr "Išvalyti talpyklą"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "Ar tikrai norite ištrinti viršelio ir metaduomenų talpyklą?"
+
+msgid "Cache emptied."
+msgstr "Talpykla išvalyta."
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"Tai išgauti metaduomenis ir viršelio vaizdus iš knygų esamame kataloge.\n"
+"Prasidėjus išgavimui, bet kuriuo metu galite nutraukti spustelėdami ekraną.\n"
+"\n"
+"Šis išgavimas gali užtrukti ir sunaudoti šiek tiek baterijos: gali tekti "
+"palikti prietaisą prijungtą."
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"Rasta %1 knygų.\n"
+"Paieška naujoms knygoms…"
+
+msgid "No new books found."
+msgstr "Nerasta naujų knygų."
+
+msgid "Do you want to stop?"
+msgstr "Ar norite sustoti?"
+
+msgid "Continue Indexing"
+msgstr "Tęsti indeksavimą"
+
+msgid "Stop Indexing"
+msgstr "Sustoti indeksavimą"
+
+msgid "Tap anywhere to stop"
+msgstr "Spustelėkite bet kur, kad sustotumėte"

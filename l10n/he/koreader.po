@@ -1,0 +1,156 @@
+# תבנית לתרגום המחרוזות הנוספות שנמצאות בפרויקט: כותר.
+# המחרוזות למטה יוספו לקובץ הלוקליזציה המלא מ-KOReader.
+# בעת הגשת קובץ זה, אנא ציינו עבור איזה קוד שפה של KOReader
+# התרגום הוא. ראו: https://github.com/koreader/koreader-translations לרשימה.
+# שמרו על התרגומים תמציתיים. עקב מגבלות שטח מסך, מחרוזות ארוכות עשויות להתקצר.
+# זה נכון במיוחד עבור שמות ההגדרות הממוקמים ב-main.lua
+# covermenu.lua
+msgid ""
+msgstr ""
+"projecttitle/he/>\n"
+"Language: he\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Library"
+msgstr "ספרייה"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "תקיות"
+
+msgid "Book"
+msgstr "ספר"
+
+# main.lua
+msgid "Project: Title"
+msgstr "פרויקט: כותר"
+
+msgid "Decrease Items Per Page"
+msgstr "הקטן פריטים לדף"
+
+msgid "Increase Items Per Page"
+msgstr "הגדל פריטים לדף"
+
+msgid "Cover List"
+msgstr "רשימת כריכות"
+
+msgid "Cover Grid"
+msgstr "רשת כריכות"
+
+msgid "Details List"
+msgstr "רשימת פרטים"
+
+msgid "Filenames List"
+msgstr "רשימת שמות קבצים"
+
+msgid "Project: Title settings"
+msgstr "הגדרות פרויקט: כותר"
+
+msgid "Portrait cover grid mode"
+msgstr "מצב רשת כריכות במצב פורטרט"
+
+msgid "Landscape cover grid mode"
+msgstr "מצב רשת כריכות במצב נוף"
+
+msgid "List modes"
+msgstr "מצבי רשימה"
+
+msgid "Folder display"
+msgstr "הצגת תקיות"
+
+msgid "Auto-generate cover images from books"
+msgstr "יצירת תמונות כריכה אוטומטית מספרים"
+
+msgid "Overlay name and details in cover grid"
+msgstr "כיסוי שם ופרטים ברשת כריכות"
+
+msgid "Book display"
+msgstr "הצגת ספר"
+
+msgid "Show series"
+msgstr "הצג סדרות"
+
+msgid "Show pages read instead of progress %"
+msgstr "הצג דפים שקראתי במקום התקדמות %"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "הצג מידע על קובץ במקום דפים או התקדמות %"
+
+msgid "Show progress % instead of progress bars"
+msgstr "הצג התקדמות % במקום מדדי התקדמות"
+
+msgid "Always show maximum length progress bars"
+msgstr "הצג תמיד מדדי התקדמות באורך מקסימלי"
+
+msgid "Use custom book status screen"
+msgstr "השתמש במסך מצב ספר מותאם אישית"
+
+msgid "Footer"
+msgstr "כותרת תחתונה"
+
+msgid "Replace folder name with device info"
+msgstr "החלף את שם התיקיה במידע על המכשיר"
+
+msgid "Show page controls in left corner"
+msgstr "הצג בקרי דפים בפינה השמאלית"
+
+msgid "Library mode"
+msgstr "מצב ספרייה"
+
+msgid "Show opened books first"
+msgstr "הצג ספרים פתוחים קודם"
+
+msgid "Cache database"
+msgstr "מסד נתונים של מטמון"
+
+msgid "Scan home folder for new books automatically"
+msgstr "סרוק את תיקיית הבית לספרים חדשים אוטומטית"
+
+msgid "Empty cache"
+msgstr "נקו את המטמון"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "האם אתה בטוח שברצונך למחוק את המטמון של כריכות ומטא נתונים?"
+
+msgid "Cache emptied."
+msgstr "המטמון ריק."
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"זה יחלץ מטא נתונים ודימויים של כריכות מספרים בתיקייה הנוכחית.\n"
+"ברגע שהחל החילוץ, תוכל לבטל בכל רגע על ידי הקשה על המסך.\n"
+"\n"
+"חילוץ זה עשוי לקחת זמן ולהשתמש בחשמל: כדאי לשמור את המכשיר מחובר."
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"נמצאו %1 ספרים.\n"
+"מחפש ספרים חדשים…"
+
+msgid "No new books found."
+msgstr "לא נמצאו ספרים חדשים."
+
+msgid "Do you want to stop?"
+msgstr "האם אתה רוצה להפסיק?"
+
+msgid "Continue Indexing"
+msgstr "המשך אינדוקציה"
+
+msgid "Stop Indexing"
+msgstr "עצור אינדוקציה"
+
+msgid "Tap anywhere to stop"
+msgstr "הקשה בשום מקום כדי לעצור"

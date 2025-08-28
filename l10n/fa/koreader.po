@@ -1,0 +1,152 @@
+# قالب محلی‌سازی برای رشته‌های اضافی یافت‌شده در پروژه: عنوان.
+# این فایل تحت همان مجوز بسته projecttitle.koplugin توزیع می‌شود.
+# نویسنده اول <EMAIL@ADDRESS>، سال.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/fa/>\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Library"
+msgstr "کتابخانه"
+
+msgid "Folders"
+msgstr "پوشه‌ها"
+
+msgid "Book"
+msgstr "کتاب"
+
+msgid "Project: Title"
+msgstr "پروژه: عنوان"
+
+msgid "Decrease Items Per Page"
+msgstr "کاهش موارد در هر صفحه"
+
+msgid "Increase Items Per Page"
+msgstr "افزایش موارد در هر صفحه"
+
+msgid "Cover List"
+msgstr "لیست جلدها"
+
+msgid "Cover Grid"
+msgstr "شبکه جلدها"
+
+msgid "Details List"
+msgstr "لیست جزئیات"
+
+msgid "Filenames List"
+msgstr "لیست نام فایل‌ها"
+
+msgid "Project: Title settings"
+msgstr "تنظیمات پروژه: عنوان"
+
+msgid "Portrait cover grid mode"
+msgstr "حالت شبکه جلد عمودی"
+
+msgid "Landscape cover grid mode"
+msgstr "حالت شبکه جلد افقی"
+
+msgid "List modes"
+msgstr "حالت‌های لیست"
+
+msgid "Folder display"
+msgstr "نمایش پوشه"
+
+msgid "Auto-generate cover images from books"
+msgstr "ایجاد خودکار تصاویر جلد از کتاب‌ها"
+
+msgid "Overlay name and details in cover grid"
+msgstr "نمایش نام و جزئیات روی شبکه جلد"
+
+msgid "Book display"
+msgstr "نمایش کتاب"
+
+msgid "Show series"
+msgstr "نمایش سری‌ها"
+
+msgid "Show pages read instead of progress %"
+msgstr "نمایش صفحات خوانده شده به جای درصد پیشرفت"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "نمایش اطلاعات فایل به جای صفحات یا درصد پیشرفت"
+
+msgid "Show progress % instead of progress bars"
+msgstr "نمایش درصد پیشرفت به جای نوارهای پیشرفت"
+
+msgid "Always show maximum length progress bars"
+msgstr "همیشه نمایش نوارهای پیشرفت با حداکثر طول"
+
+msgid "Use custom book status screen"
+msgstr "استفاده از صفحه وضعیت کتاب سفارشی"
+
+msgid "Footer"
+msgstr "پانویس"
+
+msgid "Replace folder name with device info"
+msgstr "جایگزینی نام پوشه با اطلاعات دستگاه"
+
+msgid "Show page controls in left corner"
+msgstr "نمایش کنترل‌های صفحه در گوشه چپ"
+
+msgid "Library mode"
+msgstr "حالت کتابخانه"
+
+msgid "Show opened books first"
+msgstr "نمایش کتاب‌های باز شده در ابتدا"
+
+msgid "Cache database"
+msgstr "پایگاه‌داده کش"
+
+msgid "Scan home folder for new books automatically"
+msgstr "اسکن پوشه خانگی برای کتاب‌های جدید به‌طور خودکار"
+
+msgid "Empty cache"
+msgstr "خالی کردن کش"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "آیا مطمئن هستید که می‌خواهید کش جلد و متادیتا را حذف کنید؟"
+
+msgid "Cache emptied."
+msgstr "کش خالی شد."
+
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"این عمل متادیتا و تصاویر جلد را از کتاب‌ها در دایرکتوری فعلی استخراج می‌کند.\n"
+"پس از شروع استخراج، می‌توانید در هر لحظه با ضربه زدن روی صفحه متوقف کنید.\n"
+"\n"
+"این استخراج ممکن است زمان ببرد و مقداری از باتری را مصرف کند: ممکن است "
+"بخواهید دستگاه خود را به برق متصل کنید."
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"یافتن %1 کتاب.\n"
+"در حال جستجوی کتاب‌های جدید…"
+
+msgid "No new books found."
+msgstr "کتاب جدیدی یافت نشد."
+
+msgid "Do you want to stop?"
+msgstr "آیا می‌خواهید متوقف کنید؟"
+
+msgid "Continue Indexing"
+msgstr "ادامه نمایه‌سازی"
+
+msgid "Stop Indexing"
+msgstr "متوقف کردن نمایه‌سازی"
+
+msgid "Tap anywhere to stop"
+msgstr "برای توقف هرجا ضربه بزنید"

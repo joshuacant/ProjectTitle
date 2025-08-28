@@ -1,0 +1,163 @@
+# NOE BESKRIVELSESTITTEL.
+# Opphavsrett (C) ÅR OPPHAVSMANNEN FOR PAKKEN
+# Denne filen distribueres under samme lisens som projecttitle.koplugin-pakken.
+# FØRSTE FORFATTER <EMAIL@ADRESSE>, ÅR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/nb_NO/>\n"
+"Language: nb_NO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Dette er malen for lokalisering av de ekstra strengene som finnes i Prosjekt: Tittel.
+# Strengene nedenfor vil bli lagt til i den komplette l10n-filen fra KOReader.
+# Når du sender inn denne filen, vennligst angi hvilken KOReader språkkode oversettelsen er for. Se: https://github.com/koreader/koreader-translations for en liste.
+# Hold oversettelsene konsise. På grunn av begrensninger i skjermplass kan lange strenger bli avkortet.
+# Dette gjelder spesielt for innstillingsnavnene som finnes i main.lua
+# covermenu.lua
+msgid "Library"
+msgstr "Bibliotek"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "Mapper"
+
+msgid "Book"
+msgstr "Bok"
+
+# main.lua
+msgid "Project: Title"
+msgstr "Prosjekt: Tittel"
+
+msgid "Decrease Items Per Page"
+msgstr "Reduser elementer per side"
+
+msgid "Increase Items Per Page"
+msgstr "Øk elementer per side"
+
+msgid "Cover List"
+msgstr "Omslagsliste"
+
+msgid "Cover Grid"
+msgstr "Omslagsrutenett"
+
+msgid "Details List"
+msgstr "Detaljliste"
+
+msgid "Filenames List"
+msgstr "Filnavnsliste"
+
+msgid "Project: Title settings"
+msgstr "Prosjekt: Tittelinnstillinger"
+
+msgid "Portrait cover grid mode"
+msgstr "Portrett omslagsrutenettmodus"
+
+msgid "Landscape cover grid mode"
+msgstr "Landskap omslagsrutenettmodus"
+
+msgid "List modes"
+msgstr "Listevisninger"
+
+msgid "Folder display"
+msgstr "Mapper visning"
+
+msgid "Auto-generate cover images from books"
+msgstr "Generer omslagsbilder automatisk fra bøker"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Vis navn og detaljer i omslagsrutenett"
+
+msgid "Book display"
+msgstr "Bokvisning"
+
+msgid "Show series"
+msgstr "Vis serier"
+
+msgid "Show pages read instead of progress %"
+msgstr "Vis leste sider i stedet for fremdrift %"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Vis filinfo i stedet for sider eller fremdrift %"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Vis fremdrift % i stedet for fremdriftslinjer"
+
+msgid "Always show maximum length progress bars"
+msgstr "Vis alltid fremdriftslinjer med maksimal lengde"
+
+msgid "Use custom book status screen"
+msgstr "Bruk tilpasset bokstatus skjerm"
+
+msgid "Footer"
+msgstr "Bunntekst"
+
+msgid "Replace folder name with device info"
+msgstr "Erstatt mappenavn med enhetsinfo"
+
+msgid "Show page controls in left corner"
+msgstr "Vis sidekontroller i venstre hjørne"
+
+msgid "Library mode"
+msgstr "Bibliotekmodus"
+
+msgid "Show opened books first"
+msgstr "Vis åpne bøker først"
+
+msgid "Cache database"
+msgstr "Cache-database"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Scan hjemme-mappen for nye bøker automatisk"
+
+msgid "Empty cache"
+msgstr "Tøm cache"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "Er du sikker på at du vil slette cache for omslag og metadata?"
+
+msgid "Cache emptied."
+msgstr "Cache tømt."
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"Dette vil hente metadata og omslagsbilder fra bøker i den nåværende mappen.\n"
+"Når uthenting har startet, kan du avbryte når som helst ved å trykke på "
+"skjermen.\n"
+"\n"
+"Dette kan ta tid og bruke noe batterikraft: du bør vurdere å holde enheten "
+"koblet til strøm."
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"Fant %1 bøker.\n"
+"Ser etter nye bøker…"
+
+msgid "No new books found."
+msgstr "Ingen nye bøker funnet."
+
+msgid "Do you want to stop?"
+msgstr "Vil du stoppe?"
+
+msgid "Continue Indexing"
+msgstr "Fortsett indeksering"
+
+msgid "Stop Indexing"
+msgstr "Stopp indeksering"
+
+msgid "Tap anywhere to stop"
+msgstr "Trykk hvor som helst for å stoppe"

@@ -1,0 +1,174 @@
+# PROIEKTUA IREKitzeko OINARRIA.
+# Copyright (C) YEAR PAKETEAREN COPYRIGHT JABEAK
+# Fitxategi hau proiektuan oinarritutako lizentzia berberaren pean banatzen da.
+# LEHEN AUTOREA <EMAIL@ADDRESS>, URTEA.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/eu/>\n"
+"Language: eu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Hauxe da Proiektua: Izenaren osagarri istilak lokalizatzeko txantiloia.
+# Azpiko irudikapenak KOReader-en l10n fitxategi osoari gehituko zaizkio.
+# Fitxategi hau bidaltzerakoan, mesedez adierazi zein KOReader hizkuntzako kodearentzat
+# itzulpena den. Ikusi: https://github.com/koreader/koreader-translations zerrenda batentzat.
+# Itzulpenak laburrak izan daitezela. Pantaila espazioaren mugak direla eta, luzeko stringak laburtu daitezke.
+# Hori bereziki egia da main.lua-n dagoen ezarpen izenen gainean.
+# covermenu.lua
+msgid "Library"
+msgstr "Liburutegia"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "Karpetak"
+
+msgid "Book"
+msgstr "Liburua"
+
+# main.lua
+msgid "Project: Title"
+msgstr "Proiektua: Izenburua"
+
+msgid "Decrease Items Per Page"
+msgstr "Murriztu orri bakoitzeko elementuak"
+
+msgid "Increase Items Per Page"
+msgstr "Handitu orri bakoitzeko elementuak"
+
+msgid "Cover List"
+msgstr "Estalki Zerrenda"
+
+msgid "Cover Grid"
+msgstr "Estalki Sarea"
+
+msgid "Details List"
+msgstr "Xehetasunen Zerrenda"
+
+msgid "Filenames List"
+msgstr "Fitxategi Izenen Zerrenda"
+
+msgid "Project: Title settings"
+msgstr "Proiektua: Izenburuaren ezarpenak"
+
+msgid "Portrait cover grid mode"
+msgstr "Irudi bertikaleko estalki sare eredu"
+
+msgid "Landscape cover grid mode"
+msgstr "Irudi horizontaleko estalki sare eredu"
+
+msgid "List modes"
+msgstr "Zerrenda moduak"
+
+msgid "Folder display"
+msgstr "Karpetaren irudia"
+
+msgid "Auto-generate cover images from books"
+msgstr "Automatikoki sortu estalki irudiak liburutik"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Estalki sarean izena eta xehetasunak gainjartzea"
+
+msgid "Book display"
+msgstr "Liburuaren irudia"
+
+msgid "Show series"
+msgstr "Emaitza erakutsi"
+
+msgid "Show pages read instead of progress %"
+msgstr "Irakurri diren orriak ikusi aurrerakuntzaren ordez %"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Fitxategi informazioa ikusi orriak edo aurrerakuntzaren ordez %"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Aurrerakuntza % erakutsi aurreratze mahaiak ordez"
+
+msgid "Always show maximum length progress bars"
+msgstr "Betiere erakutsi luzerako aurrerakuntzako mahaiak"
+
+msgid "Use custom book status screen"
+msgstr "Erabili liburuaren estatuko pantaila pertsonalizatua"
+
+msgid "Footer"
+msgstr "Oineko"
+
+msgid "Replace folder name with device info"
+msgstr "Aldatu karpetaren izena gailuaren informazioarekin"
+
+msgid "Show page controls in left corner"
+msgstr "Erakutsi orri kontrolak ezkerreko txokoan"
+
+msgid "Library mode"
+msgstr "Liburutegi eredu"
+
+msgid "Show opened books first"
+msgstr "Erakutsi lehenik irekita dauden liburuak"
+
+msgid "Cache database"
+msgstr "Kasu datu-basea"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Eskaneatu etxeko karpeta liburu berriak automatikoki"
+
+msgid "Empty cache"
+msgstr "Hustu cachea"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "Ziur estalkia eta metadata cachea ezabatu nahi duzula?"
+
+msgid "Cache emptied."
+msgstr "Cachea hustuta."
+
+# bookinfomanager.lua
+msgid ""
+"Esto extraerá metadatos e imágenes de portada de los libros en el directorio "
+"actual.\n"
+"Una vez que la extracción haya comenzado, puedes abortar en cualquier "
+"momento tocando la pantalla.\n"
+"\n"
+"Esta extracción puede llevar tiempo y usar algo de batería: es posible que "
+"desees mantener tu dispositivo conectado."
+msgstr ""
+"Hau metadatuak eta estalki irudiak aterako ditu egongo den direktorioan.\n"
+"Ateratzea hasita dagoenean, une oro eten dezakezu pantailan ukituz.\n"
+"\n"
+"Ateratzeak denbora har dezake eta bateria erabil dezake: zure gailua "
+"konexioan mantentzen saia zaitezke."
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"%1 liburu aurkitu dira.\n"
+"Liburu berrien bila…"
+
+msgid "No new books found."
+msgstr "Ez da liburu berririk aurkitu."
+
+msgid "Do you want to stop?"
+msgstr "Gelditu nahi duzu?"
+
+msgid "Continue Indexing"
+msgstr "Jarraitutako sailkaketa"
+
+msgid "Stop Indexing"
+msgstr "Gelditu sailkaketa"
+
+msgid "Tap anywhere to stop"
+msgstr "Ukitu nonbait gelditzeko"
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""

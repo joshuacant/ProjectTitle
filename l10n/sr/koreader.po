@@ -1,0 +1,172 @@
+# TEMPLATE FOR LOCALIZING ADDITIONAL STRINGS IN PROJECT: TITLE.
+# Copyright (C) GODINA DRŽAVALAC AUTORSKIH PRAVA PAKETA
+# Ovaj fajl se distribuira pod istom licencom kao projecttitle.koplugin paket.
+# PRVI AUTOR <EMAIL@ADRESA>, GODINA.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/sr/>\n"
+"Language: sr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Ovo je šablon za lokalizaciju dodatnih stringova u Projektu: Naslov.
+# Stringovi u nastavku će biti dodati u puni l10n fajl iz KOReader-a.
+# Kada šaljete ovaj fajl, molimo vas da naznačite koji KOReader kod jezika je
+# prevod. Pogledajte: https://github.com/koreader/koreader-translations za listu.
+# Održavajte prevode sažetim. Zbog ograničenja prostora na ekranu, dugi stringovi mogu biti skraćeni.
+# Ovo se posebno odnosi na nazive podešavanja koja se nalaze u main.lua
+# covermenu.lua
+msgid "Library"
+msgstr "Biblioteka"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "Folderi"
+
+msgid "Book"
+msgstr "Knjiga"
+
+# main.lua
+msgid "Project: Title"
+msgstr "Projekt: Naslov"
+
+msgid "Decrease Items Per Page"
+msgstr "Smanji stavke po stranici"
+
+msgid "Increase Items Per Page"
+msgstr "Povećaj stavke po stranici"
+
+msgid "Cover List"
+msgstr "Lista korica"
+
+msgid "Cover Grid"
+msgstr "Mreža korica"
+
+msgid "Details List"
+msgstr "Lista detalja"
+
+msgid "Filenames List"
+msgstr "Lista imena fajlova"
+
+msgid "Project: Title settings"
+msgstr "Podešavanja projekta: Naslov"
+
+msgid "Portrait cover grid mode"
+msgstr "Portrait način mreže korica"
+
+msgid "Landscape cover grid mode"
+msgstr "Landscape način mreže korica"
+
+msgid "List modes"
+msgstr "Načini liste"
+
+msgid "Folder display"
+msgstr "Prikaz foldera"
+
+msgid "Auto-generate cover images from books"
+msgstr "Automatski generiši slike korica iz knjiga"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Preklapaj ime i detalje u mreži korica"
+
+msgid "Book display"
+msgstr "Prikaz knjiga"
+
+msgid "Show series"
+msgstr "Prikaži serije"
+
+msgid "Show pages read instead of progress %"
+msgstr "Prikaži pročitane stranice umesto napretka %"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Prikaži informacije o fajlu umesto stranica ili napretka %"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Prikaži napredak % umesto traka napretka"
+
+msgid "Always show maximum length progress bars"
+msgstr "Uvek prikazuj trake napretka maksimalne dužine"
+
+msgid "Use custom book status screen"
+msgstr "Koristi prilagođeni ekran statusa knjige"
+
+msgid "Footer"
+msgstr "Podnožje"
+
+msgid "Replace folder name with device info"
+msgstr "Zameni ime foldera sa informacijama o uređaju"
+
+msgid "Show page controls in left corner"
+msgstr "Prikaži kontrole stranice u levom ćošku"
+
+msgid "Library mode"
+msgstr "Način biblioteke"
+
+msgid "Show opened books first"
+msgstr "Prikaži otvorene knjige prve"
+
+msgid "Cache database"
+msgstr "Cache baza podataka"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Automatski skeniraj glavni folder za nove knjige"
+
+msgid "Empty cache"
+msgstr "Prazni keš"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "Da li ste sigurni da želite da obrišete keš korica i metapodataka?"
+
+msgid "Cache emptied."
+msgstr "Keš je očišćen."
+
+# bookinfomanager.lua
+msgid ""
+"Ovo će izdvojiti metapodatke i slike korica iz knjiga u trenutnom "
+"direktorijumu.\n"
+"Jednom kada ekstrakcija počne, možete prekinuti u bilo kojem trenutku "
+"dodirivanjem ekrana.\n"
+"\n"
+"Ova ekstrakcija može potrajati i potrošiti malo baterije: možda želite da "
+"držite uređaj uključen u struju."
+msgstr ""
+
+msgid ""
+"Nađeno je %1 knjiga.\n"
+"Tražim nove knjige…"
+msgstr ""
+
+msgid "No new books found."
+msgstr "Nema novih knjiga."
+
+msgid "Do you want to stop?"
+msgstr "Da li želite da stanete?"
+
+msgid "Continue Indexing"
+msgstr "Nastavi sa indeksiranjem"
+
+msgid "Stop Indexing"
+msgstr "Prekini indeksiranje"
+
+msgid "Tap anywhere to stop"
+msgstr "Dodirnite bilo gde da prekinete"
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""

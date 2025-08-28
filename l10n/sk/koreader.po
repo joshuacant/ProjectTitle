@@ -1,0 +1,165 @@
+# ŠABLÓNA PRE LOKALIZÁCIU.
+# Copyright (C) 2023 DRŽITEĽ AUTORSKÝCH PRÁV PAKETU
+# Tento súbor je distribuovaný pod rovnakou licenciou ako projekttitle.koplugin.
+# PRVÝ AUTOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/sk/>\n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Toto je šablóna pre lokalizáciu dodatočných reťazcov v projekte: Názov.
+# Reťazce nižšie budú pridané do úplného l10n súboru z KOReader.
+# Pri predkladaní tohto súboru, prosím, oznámte, pre aký jazykový kód KOReader
+# je preklad určený. Pozrite si: https://github.com/koreader/koreader-translations pre zoznam.
+# Udržujte preklady stručné. Kvôli obmedzeniam na mieste na obrazovke môžu byť dlhé reťazce skrátené.
+# To platí najmä pre názvy nastavení nachádzajúce sa v main.lua
+# covermenu.lua
+msgid "Library"
+msgstr "Knižnica"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "Zložky"
+
+msgid "Book"
+msgstr "Kniha"
+
+# main.lua
+msgid "Project: Title"
+msgstr "Projekt: Názov"
+
+msgid "Decrease Items Per Page"
+msgstr "Znížiť položky na stránku"
+
+msgid "Increase Items Per Page"
+msgstr "Zvýšiť položky na stránku"
+
+msgid "Cover List"
+msgstr "Zoznam obálok"
+
+msgid "Cover Grid"
+msgstr "Mriežka obálok"
+
+msgid "Details List"
+msgstr "Zoznam podrobností"
+
+msgid "Filenames List"
+msgstr "Zoznam názvov súborov"
+
+msgid "Project: Title settings"
+msgstr "Nastavenia projektu: Názov"
+
+msgid "Portrait cover grid mode"
+msgstr "Portrétový režim mriežky obálok"
+
+msgid "Landscape cover grid mode"
+msgstr "Krajinný režim mriežky obálok"
+
+msgid "List modes"
+msgstr "Režimy zoznamu"
+
+msgid "Folder display"
+msgstr "Zobrazenie zložky"
+
+msgid "Auto-generate cover images from books"
+msgstr "Automaticky generovať obálky z kníh"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Prekrývať názov a podrobnosti v mriežke obálok"
+
+msgid "Book display"
+msgstr "Zobrazenie knihy"
+
+msgid "Show series"
+msgstr "Zobraziť série"
+
+msgid "Show pages read instead of progress %"
+msgstr "Zobraziť prečítané strany namiesto percenta pokroku"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Zobraziť informácie o súboroch namiesto strán alebo percenta pokroku"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Zobraziť percento pokroku namiesto progresívnych pruhov"
+
+msgid "Always show maximum length progress bars"
+msgstr "Vždy zobrazovať maximálnu dĺžku pruhov pokroku"
+
+msgid "Use custom book status screen"
+msgstr "Použiť vlastnú obrazovku stavu knihy"
+
+msgid "Footer"
+msgstr "Päta"
+
+msgid "Replace folder name with device info"
+msgstr "Nahradiť názov zložky informáciami o zariadení"
+
+msgid "Show page controls in left corner"
+msgstr "Zobraziť ovládacie prvky strán v ľavom rohu"
+
+msgid "Library mode"
+msgstr "Režim knižnice"
+
+msgid "Show opened books first"
+msgstr "Najprv zobraziť otvorené knihy"
+
+msgid "Cache database"
+msgstr "Vyrovnávacia pamäť databázy"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Automaticky skenovať domovskú zložku na nové knihy"
+
+msgid "Empty cache"
+msgstr "Vyprázdniť cache"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "Ste si istí, že chcete odstrániť vyrovnávaciu pamäť obálok a metadát?"
+
+msgid "Cache emptied."
+msgstr "Cache bola vyprázdnená."
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"Táto akcia extrahuje metadata a obálkové obrázky z kníh v aktuálnom "
+"adresári.\n"
+"Ako náhle sa extrakcia začne, môžete kedykoľvek prerušiť ťuknutím na "
+"obrazovku.\n"
+"\n"
+"Tato extrakcia môže trvať určitý čas a vyžaduje si nejakú batériu: môžete si "
+"zvážiť nechať zariadenie pripojené k napájaniu."
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"Nájdilo sa %1 kníh.\n"
+"Hľadanie nových kníh…"
+
+msgid "No new books found."
+msgstr "Nenašli sa žiadne nové knihy."
+
+msgid "Do you want to stop?"
+msgstr "Chcete zastaviť?"
+
+msgid "Continue Indexing"
+msgstr "Pokračovať v indexovaní"
+
+msgid "Stop Indexing"
+msgstr "Zastaviť indexovanie"
+
+msgid "Tap anywhere to stop"
+msgstr "Ťuknite kdekoľvek na zastavenie"

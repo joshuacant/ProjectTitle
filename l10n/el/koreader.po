@@ -1,0 +1,167 @@
+# TEMPLATE FOR LOCALIZING ADDITIONAL STRINGS IN PROJECT: TITLE
+# Copyright (C) 2025 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the projecttitle.koplugin package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/el/>\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# This is the template for localizing the additional strings found in Project: Title.
+# The strings below will be added to the full l10n file from KOReader.
+# When submitting this file, please indicate what KOReader language code the
+# translation is for. See: https://github.com/koreader/koreader-translations for a list.
+# Keep translations concise. Due to screen space limits, long strings may be truncated.
+# This is especially true of the setting names located in main.lua
+# covermenu.lua
+msgid "Library"
+msgstr "Βιβλιοθήκη"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "Φάκελοι"
+
+msgid "Book"
+msgstr "Βιβλίο"
+
+# main.lua
+msgid "Project: Title"
+msgstr "Project: Τίτλος"
+
+msgid "Decrease Items Per Page"
+msgstr "Μείωση Αντικειμένων ανά Σελίδα"
+
+msgid "Increase Items Per Page"
+msgstr "Αύξηση Αντικειμένων ανά Σελίδα"
+
+msgid "Cover List"
+msgstr "Λίστα Εξωφύλλων"
+
+msgid "Cover Grid"
+msgstr "Πλέγμα Εξωφύλλων"
+
+msgid "Details List"
+msgstr "Λίστα Λεπτομερειών"
+
+msgid "Filenames List"
+msgstr "Λίστα Ονομάτων Αρχείων"
+
+msgid "Project: Title settings"
+msgstr "Ρυθμίσεις Project: Τίτλος"
+
+msgid "Portrait cover grid mode"
+msgstr "Λειτουργία πλέγματος εξωφύλλων σε πορτρέτο"
+
+msgid "Landscape cover grid mode"
+msgstr "Λειτουργία πλέγματος εξωφύλλων σε τοπίο"
+
+msgid "List modes"
+msgstr "Λειτουργίες λίστας"
+
+msgid "Folder display"
+msgstr "Εμφάνιση φακέλου"
+
+msgid "Auto-generate cover images from books"
+msgstr "Αυτόματη δημιουργία εικόνων εξωφύλλων από βιβλία"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Επικάλυψη ονόματος και λεπτομερειών στο πλέγμα εξωφύλλων"
+
+msgid "Book display"
+msgstr "Εμφάνιση βιβλίου"
+
+msgid "Show series"
+msgstr "Εμφάνιση σειράς"
+
+msgid "Show pages read instead of progress %"
+msgstr "Εμφάνιση διαβασμένων σελίδων αντί για πρόοδο %"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Εμφάνιση πληροφοριών αρχείου αντί για σελίδες ή πρόοδο %"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Εμφάνιση προόδου % αντί για μπάρα προόδου"
+
+msgid "Always show maximum length progress bars"
+msgstr "Συνεχώς εμφάνιση μπαρών προόδου μέγιστου μήκους"
+
+msgid "Use custom book status screen"
+msgstr "Χρήση προσαρμοσμένης οθόνης κατάστασης βιβλίου"
+
+msgid "Footer"
+msgstr "Υποσέλιδο"
+
+msgid "Replace folder name with device info"
+msgstr "Αντικατάσταση ονόματος φακέλου με πληροφορίες συσκευής"
+
+msgid "Show page controls in left corner"
+msgstr "Εμφάνιση ελέγχων σελίδας στην αριστερή γωνία"
+
+msgid "Library mode"
+msgstr "Λειτουργία βιβλιοθήκης"
+
+msgid "Show opened books first"
+msgstr "Εμφάνιση ανοιγμένων βιβλίων πρώτα"
+
+msgid "Cache database"
+msgstr "Βάση δεδομένων cache"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Σάρωση του κύριου φακέλου για νέα βιβλία αυτόματα"
+
+msgid "Empty cache"
+msgstr "Άδειασμα cache"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr ""
+"Είστε σίγουροι ότι θέλετε να διαγράψετε την cache εξωφύλλων και "
+"μεταδεδομένων;"
+
+msgid "Cache emptied."
+msgstr "Η cache έχει αδειάσει."
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"Αυτό θα εξάγει μεταδεδομένα και εικόνες εξωφύλλων από βιβλία στο τρέχον "
+"κατάλογο.\n"
+"Μόλις ξεκινήσει η εξαγωγή, μπορείτε να την ακυρώσετε ανά πάσα στιγμή "
+"πατώντας στην οθόνη.\n"
+"\n"
+"Αυτή η εξαγωγή μπορεί να πάρει χρόνο και να χρησιμοποιήσει κάποια ενέργεια: "
+"μπορείτε να επιθυμείτε να έχετε τη συσκευή σας συνδεδεμένη."
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"Βρέθηκαν %1 βιβλία.\n"
+"Ψάχνοντας για νέα βιβλία…"
+
+msgid "No new books found."
+msgstr "Δεν βρέθηκαν νέα βιβλία."
+
+msgid "Do you want to stop?"
+msgstr "Θέλετε να σταματήσετε;"
+
+msgid "Continue Indexing"
+msgstr "Συνεχίστε την ευρετηρίαση"
+
+msgid "Stop Indexing"
+msgstr "Σταματήστε την ευρετηρίαση"
+
+msgid "Tap anywhere to stop"
+msgstr "Πατήστε οπουδήποτε για να σταματήσετε"

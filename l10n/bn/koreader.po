@@ -1,0 +1,163 @@
+# কিছু বর্ণনামূলক শিরোনাম।
+# কপিরাইট (C) YEAR প্যাকেজের কপিরাইট হোল্ডার
+# এই ফাইলটি projecttitle.koplugin প্যাকেজের মতো একই লাইসেন্সের অধীনে বিতরণ করা হয়।
+# প্রাথমিক লেখক <EMAIL@ADDRESS>, YEAR।
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/bn/>\n"
+"Language: bn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# এটাই Project: Title এর অতিরিক্ত স্ট্রিং স্থানীয়করণের মেশিন।
+# নিচে দেওয়া স্ট্রিংগুলো KOReader থেকে পূর্ণ l10n ফাইলে যোগ করা হবে।
+# এই ফাইলটি জমা দেওয়ার সময় দয়া করে বলুন কোন KOReader ভাষার কোডের জন্য
+# অনুবাদটি করা হয়েছে। তালিকার জন্য দেখুন: https://github.com/koreader/koreader-translations।
+# অনুবাদগুলো সংক্ষিপ্ত রাখুন। পর্দার স্থান সীমার কারণে, দীর্ঘ স্ট্রিংগুলো ছাঁটাই হতে পারে।
+# এটি বিশেষত main.lua তে পাওয়া সেটিং নামগুলির জন্য সঠিক।
+# covermenu.lua
+msgid "Library"
+msgstr "লাইব্রেরি"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "ফোল্ডার"
+
+msgid "Book"
+msgstr "বই"
+
+# main.lua
+msgid "Project: Title"
+msgstr "প্রকল্প: শিরোনাম"
+
+msgid "Decrease Items Per Page"
+msgstr "প্রতি পৃষ্ঠায় আইটেম সংখ্যা কমান"
+
+msgid "Increase Items Per Page"
+msgstr "প্রতি পৃষ্ঠায় আইটেম সংখ্যা বাড়ান"
+
+msgid "Cover List"
+msgstr "কভার তালিকা"
+
+msgid "Cover Grid"
+msgstr "কভার গ্রিড"
+
+msgid "Details List"
+msgstr "বিস্তারিত তালিকা"
+
+msgid "Filenames List"
+msgstr "ফাইলের নামের তালিকা"
+
+msgid "Project: Title settings"
+msgstr "প্রকল্প: শিরোনাম সেটিংস"
+
+msgid "Portrait cover grid mode"
+msgstr "পোর্ট্রেইট কভার গ্রিড মোড"
+
+msgid "Landscape cover grid mode"
+msgstr "ল্যান্ডস্কেপ কভার গ্রিড মোড"
+
+msgid "List modes"
+msgstr "তালিকা মোড"
+
+msgid "Folder display"
+msgstr "ফোল্ডার প্রদর্শন"
+
+msgid "Auto-generate cover images from books"
+msgstr "বই থেকে স্বয়ংক্রিয়ভাবে কভার চিত্র তৈরি করুন"
+
+msgid "Overlay name and details in cover grid"
+msgstr "কভার গ্রিডে নাম এবং বিস্তারিত ওভারলে করুন"
+
+msgid "Book display"
+msgstr "বই প্রদর্শন"
+
+msgid "Show series"
+msgstr "সিরিজ দেখান"
+
+msgid "Show pages read instead of progress %"
+msgstr "প্রগতি % এর পরিবর্তে পড়া পাতা দেখান"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "পাতা বা প্রগতি % এর পরিবর্তে ফাইলের তথ্য দেখান"
+
+msgid "Show progress % instead of progress bars"
+msgstr "প্রগতি বারগুলির পরিবর্তে প্রগতি % দেখান"
+
+msgid "Always show maximum length progress bars"
+msgstr "সর্বদা সর্বাধিক দৈর্ঘ্যের প্রগ্রেস বারের দেখান"
+
+msgid "Use custom book status screen"
+msgstr "কাস্টম বই স্থিতি স্ক্রীন ব্যবহার করুন"
+
+msgid "Footer"
+msgstr "ফুটার"
+
+msgid "Replace folder name with device info"
+msgstr "ফোল্ডার নামটি ডিভাইজ তথ্য দিয়ে প্রতিস্থাপন করুন"
+
+msgid "Show page controls in left corner"
+msgstr "বাম কোণে পৃষ্ঠা নিয়ন্ত্রণগুলি দেখান"
+
+msgid "Library mode"
+msgstr "লাইব্রেরি মোড"
+
+msgid "Show opened books first"
+msgstr "প্রথমে খোলা বইগুলো দেখান"
+
+msgid "Cache database"
+msgstr "ক্যাশে ডেটাবেস"
+
+msgid "Scan home folder for new books automatically"
+msgstr "নতুন বইগুলোর জন্য স্বয়ংক্রিয়ভাবে হোম ফোল্ডার স্ক্যান করুন"
+
+msgid "Empty cache"
+msgstr "ক্যাশে খালি করুন"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "আপনি কি কভার এবং মেটাডেটা ক্যাশে মুছতে চান?"
+
+msgid "Cache emptied."
+msgstr "ক্যাশে খালি করা হয়েছে।"
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"এটি বর্তমান ডিরেক্টরির বইগুলির মেটাডেটা এবং কভার চিত্রগুলি বের করবে।\n"
+"একবার বের করা শুরু হলে, আপনি যে কোনও মুহূর্তে স্ক্রীনে ট্যাপ করে বাতিল করতে পারেন।\n"
+"\n"
+"এই বের করা কিছু সময় নিতে পারে এবং কিছু ব্যাটারি শক্তি ব্যবহার করতে পারে: আপনি "
+"চাইলে আপনার ডিভাইসটি পPlugged ইন রাখার পরামর্শ দিতে পারেন।"
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"%d বই পাওয়া গেছে।\n"
+"নতুন বইয়ের জন্য অনুসন্ধান চলছে…"
+
+msgid "No new books found."
+msgstr "কোন নতুন বই পাওয়া যায়নি।"
+
+msgid "Do you want to stop?"
+msgstr "আপনি কি থামাতে চান?"
+
+msgid "Continue Indexing"
+msgstr "সূচীকরণ চালিয়ে যান"
+
+msgid "Stop Indexing"
+msgstr "সূচীকরণ বন্ধ করুন"
+
+msgid "Tap anywhere to stop"
+msgstr "বেন কোথাও ট্যাপ করুন থামানোর জন্য"

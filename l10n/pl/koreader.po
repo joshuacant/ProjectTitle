@@ -1,0 +1,154 @@
+# TEMPLATE DO LOKALIZACJI DODATKOWYCH STRINGÓW ZNALEZIONYCH W PROJEKCIE: Tytuł.
+# Copyright (C) 2025 Posiadacz praw autorskich pakietu
+# Ten plik jest dystrybuowany na tych samych zasadach, co pakiet projecttitle.koplugin.
+# PIERWSZY AUTOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/pl/>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Library"
+msgstr "Biblioteka"
+
+msgid "Folders"
+msgstr "Foldery"
+
+msgid "Book"
+msgstr "Książka"
+
+msgid "Project: Title"
+msgstr "Projekt: Tytuł"
+
+msgid "Decrease Items Per Page"
+msgstr "Zmniejsz elementy na stronę"
+
+msgid "Increase Items Per Page"
+msgstr "Zwiększ elementy na stronę"
+
+msgid "Cover List"
+msgstr "Lista okładek"
+
+msgid "Cover Grid"
+msgstr "Siatka okładek"
+
+msgid "Details List"
+msgstr "Lista szczegółów"
+
+msgid "Filenames List"
+msgstr "Lista nazw plików"
+
+msgid "Project: Title settings"
+msgstr "Ustawienia projektu: Tytuł"
+
+msgid "Portrait cover grid mode"
+msgstr "Tryb siatki okładek w orientacji pionowej"
+
+msgid "Landscape cover grid mode"
+msgstr "Tryb siatki okładek w orientacji poziomej"
+
+msgid "List modes"
+msgstr "Tryby list"
+
+msgid "Folder display"
+msgstr "Wyświetlanie folderów"
+
+msgid "Auto-generate cover images from books"
+msgstr "Automatycznie generuj obrazy okładek z książek"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Nałóż nazwę i szczegóły w siatce okładek"
+
+msgid "Book display"
+msgstr "Wyświetlanie książek"
+
+msgid "Show series"
+msgstr "Pokaż serie"
+
+msgid "Show pages read instead of progress %"
+msgstr "Pokaż przeczytane strony zamiast postępu %"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Pokaż informacje o pliku zamiast stron lub postępu %"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Pokaż postęp % zamiast pasków postępu"
+
+msgid "Always show maximum length progress bars"
+msgstr "Zawsze pokazuj paski postępu maksymalnej długości"
+
+msgid "Use custom book status screen"
+msgstr "Użyj niestandardowego ekranu statusu książki"
+
+msgid "Footer"
+msgstr "Stopka"
+
+msgid "Replace folder name with device info"
+msgstr "Zamień nazwę folderu na informacje o urządzeniu"
+
+msgid "Show page controls in left corner"
+msgstr "Pokaż kontrolki stron w lewym rogu"
+
+msgid "Library mode"
+msgstr "Tryb biblioteki"
+
+msgid "Show opened books first"
+msgstr "Pokaż najpierw otwarte książki"
+
+msgid "Cache database"
+msgstr "Baza danych pamięci podręcznej"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Automatycznie zeskanuj folder główny w poszukiwaniu nowych książek"
+
+msgid "Empty cache"
+msgstr "Wyczyść pamięć podręczną"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "Czy na pewno chcesz usunąć pamięć podręczną okładek i metadanych?"
+
+msgid "Cache emptied."
+msgstr "Pamięć podręczna wyczyszczona."
+
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
+"To wyodrębni metadane i obrazy okładek z książek w bieżącym katalogu.\n"
+"Gdy proces wyodrębniania się rozpocznie, możesz przerwać w każdej chwili, "
+"dotykając ekranu.\n"
+"\n"
+"Ten proces może potrwać chwilę i zużyć trochę energii: warto trzymać "
+"urządzenie podłączone do zasilania."
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"Znaleziono %1 książek.\n"
+"Szukanie nowych książek…"
+
+msgid "No new books found."
+msgstr "Nie znaleziono nowych książek."
+
+msgid "Do you want to stop?"
+msgstr "Czy chcesz zatrzymać?"
+
+msgid "Continue Indexing"
+msgstr "Kontynuuj indeksowanie"
+
+msgid "Stop Indexing"
+msgstr "Zatrzymaj indeksowanie"
+
+msgid "Tap anywhere to stop"
+msgstr "Dotknij w dowolnym miejscu, aby zatrzymać"

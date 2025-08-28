@@ -1,0 +1,172 @@
+# Nějaký popisný název.
+# Copyright (C) YEAR DRŽITEL AUTORSKÝCH PRÁV BALÍČKU
+# Tento soubor je distribuován pod stejnou licencí jako balíček projecttitle.koplugin.
+# PRVNÍ AUTOR <EMAIL@ADDRESS>, ROK.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"projecttitle/cs/>\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Tento soubor slouží jako šablona pro lokalizaci dalších řetězců nalezených v projektu: Název.
+# Řetězce níže budou přidány do úplného l10n souboru z KOReader.
+# Při odesílání tohoto souboru, prosím uveďte, pro jaký jazykový kód KOReader
+# je překlad určen. Více informací naleznete na: https://github.com/koreader/koreader-translations.
+# Udržujte překlady stručné. Z důvodu omezeného prostoru na obrazovce mohou být dlouhé řetězce zkráceny.
+# To platí zejména pro názvy nastavení umístěné v main.lua
+# covermenu.lua
+msgid "Library"
+msgstr "Knihovna"
+
+# listmenu.lua
+msgid "Folders"
+msgstr "Složky"
+
+msgid "Book"
+msgstr "Kniha"
+
+# main.lua
+msgid "Project: Title"
+msgstr "Projekt: Název"
+
+msgid "Decrease Items Per Page"
+msgstr "Snížit položky na stránku"
+
+msgid "Increase Items Per Page"
+msgstr "Zvýšit položky na stránku"
+
+msgid "Cover List"
+msgstr "Seznam obálek"
+
+msgid "Cover Grid"
+msgstr "Mřížka obálek"
+
+msgid "Details List"
+msgstr "Seznam podrobností"
+
+msgid "Filenames List"
+msgstr "Seznam názvů souborů"
+
+msgid "Project: Title settings"
+msgstr "Nastavení projektu: Název"
+
+msgid "Portrait cover grid mode"
+msgstr "Režim mřížky obálek na výšku"
+
+msgid "Landscape cover grid mode"
+msgstr "Režim mřížky obálek na šířku"
+
+msgid "List modes"
+msgstr "Režimy seznamu"
+
+msgid "Folder display"
+msgstr "Zobrazení složek"
+
+msgid "Auto-generate cover images from books"
+msgstr "Automaticky generovat obrázky obálek z knih"
+
+msgid "Overlay name and details in cover grid"
+msgstr "Překrýt název a podrobnosti v mřížce obálek"
+
+msgid "Book display"
+msgstr "Zobrazení knihy"
+
+msgid "Show series"
+msgstr "Zobrazit série"
+
+msgid "Show pages read instead of progress %"
+msgstr "Zobrazit přečtené stránky místo pokroku %"
+
+msgid "Show file info instead of pages or progress %"
+msgstr "Zobrazit informace o souboru místo stránek nebo pokroku %"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Zobrazit pokrok % místo průběhových lišt"
+
+msgid "Always show maximum length progress bars"
+msgstr "Vždy zobrazovat maximální délku průběhových lišt"
+
+msgid "Use custom book status screen"
+msgstr "Použít vlastní obrazovku stavu knihy"
+
+msgid "Footer"
+msgstr "Zápatí"
+
+msgid "Replace folder name with device info"
+msgstr "Nahradit název složky informacemi o zařízení"
+
+msgid "Show page controls in left corner"
+msgstr "Zobrazit ovládací prvky stránek v levém rohu"
+
+msgid "Library mode"
+msgstr "Režim knihovny"
+
+msgid "Show opened books first"
+msgstr "Nejprve zobrazit otevřené knihy"
+
+msgid "Cache database"
+msgstr "Cache databáze"
+
+msgid "Scan home folder for new books automatically"
+msgstr "Automaticky prohledávat domácí složku na nové knihy"
+
+msgid "Empty cache"
+msgstr "Vyprázdnit cache"
+
+msgid "Are you sure that you want to delete cover and metadata cache?"
+msgstr "Opravdu chcete smazat cache obálek a metadat?"
+
+msgid "Cache emptied."
+msgstr "Cache vyprázdněna."
+
+# bookinfomanager.lua
+msgid ""
+"Tato akce extrahuje metadata a obrázky obálek z knih v aktuálním adresáři.\n"
+"Jakmile začne extrakce, můžete ji kdykoli přerušit klepnutím na obrazovku.\n"
+"\n"
+"Tato extrakce může nějakou dobu trvat a využívat určité množství energie: "
+"doporučujeme držet zařízení zapojené."
+msgstr ""
+"Tato akce extrahuje metadata a obrázky obálek z knih v aktuálním adresáři.\n"
+"Jakmile začne extrakce, můžete ji kdykoli přerušit klepnutím na obrazovku.\n"
+"\n"
+"Tato extrakce může nějakou dobu trvat a využívat určité množství energie: "
+"doporučujeme držet zařízení zapojené."
+
+msgid ""
+"Found %1 books.\n"
+"Looking for new books…"
+msgstr ""
+"Nalezeno %1 knih.\n"
+"Hledání nových knih…"
+
+msgid "No new books found."
+msgstr "Nebyly nalezeny žádné nové knihy."
+
+msgid "Do you want to stop?"
+msgstr "Chcete přestat?"
+
+msgid "Continue Indexing"
+msgstr "Pokračovat v indexaci"
+
+msgid "Stop Indexing"
+msgstr "Zastavit indexaci"
+
+msgid "Tap anywhere to stop"
+msgstr "Klepněte kdekoli pro zastavení"
+
+# bookinfomanager.lua
+msgid ""
+"This will extract metadata and cover images from books in the current "
+"directory.\n"
+"Once extraction has started, you can abort at any moment by tapping on the "
+"screen.\n"
+"\n"
+"This extraction may take time and use some battery power: you may wish to "
+"keep your device plugged in."
+msgstr ""
