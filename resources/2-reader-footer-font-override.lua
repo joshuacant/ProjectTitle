@@ -7,6 +7,6 @@
 local ReaderFooter = require("apps/reader/modules/readerfooter")
 local _ReaderFooter_init_orig = ReaderFooter.init
 ReaderFooter.init = function(self)
-    self.text_font_face = "source/SourceSerif4-Regular.ttf"
-    _ReaderFooter_init_orig(self)
+	self.text_font_face = "SourceSerif4-Regular.ttf"
+	_ReaderFooter_init_orig(self)
 end
