@@ -233,6 +233,10 @@ function CoverBrowser:init()
         BookInfoManager:saveSetting("unified_display_mode", true)
         BookInfoManager:saveSetting("show_progress_in_mosaic", true)
         BookInfoManager:saveSetting("autoscan_on_eject", false)
+        BookInfoManager:saveSetting("list_show_pages", true)
+        BookInfoManager:saveSetting("list_show_percentage", true)
+        BookInfoManager:saveSetting("list_show_fileinfo", true)
+        BookInfoManager:saveSetting("list_show_progressbar", true)
         G_reader_settings:makeTrue("aaaProjectTitle_initial_default_setup_done2")
         restart_needed = true
     end
@@ -265,6 +269,20 @@ function CoverBrowser:init()
         BookInfoManager:saveSetting("force_focus_indicator", false)
         BookInfoManager:saveSetting("use_stacked_foldercovers", false)
         BookInfoManager:saveSetting("config_version", "4")
+    end
+
+    -- Ensure new boolean defaults for older installs
+    if BookInfoManager:getSetting("list_show_pages") == nil then
+        BookInfoManager:saveSetting("list_show_pages", true)
+    end
+    if BookInfoManager:getSetting("list_show_percentage") == nil then
+        BookInfoManager:saveSetting("list_show_percentage", true)
+    end
+    if BookInfoManager:getSetting("list_show_fileinfo") == nil then
+        BookInfoManager:saveSetting("list_show_fileinfo", true)
+    end
+    if BookInfoManager:getSetting("list_show_progressbar") == nil then
+        BookInfoManager:saveSetting("list_show_progressbar", true)
     end
 
     -- restart if needed
@@ -544,7 +562,47 @@ function CoverBrowser:addToMainMenu(menu_items)
                 text = _("Book display"),
                 sub_item_table = {
                     {
-                        text = _("Show file info instead of pages or progress %"),
+                        text = _("List view: Show no. of pages"),
+                        checked_func = function() return BookInfoManager:getSetting("list_show_pages") end,
+                        callback = function()
+                            BookInfoManager:toggleSetting("list_show_pages")
+                            fc:updateItems(1, true)
+                        end,
+                    },
+                    {
+                        text = _("List view: Show progress bar"),
+                        checked_func = function() return BookInfoManager:getSetting("list_show_progressbar") end,
+                        callback = function()
+                            BookInfoManager:toggleSetting("list_show_progressbar")
+                            fc:updateItems(1, true)
+                        end,
+                    },
+                    {
+                        text = _("List view: Show progress %"),
+                        checked_func = function() return BookInfoManager:getSetting("list_show_percentage") end,
+                        callback = function()
+                            BookInfoManager:toggleSetting("list_show_percentage")
+                            fc:updateItems(1, true)
+                        end,
+                    },
+                    
+                    {
+                        text = _("List view: Show fileinfo"),
+                        separator = true,
+                        checked_func = function() return BookInfoManager:getSetting("list_show_fileinfo") end,
+                        callback = function()
+                            BookInfoManager:toggleSetting("list_show_fileinfo")
+                            fc:updateItems(1, true)
+                        end,
+                    },
+                    {
+                        text = _("Grid view: Show file info instead of progressbar"),
+                        enabled_func = function()
+                            return not (
+                                BookInfoManager:getSetting("show_pages_read_as_progress") or
+                                BookInfoManager:getSetting("force_no_progressbars")
+                                )
+                        end,
                         checked_func = function() return not BookInfoManager:getSetting("hide_file_info") end,
                         callback = function()
                             BookInfoManager:toggleSetting("hide_file_info")
@@ -552,10 +610,11 @@ function CoverBrowser:addToMainMenu(menu_items)
                         end,
                     },
                     {
-                        text = _("Show pages read instead of progress %"),
+                        text = _("Grid view: Show pages read instead of progressbar"),
                         enabled_func = function()
                             return not (
-                                    not BookInfoManager:getSetting("hide_file_info")
+                                not BookInfoManager:getSetting("hide_file_info") or
+                                BookInfoManager:getSetting("force_no_progressbars")
                                 )
                         end,
                         checked_func = function() return BookInfoManager:getSetting("show_pages_read_as_progress") end,
@@ -565,11 +624,13 @@ function CoverBrowser:addToMainMenu(menu_items)
                         end,
                     },
                     {
-                        text = _("Show progress % instead of progress bars"),
+                        text = _("Grid view: Show progress percentage instead of progressbar"),
+                        separator = true,
                         enabled_func = function()
                             return not (
-                                    BookInfoManager:getSetting("show_pages_read_as_progress") or
-                                    not BookInfoManager:getSetting("hide_file_info")
+                                not BookInfoManager:getSetting("hide_file_info") or
+                                BookInfoManager:getSetting("show_pages_read_as_progress")
+                                    
                                 )
                         end,
                         checked_func = function() return BookInfoManager:getSetting("force_no_progressbars") end,
@@ -580,14 +641,6 @@ function CoverBrowser:addToMainMenu(menu_items)
                     },
                     {
                         text = _("Always show maximum length progress bars"),
-                        separator = true,
-                        enabled_func = function()
-                            return not (
-                                    BookInfoManager:getSetting("force_no_progressbars") or
-                                    BookInfoManager:getSetting("show_pages_read_as_progress") or
-                                    not BookInfoManager:getSetting("hide_file_info")
-                                )
-                        end,
                         checked_func = function() return BookInfoManager:getSetting("force_max_progressbars") end,
                         callback = function()
                             BookInfoManager:toggleSetting("force_max_progressbars")

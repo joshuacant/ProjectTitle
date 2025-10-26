@@ -473,6 +473,16 @@ end
 function ptutil.showProgressBar(pages)
     local show_progress_bar = false
     local est_page_count = pages or nil
+    show_progress_bar = est_page_count ~= nil and
+        BookInfoManager:getSetting("list_show_progressbar")
+    return est_page_count, show_progress_bar
+end
+
+-- This is an ugly workaround to not mix list/grid view settings,
+-- There's probably a better solution using one function and checking for view-mode selected
+function ptutil.showProgressBarGrid(pages)
+    local show_progress_bar = false
+    local est_page_count = pages or nil
     if BookInfoManager:getSetting("force_max_progressbars") and not BookInfoManager:getSetting("show_pages_read_as_progress") then
         est_page_count = "700"
     end

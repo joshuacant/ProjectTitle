@@ -424,6 +424,7 @@ function ListMenuItem:update()
             local abandoned_string = _("On hold")
             local read_text = _("Reading")
             local unread_text = _("New")
+            local status_str = ""
             local pages_str = ""
             local pages_left_str = ""
             local percent_str = ""
@@ -454,7 +455,7 @@ function ListMenuItem:update()
             if draw_progressbar then
                 local progressbar_items = { align = "center" }
 
-                local fn_pages = tonumber(est_page_count)
+                local fn_pages = BookInfoManager:getSetting("force_max_progressbars") and 700 or tonumber(est_page_count)
                 local max_progress_size = 235
                 local pixels_per_page = 3
                 local min_progress_size = 25
@@ -469,7 +470,7 @@ function ListMenuItem:update()
                     bordersize = Screen:scaleBySize(0.5),
                     bordercolor = Blitbuffer.COLOR_BLACK,
                     bgcolor = Blitbuffer.COLOR_GRAY_E,
-                    fillcolor = Blitbuffer.COLOR_GRAY_6,
+                    fillcolor = Blitbuffer.COLOR_GRAY_8, -- changed to make sure perecentage text is more visible
                     percentage = 0,
                 }
 
@@ -553,6 +554,23 @@ function ListMenuItem:update()
                 else
                     table.insert(progressbar_items, progress_block)
                 end
+                 -- Add percentage text to progress bar if drawing progress bar
+                 -- Not showing for new (0%) or finished (100%) books
+                if BookInfoManager:getSetting("list_show_percentage") and (status == "reading" or status == "abandoned") then
+                    local progress_statuspercent_widget = TextWidget:new({
+                        text = math.floor(100 * percent_finished) .. "%",
+                        face = Font:getFace(ptutil.good_sans, _fontSize(10, 16)),
+                        fgcolor = fgcolor,
+                        padding = 0,
+                    })
+                    table.insert(progress_block, CenterContainer:new {
+                        dimen = progress_dimen,
+                        HorizontalGroup:new {
+                            progress_statuspercent_widget,
+                            HorizontalSpan:new { width = progress_statuspercent_widget._length}, -- adjust position by the width of the text itself
+                        }
+                    })
+                end
 
                 for _, w in ipairs(progressbar_items) do
                     wright_width = wright_width + w:getSize().w
@@ -592,80 +610,98 @@ function ListMenuItem:update()
                 end
             end
 
-            -- show progress text, page text, and/or file info text
-            if BookInfoManager:getSetting("hide_file_info") then
+            -- Show status text (only for new)
+            if status == "complete" then
+                status_str = "" --finished_text
+            elseif status == "abandoned" then
+                status_str = "" --abandoned_string
+            elseif status == "reading" then
+                status_str = "" --read_text
+            elseif not bookinfo._no_provider then
+                status = "new"
+                status_str = unread_text
+            end
+
+            -- Add percentage text when no bar present (onto status text)
+            if BookInfoManager:getSetting("list_show_percentage") and (status == "reading" or status == "abandoned") and not draw_progressbar then
+                status_str = math.floor(100 * percent_finished) .. "%"
+            end
+
+            
+            -- Add pages text
+            local pages_str_ending = " pages"
+            local pages_left_str_ending = " pages left"
+            if pages == 1 then
+                pages_str_ending = " page"
+            end
+            if BookInfoManager:getSetting("list_show_pages") then
                 if status == "complete" then
-                    progress_str = finished_text
-                elseif status == "abandoned" then
-                    progress_str = abandoned_string
-                elseif percent_finished then
-                    progress_str = read_text
-                    if not draw_progressbar then
-                        percent_str = math.floor(100 * percent_finished) .. "%"
+                    pages_str = tonumber(pages) .. pages_str_ending
+                elseif status == "abandoned" and percent_finished then
+                    local pages_left = Math.round(pages - percent_finished * pages)
+                    if pages_left == 1 then
+                        pages_left_str_ending = " page left"
                     end
-                    if pages then
-                        if BookInfoManager:getSetting("show_pages_read_as_progress") then
-                            percent_str = read_text
-                            pages_str = T(_("Page %1 of %2"), Math.round(percent_finished * pages), pages)
-                        end
-                        if BookInfoManager:getSetting("show_pages_left_in_progress") then
-                            percent_str = read_text
-                            pages_left_str = T(_("%1 pages left"), Math.round(pages - percent_finished * pages), pages)
-                        end
-                    end
+                    pages_str = tostring(pages_left) .. pages_left_str_ending
+                elseif status == "abandoned" and not percent_finished then
+                    pages_str = " 1 pages left"    
+                elseif status == "reading" and pages and percent_finished then
+                    pages_str = T(_("Page %1 of %2"), Math.round(percent_finished * pages), pages)
                 elseif not bookinfo._no_provider then
-                    progress_str = unread_text
+                    pages_str = tonumber(pages) .. pages_str_ending
                 end
 
-                if BookInfoManager:getSetting("show_pages_read_as_progress") then
-                    if pages_str ~= "" then
-                        local wpageinfo = TextWidget:new {
-                            text = pages_str,
-                            face = wright_font_face,
-                            fgcolor = fgcolor,
-                            padding = 0,
-                        }
-                        table.insert(wright_items, 1, wpageinfo)
-                    end
-                else
-                    if percent_str ~= "" then
-                        local wpercentinfo = TextWidget:new {
-                            text = percent_str,
-                            face = wright_font_face,
-                            fgcolor = fgcolor,
-                            padding = 0,
-                        }
-                        table.insert(wright_items, 1, wpercentinfo)
-                    end
+                -- Edge cases
+                -- If book is on hold and no progress bar is shown
+                -- put pages left and percentage on one line to avoid 4 lines
+                if BookInfoManager:getSetting("list_show_percentage") and status == "abandoned" and not draw_progressbar then
+                    pages_str = status_str .. " ⋅ " .. pages_str
+                    status_str = "" -- clear string to avoid duplicate
                 end
-                if BookInfoManager:getSetting("show_pages_left_in_progress") then
-                    if pages_left_str ~= "" then
-                        local wpagesleftinfo = TextWidget:new {
-                            text = pages_left_str,
-                            face = wright_font_face,
-                            fgcolor = fgcolor,
-                            padding = 0,
-                        }
-                        table.insert(wright_items, 1, wpagesleftinfo)
-                    end
+                -- If book is new and progress bar is shown
+                -- put no of pages and status text on one line to avoid 4 lines
+                if BookInfoManager:getSetting("list_show_percentage") and status == "new" and draw_progressbar then
+                    pages_str = pages_str .. " ⋅ " .. status_str
+                    status_str = "" -- clear string to avoid duplicate
                 end
-                if progress_str ~= "" then
-                    local wprogressinfo = TextWidget:new {
-                        text = progress_str,
-                        face = wright_font_face,
-                        fgcolor = fgcolor,
-                        padding = 0,
-                    }
-                    table.insert(wright_items, 1, wprogressinfo)
-                end
-            else
-                local wfileinfo = TextWidget:new {
-                    text = fileinfo_str,
+               
+                local wpages = TextWidget:new {
+                    text = pages_str,
                     face = wright_font_face,
                     fgcolor = fgcolor,
                     padding = 0,
                 }
-                table.insert(wright_items, 1, wfileinfo)
+                -- Positional shenanigans to make it look better
+                -- If progressbar is shown - then put it above it, 
+                -- otherwise make the pause/trophy icon be on the top
+                if draw_progressbar then
+                    table.insert(wright_items, 1, wpages)
+                else
+                    table.insert(wright_items, wpages)
+                end
+            end
+            
+            local wstatus = TextWidget:new {
+                text = status_str,
+                face = wright_font_face,
+                fgcolor = fgcolor,
+                padding = 0,
+            }
+            if status_str ~= "" then
+                table.insert(wright_items, 1, wstatus)
+            end
+
+            -- Show fileinfo text, always on bottom
+            if BookInfoManager:getSetting("list_show_fileinfo") then
+                fileinfo_str = filetype:upper() .. " ⋅ " .. fileinfo_str
+                local wfileinfo = TextWidget:new {
+                    text = fileinfo_str,
+                    face = wright_font_face,
+                    fgcolor = fgcolor,
+                    height_adjust = true,
+                    padding = 0,
+                }
+                table.insert(wright_items, wfileinfo)
             end
 
             if #wright_items > 0 and not self.do_filename_only then
@@ -726,7 +762,7 @@ function ListMenuItem:update()
                 end
                 if bookinfo.series_index then
                     -- bookinfo.series = "\u{FFF1}#" .. bookinfo.series_index .. " – " .. "\u{FFF2}" .. BD.auto(bookinfo.series) .. "\u{FFF3}"
-                    bookinfo.series = "#" .. bookinfo.series_index .. " – " .. BD.auto(bookinfo.series)
+                    bookinfo.series = "Book " .. bookinfo.series_index .. " of " .. BD.auto(bookinfo.series)
                 else
                     bookinfo.series = BD.auto(bookinfo.series)
                 end
