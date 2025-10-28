@@ -470,7 +470,7 @@ function ListMenuItem:update()
                     bordersize = Screen:scaleBySize(0.5),
                     bordercolor = Blitbuffer.COLOR_BLACK,
                     bgcolor = Blitbuffer.COLOR_GRAY_E,
-                    fillcolor = Blitbuffer.COLOR_GRAY_8, -- changed to make sure perecentage text is more visible
+                    fillcolor = Blitbuffer.COLOR_GRAY_8, -- changed to make sure percentage text is more visible
                     percentage = 0,
                 }
 
@@ -556,7 +556,7 @@ function ListMenuItem:update()
                 end
                  -- Add percentage text to progress bar if drawing progress bar
                  -- Not showing for new (0%) or finished (100%) books
-                if BookInfoManager:getSetting("list_show_percentage") and (status == "reading" or status == "abandoned") then
+                if BookInfoManager:getSetting("list_show_percentage") and (status == "reading" or status == "abandoned") and percent_finished then
                     local progress_statuspercent_widget = TextWidget:new({
                         text = math.floor(100 * percent_finished) .. "%",
                         face = Font:getFace(ptutil.good_sans, _fontSize(10, 16)),
