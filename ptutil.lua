@@ -103,14 +103,14 @@ ptutil.bookstatus_defaults = {
     description_font_size = Screen:scaleBySize(18),
 }
 
-ptutil.good_serif = ptutil.koreader_dir .. "/fonts/" .. "source/SourceSerif4-Regular.ttf"
-ptutil.good_serif_it = ptutil.koreader_dir .. "/fonts/" .. "source/SourceSerif4-It.ttf"
-ptutil.good_serif_bold = ptutil.koreader_dir .. "/fonts/" .."source/SourceSerif4-Bold.ttf"
-ptutil.good_serif_boldit = ptutil.koreader_dir .. "/fonts/" .."source/SourceSerif4-BoldIt.ttf"
-ptutil.good_sans = ptutil.koreader_dir .. "/fonts/" .."source/SourceSans3-Regular.ttf"
-ptutil.good_sans_it = ptutil.koreader_dir .. "/fonts/" .."source/SourceSans3-It.ttf"
-ptutil.good_sans_bold = ptutil.koreader_dir .. "/fonts/" .."source/SourceSans3-Bold.ttf"
-ptutil.good_sans_boldit = ptutil.koreader_dir .. "/fonts/" .."source/SourceSans3-BoldIt.ttf"
+ptutil.good_serif = "source/SourceSerif4-Regular.ttf"
+ptutil.good_serif_it = "source/SourceSerif4-It.ttf"
+ptutil.good_serif_bold = "source/SourceSerif4-Bold.ttf"
+ptutil.good_serif_boldit = "source/SourceSerif4-BoldIt.ttf"
+ptutil.good_sans = "source/SourceSans3-Regular.ttf"
+ptutil.good_sans_it = "source/SourceSans3-It.ttf"
+ptutil.good_sans_bold = "source/SourceSans3-Bold.ttf"
+ptutil.good_sans_boldit = "source/SourceSans3-BoldIt.ttf"
 ptutil.title_serif = ptutil.good_serif_boldit
 
 -- a non-standard space is used here because it looks nicer
