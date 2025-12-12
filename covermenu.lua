@@ -65,7 +65,7 @@ local nb_drawings_since_last_collectgarbage = 0
 
 local function onFolderUp()
     if current_path then -- file browser or PathChooser
-        if current_path == "favorites" then current_path = previous_path end
+        if not util.directoryExists(current_path) then current_path = previous_path end
         if not (G_reader_settings:isTrue("lock_home_folder") and
                 current_path == G_reader_settings:readSetting("home_dir")) then
             FileManager.instance.file_chooser:changeToPath(string.format("%s/..", current_path), current_path)
@@ -137,7 +137,7 @@ function CoverMenu:updateItems(select_number, no_recalculate_dimen)
     -- use the cover_specs set for FileBrowser, and not those from History.
     -- Hopefully, we get self.path=nil when called from History
     if self.path and is_pathchooser == false then
-        if current_path ~= "favorites" then previous_path = current_path end
+        if current_path ~= nil and util.directoryExists(current_path) then previous_path = current_path end
         current_path = self.path
     end
 
