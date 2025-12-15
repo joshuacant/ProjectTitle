@@ -547,10 +547,11 @@ function BookInfoManager:extractBookInfo(filepath, cover_specs)
                     local opf_match_pattern = "(%S+%.opf)$"
                     local line = ""
 
+                    -- fh style for Android
                     if Device:isAndroid() then
-                        -- fh style for Android
+                        -- android unzip binary doesn't always have wildcard support
                         locate_opf_command = locate_opf_command .. "\""
-                        logger.info(locate_opf_command)
+                        logger.dbg(ptdbg.logprefix, locate_opf_command)
                         local fh = io.popen(locate_opf_command, "r")
                         while true and fh ~= nil do
                             line = fh:read()
@@ -560,11 +561,12 @@ function BookInfoManager:extractBookInfo(filepath, cover_specs)
                             opf_file = string.match(line, opf_match_pattern)
                             logger.dbg(ptdbg.logprefix, line)
                         end
+                    -- std_out style for POSIX
                     else
-                        -- std_out style for POSIX
                         local std_out = nil
+                        -- non-android (kobo, kindle, etc?) unzip seems to have wildcard support
                         locate_opf_command = locate_opf_command .. "\" \"*.opf\""
-                        logger.info(locate_opf_command)
+                        logger.dbg(ptdbg.logprefix, locate_opf_command)
                         std_out = io.popen(locate_opf_command)
                         if std_out then
                             line = std_out:read()
@@ -606,8 +608,8 @@ function BookInfoManager:extractBookInfo(filepath, cover_specs)
                             return fp, fv, false
                         end
 
+                        -- fh style for Android
                         if Device:isAndroid() then
-                            -- fh style for Android
                             local fh = io.popen(expand_opf_command, "r")
                             while true and fh ~= nil do
                                 line = fh:read()
@@ -617,8 +619,8 @@ function BookInfoManager:extractBookInfo(filepath, cover_specs)
                                 found_pages, found_value, do_break = parse_opf_file(found_pages, found_value, line)
                                 if do_break then break end
                             end
+                        -- std_out style for POSIX
                         else
-                            -- std_out style for POSIX
                             local std_out = io.popen(expand_opf_command)
                             if std_out then
                                 for std_line in std_out:lines() do
@@ -628,6 +630,7 @@ function BookInfoManager:extractBookInfo(filepath, cover_specs)
                                 std_out:close()
                             end
                         end
+
                         if found_value and found_value ~= "0" then
                             logger.dbg(ptdbg.logprefix, "Pagecount found in opf metadata ", fname, found_value)
                             return found_value
