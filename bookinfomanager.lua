@@ -543,12 +543,14 @@ function BookInfoManager:extractBookInfo(filepath, cover_specs)
                     end
 
                     local opf_file = nil
-                    local locate_opf_command = "unzip " .. "-lqq \"" .. fname .. "\" \"*.opf\""
+                    local locate_opf_command = "unzip " .. "-lqq \"" .. fname
                     local opf_match_pattern = "(%S+%.opf)$"
                     local line = ""
 
                     if Device:isAndroid() then
                         -- fh style for Android
+                        locate_opf_command = locate_opf_command .. "\""
+                        logger.info(locate_opf_command)
                         local fh = io.popen(locate_opf_command, "r")
                         while true and fh ~= nil do
                             line = fh:read()
@@ -561,7 +563,9 @@ function BookInfoManager:extractBookInfo(filepath, cover_specs)
                     else
                         -- std_out style for POSIX
                         local std_out = nil
-                        std_out = io.popen("unzip " .. "-lqq \"" .. fname .. "\" \"*.opf\"")
+                        locate_opf_command = locate_opf_command .. "\" \"*.opf\""
+                        logger.info(locate_opf_command)
+                        std_out = io.popen(locate_opf_command)
                         if std_out then
                             line = std_out:read()
                             opf_file = string.match(line, opf_match_pattern)
