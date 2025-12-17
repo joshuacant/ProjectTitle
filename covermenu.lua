@@ -29,7 +29,6 @@ local logger = require("logger")
 local util = require("util")
 local ffiUtil = require("ffi/util")
 local C_ = _.pgettext
-local time = require("ui/time")
 local Screen = Device.screen
 local BookInfoManager = require("bookinfomanager")
 local ptutil  = require("ptutil")

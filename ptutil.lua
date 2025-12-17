@@ -1,7 +1,6 @@
 local Blitbuffer = require("ffi/blitbuffer")
 local CenterContainer = require("ui/widget/container/centercontainer")
 local FrameContainer = require("ui/widget/container/framecontainer")
-local FileManager = require("apps/filemanager/filemanager")
 local Geom = require("ui/geometry")
 local HorizontalGroup = require("ui/widget/horizontalgroup")
 local HorizontalSpan = require("ui/widget/horizontalspan")
@@ -25,9 +24,20 @@ local _ = require("l10n.gettext")
 local ptdbg = require("ptdbg")
 local BookInfoManager = require("bookinfomanager")
 
+
+--[[
+    The settings and functions in this file are to intended make user patches easier.
+    I strongly recommend writing a user patch rather than editing this file directly.
+    Changes made to this file will be lost when upgrading. User patches are forever.
+
+    For more information and examples visit this wiki article:
+
+    https://github.com/joshuacant/ProjectTitle/wiki/User-Patches-for-Project-Title
+--]]
+
+
 local ptutil = {}
 
--- These values adjust defaults and limits for the List views (Cover List, Details List, Filenames List)
 ptutil.list_defaults = {
     -- Progress bar settings
     progress_bar_max_size = 235,      -- maximum progress bar width in pixels

@@ -10,21 +10,31 @@ this plugin first, as there are some changes and additions.
 To learn about user patches, please visit the KOReader wiki article:
 https://github.com/koreader/koreader/wiki/User-patches
 
-]]--
+--]]
 
 local userpatch = require("userpatch")
 local logger = require ("logger")
 
 local function patchCoverBrowser(plugin)
-    -- Grab Cover Grid mode and the individual Cover Grid items
+    -- Modify functionality in ptutil:
+    local ptutil = require("ptutil")
+        -- Override a formatting or setting
+        -- ptutil.list_defaults.max_items_per_page = 20
+
+        -- Replace a function from ptutil:
+        -- function ptutil.formatSeries(series, series_index)
+        --     return string.format("Book %s of %s", series_index, series)
+        -- end
+
+    -- Grab Cover Grid mode and the individual Cover Grid items:
     local MosaicMenu = require("mosaicmenu")
     local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
 
-    -- Grab Cover List mode and the individual Cover List items
+    -- Grab Cover List mode and the individual Cover List items:
     local ListMenu = require("listmenu")
     local ListMenuItem = userpatch.getUpValue(ListMenu._updateItemsBuildUI, "ListMenuItem")
 
-    -- Grab Cover Menu which sets up top bar, bottom bar, and generates the item table
+    -- Grab Cover Menu which sets up top bar, bottom bar, and generates the item table:
     local CoverMenu = require("covermenu")
         -- CoverMenu:setupLayout() has the top bar
         -- CoverMenu:updatePageInfo(select_number) has the bottom bar
