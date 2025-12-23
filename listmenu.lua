@@ -765,7 +765,7 @@ function ListMenuItem:update()
                 -- and authors with alternate glyphs for that language.
 
                 -- call this style for items like txt files
-                if bookinfo.unsupported or bookinfo._no_provider or not bookinfo.authors then
+                if bookinfo.unsupported or bookinfo._no_provider then
                     fontname_title = ptutil.good_serif
                     bold_title = true
                 end
