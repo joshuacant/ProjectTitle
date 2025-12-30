@@ -145,8 +145,8 @@ function ListMenuItem:update()
     -- We'll draw some padding around cover images so they don't run up against
     -- other parts of the list item or decorations
     local padding_size = Screen:scaleBySize(4)
-    local max_img_w = dimen.h - 2 * padding_size -- width = height, squared
-    local max_img_h = dimen.h - 2 * padding_size
+    local max_img_w = dimen.h - (2 * padding_size) -- width = height, squared
+    local max_img_h = dimen.h - (2 * padding_size)
     local cover_specs = {
         max_cover_w = max_img_w,
         max_cover_h = max_img_h,
