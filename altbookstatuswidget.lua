@@ -155,7 +155,8 @@ function AltBookStatusWidget:genBookInfoGroup()
     local current_chapter_page = 1
     if self.ui.toc then
         chapter_pages = self.ui.toc:getChapterPageCount(current_page) or 1
-        current_chapter_page = (self.ui.toc:getChapterPagesDone(current_page) + 1) or 1
+        current_chapter_page = self.ui.toc:getChapterPagesDone(current_page) or 0
+        current_chapter_page = current_chapter_page + 1 -- include the page you're looking at
     end
 
     -- author(s) text
