@@ -743,7 +743,11 @@ function MosaicMenuItem:update()
             self.percent_finished = percent_finished
             local status = book_info.status
             self.status = status
-            self.pages, self.show_progress_bar = ptutil.showProgressBar(bookinfo.pages)
+            local pages = bookinfo.pages -- prefer value in database
+            if not pages and book_info and book_info.pages then
+                pages = book_info.pages -- fallback to sidecar metadata
+            end
+            self.pages, self.show_progress_bar = ptutil.showProgressBar(pages)
             local cover_bb_used = false
             self.bookinfo_found = true
             -- For wikipedia saved as epub, we made a cover from the 1st pic of the page,

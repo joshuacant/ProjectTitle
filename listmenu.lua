@@ -447,10 +447,13 @@ function ListMenuItem:update()
             local wright_width = 0
             local wright_height = 0
             local wright_items = { align = "right" }
-            local est_page_count, draw_progressbar = ptutil.showProgressBar(bookinfo.pages)
+            local pages = bookinfo.pages -- prefer value in database
+            if not pages and book_info and book_info.pages then
+                pages = book_info.pages -- fallback to sidecar metadata
+            end
+
+            local est_page_count, draw_progressbar = ptutil.showProgressBar(pages)
             self.pages = est_page_count
-            bookinfo.pages = est_page_count
-            local pages = bookinfo.pages -- limit to value in database
 
             if draw_progressbar then
                 local progressbar_items = { align = "center" }
