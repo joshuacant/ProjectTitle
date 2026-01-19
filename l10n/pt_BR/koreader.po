@@ -19,6 +19,9 @@ msgid "Book"
 msgstr "Livros"
 
 # main.lua
+msgid "Project: Title"
+msgstr "Project: Title"
+
 msgid "Cover List"
 msgstr "Lista de Capas"
 
@@ -99,6 +102,24 @@ msgstr "Tem certeza de que deseja excluir o cache de capa e metadados?"
 
 msgid "Cache emptied."
 msgstr "Cache esvaziado"
+
+msgid "Show progress % instead of progress bars"
+msgstr "Mostrar progresso em % em vez de barras"
+
+msgid "Decrease Items Per Page"
+msgstr "Diminuir itens por página"
+
+msgid "Increase Items Per Page"
+msgstr "Aumentar itens por página"
+
+msgid "Show auto-generated cover images as a stack"
+msgstr "Mostrar em pilha capas geradas automaticamente"
+
+msgid "Show last item indicator on touchscreen devices"
+msgstr "Mostrar indicador do último item em dispositivos touchscreen"
+
+msgid "Show calibre tags/keywords"
+msgstr "Mostrar etiquetas/palavras-chave do calibre"
 
 # bookinfomanager.lua
 msgid ""
