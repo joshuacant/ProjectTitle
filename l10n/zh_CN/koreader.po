@@ -361,3 +361,21 @@ msgstr "项目：标题"
 
 msgid "All new user interface for browsing books."
 msgstr "全新浏览书籍的用户界面。"
+
+msgid "Show progress % instead of progress bars"
+msgstr "显示进度百分比而非进度条"
+
+msgid "Decrease Items Per Page"
+msgstr "减少每页列出的项目"
+
+msgid "Increase Items Per Page"
+msgstr "增加每页列出的项目"
+
+msgid "Show auto-generated cover images as a stack"
+msgstr "将自动生成的封面图显示为堆叠"
+
+msgid "Show last item indicator on touchscreen devices"
+msgstr "显示触摸屏设备上最后项目的指示器"
+
+msgid "Show calibre tags/keywords"
+msgstr "显示 Calibre 标签/关键词"
