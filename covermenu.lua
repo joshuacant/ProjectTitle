@@ -541,6 +541,15 @@ function CoverMenu:setupLayout()
                     FileManagerConverter:genConvertButton(file, close_dialog_callback, refresh_callback)
                 })
             end
+            if been_opened then
+                local annotations = doc_settings_or_file:readSetting("annotations")
+                if annotations and #annotations > 0 then
+                    table.insert(buttons, {
+                        file_manager.collections:genExportHighlightsButton({ [file] = true }, close_dialog_callback),
+                        file_manager.collections:genBookmarkBrowserButton({ [file] = true }, close_dialog_callback),
+                    })
+                end
+            end
             table.insert(buttons, {
                 {
                     text = _("Open with…"),
