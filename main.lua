@@ -106,16 +106,18 @@ local Dispatcher = require("dispatcher")
 local Trapper = require("ui/trapper")
 local FFIUtil = require("ffi/util")
 
--- We need to save the original methods early here as locals.
--- For some reason, saving them as attributes in init() does not allow
--- us to get back to classic mode
+-- https://github.com/koreader/koreader/commits/master/frontend/ui/widget/filechooser.lua
 local _FileChooser__recalculateDimen_orig = FileChooser._recalculateDimen
 local _FileChooser_updateItems_orig = FileChooser.updateItems
 local _FileChooser_onCloseWidget_orig = FileChooser.onCloseWidget
-local _FileChooser_genItemTable_orig = FileChooser.genItemTable         -- additional
-local _FileManager_setupLayout_orig = FileManager.setupLayout           -- additional
-local _Menu_init_orig = Menu.init                                       -- additional
-local _Menu_updatePageInfo_orig = Menu.updatePageInfo                   -- additional
+local _FileChooser_genItemTable_orig = FileChooser.genItemTable         -- not in Cover Browser
+
+-- https://github.com/koreader/koreader/commits/master/frontend/apps/filemanager/filemanager.lua
+local _FileManager_setupLayout_orig = FileManager.setupLayout           -- not in Cover Browser
+
+-- https://github.com/koreader/koreader/commits/master/frontend/ui/widget/menu.lua
+local _Menu_init_orig = Menu.init                                       -- not in Cover Browser
+local _Menu_updatePageInfo_orig = Menu.updatePageInfo                   -- not in Cover Browser
 
 local _modified_widgets = {
     filemanager  = FileManager,
