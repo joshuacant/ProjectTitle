@@ -10,6 +10,7 @@ local Size = require("ui/size")
 local VerticalGroup = require("ui/widget/verticalgroup")
 local VerticalSpan = require("ui/widget/verticalspan")
 local OverlapGroup = require("ui/widget/overlapgroup")
+local Math = require("optmath")
 local logger = require("logger")
 local Device = require("device")
 local Screen = Device.screen
@@ -652,6 +653,38 @@ function ptutil.formatTags(keywords, tags_limit)
         formatted_tags = formatted_tags .. "…"
     end
     return formatted_tags
+end
+
+function ptutil.formatProgressText(status, bookinfo, pages, draw_progressbar, percent_finished, progress_strings)
+    local pages_str = ""
+    local pages_left_str = ""
+    local percent_str = ""
+    local progress_str = ""
+
+    if status == "complete" then
+        progress_str = progress_strings.finished
+    elseif status == "abandoned" then
+        progress_str = progress_strings.abandoned
+    elseif percent_finished then
+        progress_str = progress_strings.reading
+        if not draw_progressbar then
+            percent_str = math.floor(100 * percent_finished) .. "%"
+        end
+        if pages then
+            if BookInfoManager:getSetting("show_pages_read_as_progress") then
+                percent_str = progress_strings.reading
+                pages_str = T(_("Page %1 of %2"), Math.round(percent_finished * pages), pages)
+            end
+            if BookInfoManager:getSetting("show_pages_left_in_progress") then
+                percent_str = progress_strings.reading
+                pages_left_str = T(_("%1 pages left"), Math.round(pages - percent_finished * pages), pages)
+            end
+        end
+    elseif not bookinfo._no_provider then
+        progress_str = progress_strings.unread
+    end
+
+    return progress_str, percent_str, pages_str, pages_left_str
 end
 
 return ptutil
