@@ -258,8 +258,19 @@ local function findCover(dir_path)
     return nil
 end
 
-function ptutil.getFolderCover(filepath, max_img_w, max_img_h)
-    local folder_image_file = findCover(filepath)
+---
+--- Gets a folder cover image widget.
+--- @param filepath string: Path to the folder.
+--- @param max_img_w number: Maximum image width.
+--- @param max_img_h number: Maximum image height.
+--- @param pt_cover_path string|nil: Optional explicit cover path for ProjectTitle (e.g., from virtual folders).
+--- @return table|nil: FrameContainer with image widget, or nil if no cover found.
+function ptutil.getFolderCover(filepath, max_img_w, max_img_h, pt_cover_path)
+    local folder_image_file = pt_cover_path
+
+    if not folder_image_file then
+        folder_image_file = findCover(filepath)
+    end
     if folder_image_file ~= nil then
         local success, folder_image = pcall(function()
             local temp_image = ImageWidget:new { file = folder_image_file, scale_factor = 1 }
