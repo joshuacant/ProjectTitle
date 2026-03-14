@@ -246,10 +246,12 @@ local function findCover(dir_path)
     dir_path = dir_path:gsub("[/\\]+$", "")
     if not util.directoryExists(dir_path) then return nil end
 
+    local mode_pat = G_reader_settings:isTrue("night_mode") and "_dark" or "_light"
+
     local fn_lc
     for fn in lfs.dir(dir_path) do
         fn_lc = fn:lower()
-        if fn_lc:match('^%.?cover%.') or fn_lc:match('^%.?folder%.') then
+        if fn_lc:match('^%.?cover%.') or fn_lc:match('^%.?folder%.') or fn_lc:match('^%.?cover' .. mode_pat .. '%.') or fn_lc:match('^%.?folder' .. mode_pat .. '%.') then
             if fn_lc:match('%.jpe?g$') or fn_lc:match('%.png$') or fn_lc:match('%.webp$') or fn_lc:match('%.gif$') then
                 return dir_path .. "/" .. fn
             end
