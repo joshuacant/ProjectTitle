@@ -238,7 +238,7 @@ function ptutil.installIcons()
     return false
 end
 
-local function findCover(dir_path)
+function ptutil.findCover(dir_path)
     if not dir_path or dir_path == "" or dir_path == ".." or dir_path:match("%.%.$") then
         return nil
     end
@@ -262,7 +262,7 @@ function ptutil.getFolderCover(filepath, max_img_w, max_img_h, pt_cover_path)
     local folder_image_file = pt_cover_path
 
     if not folder_image_file then
-        folder_image_file = findCover(filepath)
+        folder_image_file = ptutil.findCover(filepath)
     end
     if folder_image_file ~= nil then
         local success, folder_image = pcall(function()
