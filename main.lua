@@ -204,6 +204,9 @@ function CoverBrowser:init()
         return
     end
 
+    -- impersonate coverbrowser to support calls from KOReader core
+    -- self.ui.coverbrowser = self
+
     -- on first ever run and occasionally afterward it will be necessary to create
     -- new settings keys in the 'config' table and some of them require restarting
     -- koreader to fully apply.
