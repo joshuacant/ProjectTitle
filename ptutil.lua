@@ -143,7 +143,7 @@ function ptutil.getPluginDir()
     end
 end
 
-local function copyRecursive(from, to)
+function ptutil.copyRecursive(from, to)
     -- from: koreader/frontend/apps/filemanager/filemanager.lua
     local cp_bin = Device:isAndroid() and "/system/bin/cp" or "/bin/cp"
     return ffiUtil.execute(cp_bin, "-r", from, to ) == 0
@@ -173,7 +173,7 @@ function ptutil.installFonts()
     end
     if util.directoryExists(fonts_path) then
         -- copy the entire "source"
-        result = copyRecursive(ptutil.getPluginDir() .. "/fonts/source", fonts_path)
+        result = ptutil.copyRecursive(ptutil.getPluginDir() .. "/fonts/source", fonts_path)
         logger.info(ptdbg.logprefix, "Copying fonts")
         if not result then return false end
         package.loaded["ui/font"] = nil
@@ -320,7 +320,7 @@ function ptutil.getFolderCover(filepath, max_img_w, max_img_h, pt_cover_path)
     end
 end
 
-local function query_cover_paths(folder, include_subfolders)
+function ptutil.query_cover_paths(folder, include_subfolders)
     local db_conn = SQ3.open(DataStorage:getSettingsDir() .. "/PT_bookinfo_cache.sqlite3")
     db_conn:set_busy_timeout(5000)
 
@@ -348,7 +348,7 @@ local function query_cover_paths(folder, include_subfolders)
     return res
 end
 
-local function get_thumbnail_size(max_w, max_h)
+function ptutil.get_thumbnail_size(max_w, max_h)
     local max_img_w = 0
     local max_img_h = 0
     if BookInfoManager:getSetting("use_stacked_foldercovers") then
@@ -361,12 +361,12 @@ local function get_thumbnail_size(max_w, max_h)
     return max_img_w, max_img_h
 end
 
-local function build_cover_images(db_res, max_w, max_h)
+function ptutil.build_cover_images(db_res, max_w, max_h)
     local covers = {}
     if db_res then
         local directories = db_res[1]
         local filenames = db_res[2]
-        local max_img_w, max_img_h = get_thumbnail_size(max_w, max_h)
+        local max_img_w, max_img_h = ptutil.get_thumbnail_size(max_w, max_h)
         for i, filename in ipairs(filenames) do
             local fullpath = directories[i] .. filename
             if util.fileExists(fullpath) then
@@ -399,7 +399,7 @@ local function build_cover_images(db_res, max_w, max_h)
 end
 
 -- Helper to create a blank frame-style cover with background
-local function create_blank_cover(width, height, background_idx)
+function ptutil.create_blank_cover(width, height, background_idx)
     local backgrounds = {
         Blitbuffer.COLOR_LIGHT_GRAY,
         Blitbuffer.COLOR_GRAY_D,
@@ -424,11 +424,11 @@ local function create_blank_cover(width, height, background_idx)
 end
 
 -- Build the diagonal stack layout using OverlapGroup
-local function build_diagonal_stack(images, max_w, max_h)
+function ptutil.build_diagonal_stack(images, max_w, max_h)
     local top_image_size = images[#images]:getSize()
     local nb_fakes = (4 - #images)
     for i = 1, nb_fakes do
-        table.insert(images, 1, create_blank_cover(top_image_size.w, top_image_size.h, (i % 2 + 2)))
+        table.insert(images, 1, ptutil.create_blank_cover(top_image_size.w, top_image_size.h, (i % 2 + 2)))
     end
 
     local stack_items = {}
@@ -464,7 +464,7 @@ local function build_diagonal_stack(images, max_w, max_h)
 end
 
 -- Build a 2x2 grid layout using nested horizontal & vertical groups
-local function build_grid(images, max_w, max_h)
+function ptutil.build_grid(images, max_w, max_h)
     local row1 = HorizontalGroup:new {}
     local row2 = HorizontalGroup:new {}
     local layout = VerticalGroup:new {}
@@ -472,17 +472,17 @@ local function build_grid(images, max_w, max_h)
     -- Create blank covers if needed
     if #images == 3 then
         local w3, h3 = images[3]:getSize().w, images[3]:getSize().h
-        table.insert(images, 2, create_blank_cover(w3, h3, 3))
+        table.insert(images, 2, ptutil.create_blank_cover(w3, h3, 3))
     elseif #images == 2 then
         local w1, h1 = images[1]:getSize().w, images[1]:getSize().h
         local w2, h2 = images[2]:getSize().w, images[2]:getSize().h
-        table.insert(images, 2, create_blank_cover(w1, h1, 3))
-        table.insert(images, 3, create_blank_cover(w2, h2, 2))
+        table.insert(images, 2, ptutil.create_blank_cover(w1, h1, 3))
+        table.insert(images, 3, ptutil.create_blank_cover(w2, h2, 2))
     elseif #images == 1 then
         local w1, h1 = images[1]:getSize().w, images[1]:getSize().h
-        table.insert(images, 1, create_blank_cover(w1, h1, 3))
-        table.insert(images, 2, create_blank_cover(w1, h1, 2))
-        table.insert(images, 4, create_blank_cover(w1, h1, 3))
+        table.insert(images, 1, ptutil.create_blank_cover(w1, h1, 3))
+        table.insert(images, 2, ptutil.create_blank_cover(w1, h1, 2))
+        table.insert(images, 4, ptutil.create_blank_cover(w1, h1, 3))
     end
 
     for i, img in ipairs(images) do
@@ -505,21 +505,21 @@ local function build_grid(images, max_w, max_h)
 end
 
 function ptutil.getSubfolderCoverImages(filepath, max_w, max_h)
-    local db_res = query_cover_paths(filepath, false)
-    local images = build_cover_images(db_res, max_w, max_h)
+    local db_res = ptutil.query_cover_paths(filepath, false)
+    local images = ptutil.build_cover_images(db_res, max_w, max_h)
 
     if #images < 4 then
-        db_res = query_cover_paths(filepath, true)
-        images = build_cover_images(db_res, max_w, max_h)
+        db_res = ptutil.query_cover_paths(filepath, true)
+        images = ptutil.build_cover_images(db_res, max_w, max_h)
     end
 
     -- Return nil if no images found
     if #images == 0 then return nil end
 
     if BookInfoManager:getSetting("use_stacked_foldercovers") then
-        return build_diagonal_stack(images, max_w, max_h)
+        return ptutil.build_diagonal_stack(images, max_w, max_h)
     else
-        return build_grid(images, max_w, max_h)
+        return ptutil.build_grid(images, max_w, max_h)
     end
 end
 
