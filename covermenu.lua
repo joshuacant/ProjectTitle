@@ -198,6 +198,16 @@ local TITLEBAR_ACTIONS = {
         end end,
         hold = false,
     },
+    exit = {
+        icon = "tab_exit",
+        tap = function(self) return function() self:onClose() end end,
+        hold = false,
+    },
+    show_favorites = {
+        icon = "tab_favorites",
+        tap = function() return function() FileManager.instance.collections:onShowColl() end end,
+        hold = function() return function() FileManager.instance.folder_shortcuts:onShowFolderShortcutsDialog() end end,
+    },
     none = {
         icon = nil,
         tap = false,

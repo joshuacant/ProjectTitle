@@ -829,8 +829,8 @@ ptutil.TITLEBAR_DEFAULTS = {
 }
 
 ptutil.TITLEBAR_ACTION_IDS = {
-    "home", "favorites", "history", "last_document", "go_up", "go_root",
-    "collections", "meta_browse",
+    "home", "favorites", "show_favorites", "history", "last_document", "go_up", "go_root",
+    "collections", "meta_browse", "exit",
     "manga", "annas", "zlib", "appstore", "opds",
     "none",
 }
@@ -842,8 +842,10 @@ ptutil.TITLEBAR_ACTION_LABELS = {
     last_document = "Last document",
     go_up         = "Folder up",
     go_root       = "Root folder",
+    show_favorites = "Favorites (alt icon)",
     collections   = "Collections",
     meta_browse   = "Library mode",
+    exit          = "Exit KOReader",
     manga         = "Manga/Rakuyomi",
     annas         = "Anna's Archive",
     zlib          = "Z-Library",
