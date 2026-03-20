@@ -114,6 +114,7 @@ local _FileChooser_genItemTable_orig = FileChooser.genItemTable         -- not i
 
 -- https://github.com/koreader/koreader/commits/master/frontend/apps/filemanager/filemanager.lua
 local _FileManager_setupLayout_orig = FileManager.setupLayout           -- not in Cover Browser
+local _FileManager_getPlusDialogButtons_orig = FileManager.getPlusDialogButtons
 
 -- https://github.com/koreader/koreader/commits/master/frontend/ui/widget/menu.lua
 local _Menu_init_orig = Menu.init                                       -- not in Cover Browser
@@ -238,7 +239,7 @@ function CoverBrowser:init()
         logger.info(ptdbg.logprefix, "Migrating settings to version 1")
         BookInfoManager:saveSetting("config_version", "1")
     end
-    if BookInfoManager:getSetting("config_version") == 1 then
+    if BookInfoManager:getSetting("config_version") == "1" then
         logger.info(ptdbg.logprefix, "Migrating settings to version 2")
         BookInfoManager:saveSetting("disable_auto_foldercovers", false)
         BookInfoManager:saveSetting("force_max_progressbars", false)
@@ -250,18 +251,18 @@ function CoverBrowser:init()
         BookInfoManager:saveSetting("config_version", "2")
         restart_needed = true
     end
-    if BookInfoManager:getSetting("config_version") == 2 then
+    if BookInfoManager:getSetting("config_version") == "2" then
         logger.info(ptdbg.logprefix, "Migrating settings to version 3")
         BookInfoManager:saveSetting("force_no_progressbars", false)
         BookInfoManager:saveSetting("config_version", "3")
     end
-    if BookInfoManager:getSetting("config_version") == 3 then
+    if BookInfoManager:getSetting("config_version") == "3" then
         logger.info(ptdbg.logprefix, "Migrating settings to version 4")
         BookInfoManager:saveSetting("force_focus_indicator", false)
         BookInfoManager:saveSetting("use_stacked_foldercovers", false)
         BookInfoManager:saveSetting("config_version", "4")
     end
-    if BookInfoManager:getSetting("config_version") == 4 then
+    if BookInfoManager:getSetting("config_version") == "4" then
         logger.info(ptdbg.logprefix, "Migrating settings to version 5")
         BookInfoManager:saveSetting("show_tags", false)
         BookInfoManager:saveSetting("config_version", "5")
@@ -504,6 +505,93 @@ function CoverBrowser:addToMainMenu(menu_items)
             },
         },
     })
+    -- Title bar configuration submenu
+    local titlebar_sub_items = {}
+    local tb_ok, tb_err = pcall(function()
+        for _i, slot in ipairs(ptutil.TITLEBAR_SLOTS) do
+            local slot_label = ptutil.TITLEBAR_SLOT_LABELS[slot]
+            local tap_key = "titlebar_" .. slot .. "_tap"
+            local hold_key = "titlebar_" .. slot .. "_hold"
+
+            local function make_action_submenu(gesture_key, gesture_label)
+                local is_hold = gesture_key:find("_hold$")
+                local items = {}
+                for _j, action_id in ipairs(ptutil.TITLEBAR_ACTION_IDS) do
+                    table.insert(items, {
+                        text = _(ptutil.TITLEBAR_ACTION_LABELS[action_id]),
+                        checked_func = function()
+                            local current = BookInfoManager:getSetting(gesture_key)
+                                or ptutil.TITLEBAR_DEFAULTS[gesture_key:gsub("titlebar_", "")]
+                            return current == action_id
+                        end,
+                        callback = function()
+                            if is_hold and action_id ~= "none" then
+                                local current = BookInfoManager:getSetting(gesture_key)
+                                    or ptutil.TITLEBAR_DEFAULTS[gesture_key:gsub("titlebar_", "")]
+                                if current == action_id then
+                                    BookInfoManager:saveSetting(gesture_key, "none")
+                                    UIManager:askForRestart()
+                                    return
+                                end
+                            end
+                            BookInfoManager:saveSetting(gesture_key, action_id)
+                            UIManager:askForRestart()
+                        end,
+                    })
+                end
+                return {
+                    text = _(gesture_label),
+                    sub_item_table = items,
+                }
+            end
+
+            table.insert(titlebar_sub_items, {
+                text_func = function()
+                    local tap_id = BookInfoManager:getSetting(tap_key)
+                        or ptutil.TITLEBAR_DEFAULTS[slot .. "_tap"]
+                    local action_label = ptutil.TITLEBAR_ACTION_LABELS[tap_id] or tap_id
+                    return _(slot_label) .. ": " .. _(action_label)
+                end,
+                sub_item_table = {
+                    make_action_submenu(tap_key, "Tap action"),
+                    make_action_submenu(hold_key, "Hold action"),
+                },
+            })
+        end
+        titlebar_sub_items[#titlebar_sub_items].separator = true
+        table.insert(titlebar_sub_items, {
+            text = _("Always use hero icon for center"),
+            checked_func = function()
+                return not not BookInfoManager:getSetting("titlebar_center_hero")
+            end,
+            callback = function()
+                BookInfoManager:toggleSetting("titlebar_center_hero")
+                UIManager:askForRestart()
+            end,
+        })
+        titlebar_sub_items[#titlebar_sub_items].separator = true
+        for _i, id in ipairs(ptutil.PLUS_MENU_PLUGIN_IDS) do
+            local setting_key = "plus_menu_" .. id
+            local label = ptutil.TITLEBAR_ACTION_LABELS[id] or id
+            table.insert(titlebar_sub_items, {
+                text = T(_("Show %1 in plus menu"), _(label)),
+                checked_func = function()
+                    return not not BookInfoManager:getSetting(setting_key)
+                end,
+                callback = function()
+                    BookInfoManager:toggleSetting(setting_key)
+                end,
+            })
+        end
+    end)
+    if tb_ok then
+        table.insert(sub_item_table, {
+            text = _("Title bar"),
+            sub_item_table = titlebar_sub_items,
+        })
+    else
+        logger.warn(ptdbg.logprefix, "Title bar menu error:", tostring(tb_err))
+    end
     table.insert(sub_item_table, {
         text = _("Advanced settings"),
         sub_item_table = {
@@ -947,6 +1035,9 @@ function CoverBrowser:setupFileManagerDisplayMode(display_mode)
 
     CoverMenu._FileManager_setupLayout_orig = _FileManager_setupLayout_orig
     FileManager.setupLayout = CoverMenu.setupLayout
+
+    CoverMenu._FileManager_getPlusDialogButtons_orig = _FileManager_getPlusDialogButtons_orig
+    FileManager.getPlusDialogButtons = CoverMenu.getPlusDialogButtons
 
     CoverMenu._Menu_init_orig = _Menu_init_orig
     CoverMenu._Menu_updatePageInfo_orig = _Menu_updatePageInfo_orig
