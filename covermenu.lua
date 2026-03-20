@@ -72,6 +72,169 @@ local function onFolderUp()
     end
 end
 
+-- Action registry for configurable titlebar slots
+local TITLEBAR_ACTIONS = {
+    home = {
+        icon = "home",
+        tap = function(self) return function() self:onHome() end end,
+        hold = function(self) return function() self:onShowFolderMenu() end end,
+    },
+    favorites = {
+        icon = "favorites",
+        tap = function() return function() FileManager.instance.collections:onShowColl() end end,
+        hold = function() return function() FileManager.instance.folder_shortcuts:onShowFolderShortcutsDialog() end end,
+    },
+    history = {
+        icon = "history",
+        tap = function() return function() FileManager.instance.history:onShowHist() end end,
+        hold = false,
+    },
+    last_document = {
+        icon = "last_document",
+        tap = function() return function() FileManager.instance.menu:onOpenLastDoc() end end,
+        hold = false,
+    },
+    go_up = {
+        icon = "go_up",
+        tap = function() return function() onFolderUp() end end,
+        hold = false,
+    },
+    go_root = {
+        icon = "go_root",
+        tap = function() return function()
+            if current_path then
+                if G_reader_settings:isTrue("lock_home_folder") then
+                    local home_dir = G_reader_settings:readSetting("home_dir")
+                    if home_dir then
+                        FileManager.instance.file_chooser:changeToPath(home_dir)
+                    end
+                else
+                    FileManager.instance.file_chooser:changeToPath("/")
+                end
+            end
+        end end,
+        hold = false,
+    },
+    collections = {
+        icon = "tab_collections",
+        tap = function() return function() FileManager.instance.collections:onShowCollList() end end,
+        hold = false,
+    },
+    meta_browse = {
+        icon = "hero",
+        tap = false,
+        hold = function(self) return function()
+            if G_reader_settings:readSetting("home_dir") ~= nil then
+                meta_browse_mode = not meta_browse_mode
+                self:onHome()
+            end
+        end end,
+    },
+    manga = {
+        icon = "tab_manga",
+        tap = function() return function()
+            local fm = FileManager.instance
+            if fm.rakuyomi then
+                fm.rakuyomi:openLibraryView()
+            else
+                UIManager:show(InfoMessage:new { text = _("Rakuyomi plugin not found.") })
+            end
+        end end,
+        hold = false,
+    },
+    annas = {
+        icon = "tab_books",
+        tap = function() return function()
+            local fm = FileManager.instance
+            local plugin = fm.annas_archive or fm["annas-archive"] or fm.annasarchive or fm["Anna's Archive"]
+            if plugin then
+                if plugin.showMultiSearchDialog then
+                    plugin:showMultiSearchDialog()
+                elseif plugin.showSearchDialog then
+                    plugin:showSearchDialog()
+                elseif plugin.onZlibrarySearch then
+                    plugin:onZlibrarySearch()
+                end
+            else
+                UIManager:show(InfoMessage:new { text = _("Anna's Archive plugin not found.") })
+            end
+        end end,
+        hold = false,
+    },
+    zlib = {
+        icon = "tab_news",
+        tap = function() return function()
+            local fm = FileManager.instance
+            local plugin = fm["Z-library"] or fm["Z-Library"] or fm["z-library"] or fm.zlibrary
+            if plugin and plugin.showMultiSearchDialog then
+                plugin:showMultiSearchDialog()
+            else
+                UIManager:show(InfoMessage:new { text = _("Z-Library plugin not found.") })
+            end
+        end end,
+        hold = false,
+    },
+    appstore = {
+        icon = "tab_continue",
+        tap = function() return function()
+            local fm = FileManager.instance
+            if fm.appstore then
+                fm.appstore:showBrowser()
+            else
+                UIManager:show(InfoMessage:new { text = _("AppStore plugin not found.") })
+            end
+        end end,
+        hold = false,
+    },
+    opds = {
+        icon = "tab_history",
+        tap = function() return function()
+            local fm = FileManager.instance
+            if fm.opds then
+                fm.opds:onShowOPDSCatalog()
+            else
+                UIManager:show(InfoMessage:new { text = _("OPDS plugin not found.") })
+            end
+        end end,
+        hold = false,
+    },
+    none = {
+        icon = nil,
+        tap = false,
+        hold = false,
+    },
+}
+
+local function getTitlebarSlotConfig(self)
+    local tb = {}
+    for _, slot in ipairs(ptutil.TITLEBAR_SLOTS) do
+        local tap_id = BookInfoManager:getSetting("titlebar_" .. slot .. "_tap")
+            or ptutil.TITLEBAR_DEFAULTS[slot .. "_tap"]
+        local hold_id = BookInfoManager:getSetting("titlebar_" .. slot .. "_hold")
+            or ptutil.TITLEBAR_DEFAULTS[slot .. "_hold"]
+
+        local tap_action = TITLEBAR_ACTIONS[tap_id] or TITLEBAR_ACTIONS["none"]
+        local hold_action = TITLEBAR_ACTIONS[hold_id] or TITLEBAR_ACTIONS["none"]
+
+        -- Icon: check for center icon overrides
+        local icon = tap_action.icon
+        if slot == "center" then
+            if BookInfoManager:getSetting("titlebar_center_hero") then
+                icon = "hero"
+            elseif not icon and hold_action.icon then
+                icon = hold_action.icon
+            end
+            if not icon then icon = "hero" end
+        end
+
+        local tap_cb = tap_action.tap and tap_action.tap(self) or false
+        local hold_cb = hold_action.hold and hold_action.hold(self) or false
+
+        tb[slot] = { icon = icon, tap = tap_cb, hold = hold_cb }
+    end
+    return tb
+end
+
 -- Simple holder of methods that will replace those
 -- in the real Menu class or instance
 local CoverMenu = {}
@@ -348,40 +511,30 @@ end
 
 function CoverMenu:setupLayout()
     self.show_parent = self.show_parent or self
+    local tb = getTitlebarSlotConfig(self)
     self.title_bar = TitleBar:new {
         show_parent = self.show_parent,
         title = "",
         subtitle = "",
-        -- home
-        left1_icon = "home",
-        left1_icon_tap_callback = function() self:onHome() end,
-        left1_icon_hold_callback = function() self:onShowFolderMenu() end,
-        -- favorites
-        left2_icon = "favorites",
-        left2_icon_tap_callback = function() FileManager.instance.collections:onShowColl() end,
-        left2_icon_hold_callback = function() FileManager.instance.folder_shortcuts:onShowFolderShortcutsDialog() end,
-        -- history
-        left3_icon = "history",
-        left3_icon_tap_callback = function() FileManager.instance.history:onShowHist() end,
-        left3_icon_hold_callback = false,
-        -- centered logo
-        center_icon = "hero",
-        center_icon_tap_callback = false,
-        center_icon_hold_callback = function()
-            if G_reader_settings:readSetting("home_dir") ~= nil then
-                meta_browse_mode = not meta_browse_mode
-                self:onHome()
-            end
-        end,
-        -- open last file
-        right3_icon = "last_document",
-        right3_icon_tap_callback = function() FileManager.instance.menu:onOpenLastDoc() end,
-        right3_icon_hold_callback = false,
-        -- up folder
-        right2_icon = "go_up",
-        right2_icon_tap_callback = function() onFolderUp() end,
-        right2_icon_hold_callback = false,
-        -- plus menu
+        left1_icon = tb.left1.icon,
+        left1_icon_tap_callback = tb.left1.tap,
+        left1_icon_hold_callback = tb.left1.hold,
+        left2_icon = tb.left2.icon,
+        left2_icon_tap_callback = tb.left2.tap,
+        left2_icon_hold_callback = tb.left2.hold,
+        left3_icon = tb.left3.icon,
+        left3_icon_tap_callback = tb.left3.tap,
+        left3_icon_hold_callback = tb.left3.hold,
+        center_icon = tb.center.icon,
+        center_icon_tap_callback = tb.center.tap,
+        center_icon_hold_callback = tb.center.hold,
+        right3_icon = tb.right3.icon,
+        right3_icon_tap_callback = tb.right3.tap,
+        right3_icon_hold_callback = tb.right3.hold,
+        right2_icon = tb.right2.icon,
+        right2_icon_tap_callback = tb.right2.tap,
+        right2_icon_hold_callback = tb.right2.hold,
+        -- plus menu (always hardcoded)
         right1_icon = self.selected_files and "check" or "plus",
         right1_icon_tap_callback = function() self:onShowPlusMenu() end,
         right1_icon_hold_callback = false,
@@ -613,6 +766,35 @@ function CoverMenu:setupLayout()
     -- No need to reinvent the wheel, use FileChooser's layout
     self.layout = file_chooser.layout
     self:registerKeyEvents()
+end
+
+function CoverMenu:getPlusDialogButtons()
+    local title, buttons = CoverMenu._FileManager_getPlusDialogButtons_orig(self)
+    -- Append configurable plugin shortcuts
+    local extras_added = false
+    for _, id in ipairs(ptutil.PLUS_MENU_PLUGIN_IDS) do
+        if BookInfoManager:getSetting("plus_menu_" .. id) then
+            local action = TITLEBAR_ACTIONS[id]
+            if action and action.tap then
+                if not extras_added then
+                    table.insert(buttons, {}) -- separator
+                    extras_added = true
+                end
+                local label = ptutil.TITLEBAR_ACTION_LABELS[id] or id
+                local cb = action.tap(self)
+                table.insert(buttons, {
+                    {
+                        text = _(label),
+                        callback = function()
+                            UIManager:close(self.plus_dialog)
+                            cb()
+                        end,
+                    },
+                })
+            end
+        end
+    end
+    return title, buttons
 end
 
 function CoverMenu:menuInit()
