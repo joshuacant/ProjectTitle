@@ -187,11 +187,20 @@ function ptutil.installIcons()
     local icons_path = ptutil.koreader_dir .. "/icons"
     local icons_list = {
         "favorites",
+        "go_root",
         "go_up",
         "hero",
         "history",
         "last_document",
         "plus",
+        "tab_books",
+        "tab_collections",
+        "tab_continue",
+        "tab_exit",
+        "tab_favorites",
+        "tab_history",
+        "tab_manga",
+        "tab_news",
     }
     local function checkicons()
         logger.info(ptdbg.logprefix, "Checking for icons")
@@ -797,5 +806,52 @@ function ptutil.formatFooterText(footer_config, _manager, path, fm_default_dir, 
         return display_path
     end
 end
+
+-- right1 is reserved for the plus menu button and is not configurable
+ptutil.TITLEBAR_SLOTS = { "left1", "left2", "left3", "center", "right3", "right2" }
+
+ptutil.TITLEBAR_SLOT_LABELS = {
+    left1  = "Left 1 (far left)",
+    left2  = "Left 2",
+    left3  = "Left 3",
+    center = "Center",
+    right3 = "Right 3",
+    right2 = "Right 2",
+}
+
+ptutil.TITLEBAR_DEFAULTS = {
+    left1_tap  = "home",          left1_hold  = "home",
+    left2_tap  = "favorites",     left2_hold  = "favorites",
+    left3_tap  = "history",       left3_hold  = "none",
+    center_tap = "none",          center_hold = "meta_browse",
+    right3_tap = "last_document", right3_hold = "none",
+    right2_tap = "go_up",         right2_hold = "none",
+}
+
+ptutil.TITLEBAR_ACTION_IDS = {
+    "home", "favorites", "history", "last_document", "go_up", "go_root",
+    "collections", "meta_browse",
+    "manga", "annas", "zlib", "appstore", "opds",
+    "none",
+}
+
+ptutil.TITLEBAR_ACTION_LABELS = {
+    home          = "Home",
+    favorites     = "Favorites",
+    history       = "History",
+    last_document = "Last document",
+    go_up         = "Folder up",
+    go_root       = "Root folder",
+    collections   = "Collections",
+    meta_browse   = "Library mode",
+    manga         = "Manga/Rakuyomi",
+    annas         = "Anna's Archive",
+    zlib          = "Z-Library",
+    appstore      = "AppStore",
+    opds          = "OPDS catalog",
+    none          = "None (disabled)",
+}
+
+ptutil.PLUS_MENU_PLUGIN_IDS = { "manga", "annas", "zlib", "appstore", "opds" }
 
 return ptutil
