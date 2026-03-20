@@ -205,7 +205,7 @@ local TITLEBAR_ACTIONS = {
     },
 }
 
-local function getTitlebarSlotConfig(self)
+local function getTitlebarSlotConfig(fm)
     local tb = {}
     for _, slot in ipairs(ptutil.TITLEBAR_SLOTS) do
         local tap_id = BookInfoManager:getSetting("titlebar_" .. slot .. "_tap")
@@ -227,8 +227,8 @@ local function getTitlebarSlotConfig(self)
             if not icon then icon = "hero" end
         end
 
-        local tap_cb = tap_action.tap and tap_action.tap(self) or false
-        local hold_cb = hold_action.hold and hold_action.hold(self) or false
+        local tap_cb = tap_action.tap and tap_action.tap(fm) or false
+        local hold_cb = hold_action.hold and hold_action.hold(fm) or false
 
         tb[slot] = { icon = icon, tap = tap_cb, hold = hold_cb }
     end
