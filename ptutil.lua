@@ -196,8 +196,6 @@ function ptutil.installIcons()
         "tab_books",
         "tab_collections",
         "tab_continue",
-        "tab_exit",
-        "tab_favorites",
         "tab_history",
         "tab_manga",
         "tab_news",
