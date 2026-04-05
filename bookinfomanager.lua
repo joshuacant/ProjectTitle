@@ -339,8 +339,84 @@ function BookInfoManager:toggleSetting(key)
     return value
 end
 
+local function loadKoboMetadata(filepath, get_cover)
+    local VIRTUAL_PATH_PREFIX = "KOBO_VIRTUAL://"
+
+    local function isKoboVirtualPath(path)
+        if not path then
+            return false
+        end
+        return path:sub(1, #VIRTUAL_PATH_PREFIX) == VIRTUAL_PATH_PREFIX
+    end
+
+    local function getKoboVirtualLibrary()
+        local ok, PluginLoader = pcall(require, "pluginloader")
+        if not ok or not PluginLoader then
+            return nil
+        end
+
+        local kobo_plugin = PluginLoader:getPluginInstance("kobo")
+        logger.dbg(ptdbg.logprefix, "Kobo plugin instance:", kobo_plugin ~= nil)
+
+        if kobo_plugin and kobo_plugin.virtual_library then
+            return kobo_plugin.virtual_library
+        end
+        return nil
+    end
+
+    local function buildBookInfoFromKoboMetadata(fpath, metadata)
+        local directory, filename = fpath:match("^(.*/)([^/]+)$")
+        return {
+            directory = directory,
+            filename = filename,
+            filesize = 0,
+            filemtime = 0,
+            in_progress = 0,
+            unsupported = nil,
+            cover_fetched = "Y",
+            has_meta = "Y",
+            has_cover = metadata.has_cover,
+            cover_w = metadata.cover_w,
+            cover_h = metadata.cover_h,
+            cover_bb = metadata.cover_bb,
+            cover_sizetag = metadata.cover_sizetag,
+            ignore_meta = nil,
+            ignore_cover = nil,
+            title = metadata.title,
+            authors = metadata.author,
+            series = metadata.series,
+            series_index = metadata.series_number and tonumber(metadata.series_number),
+            language = nil,
+            keywords = nil,
+            description = nil,
+            pages = nil,
+        }
+    end
+
+    if isKoboVirtualPath(filepath) then
+        logger.info(ptdbg.logprefix, "Path is a Kobo virtual path, trying to get metadata from Kobo virtual library")
+        local virtual_library = getKoboVirtualLibrary()
+        logger.dbg(ptdbg.logprefix, "Got Kobo virtual library:", virtual_library ~= nil)
+
+        if virtual_library then
+            local ok, metadata = pcall(virtual_library.getMetadataForPath, virtual_library, filepath, get_cover)
+            if ok and metadata then
+                return buildBookInfoFromKoboMetadata(filepath, metadata)
+            end
+        end
+    end
+
+    return nil
+end
+
 -- Bookinfo management
 function BookInfoManager:getBookInfo(filepath, get_cover)
+    -- load metadata from Kobo plugin
+    local kobobookinfo = loadKoboMetadata(filepath, get_cover)
+    if kobobookinfo then
+        return kobobookinfo
+    end
+
     local directory, filename = util.splitFilePathName(filepath)
 
     -- CoverBrowser may be used by PathChooser, which will not filter out
