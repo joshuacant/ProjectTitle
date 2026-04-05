@@ -412,9 +412,9 @@ end
 -- Bookinfo management
 function BookInfoManager:getBookInfo(filepath, get_cover)
     -- load metadata from Kobo plugin
-    local kobobookinfo = loadKoboMetadata(filepath, get_cover)
-    if kobobookinfo then
-        return kobobookinfo
+    local kobo_bookinfo = loadKoboMetadata(filepath, get_cover)
+    if kobo_bookinfo then
+        return kobo_bookinfo
     end
 
     local directory, filename = util.splitFilePathName(filepath)
