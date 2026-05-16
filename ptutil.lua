@@ -320,6 +320,12 @@ function ptutil.getFolderCover(filepath, max_img_w, max_img_h, pt_cover_path)
     end
 end
 
+function ptutil.make_sql_safe(string)
+    string = string:gsub("'", "''") -- use '' inside '
+    string = string:gsub(";","_")   -- ljsqlite3 splits commands on semicolons
+    return string
+end
+
 function ptutil.query_cover_paths(folder, include_subfolders)
     local db_conn = SQ3.open(DataStorage:getSettingsDir() .. "/PT_bookinfo_cache.sqlite3")
     db_conn:set_busy_timeout(5000)
@@ -327,20 +333,19 @@ function ptutil.query_cover_paths(folder, include_subfolders)
     if not util.directoryExists(folder) then return nil end
 
     local query
-    folder = folder:gsub("'", "''")
-    folder = folder:gsub(";","_") -- ljsqlite3 splits commands on semicolons
+    local folder_safe = ptutil.make_sql_safe(folder)
     if include_subfolders then
         query = string.format([[
             SELECT directory, filename FROM bookinfo
             WHERE directory LIKE '%s/%%' AND has_cover = 'Y'
             ORDER BY RANDOM() LIMIT 16;
-            ]], folder)
+            ]], folder_safe)
     else
         query = string.format([[
             SELECT directory, filename FROM bookinfo
             WHERE directory = '%s/' AND has_cover = 'Y'
             ORDER BY RANDOM() LIMIT 16;
-            ]], folder)
+            ]], folder_safe)
     end
 
     local res = db_conn:exec(query)
