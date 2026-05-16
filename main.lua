@@ -96,6 +96,7 @@ logger.info(ptdbg.logprefix, "All tests passed, loading into KOReader ver", tost
 local BookStatusWidget = require("ui/widget/bookstatuswidget")
 local AltBookStatusWidget = require("altbookstatuswidget")
 local BookInfoManager = require("bookinfomanager")
+local BookList = require("ui/widget/booklist")
 local FileChooser = require("ui/widget/filechooser")
 local FileManager = require("apps/filemanager/filemanager")
 local FileManagerHistory = require("apps/filemanager/filemanagerhistory")
@@ -278,6 +279,8 @@ function CoverBrowser:init()
     CoverBrowser.setupWidgetDisplayMode("history", true)
     CoverBrowser.setupWidgetDisplayMode("collections", true)
     series_mode = BookInfoManager:getSetting("series_mode")
+    self:onDispatcherRegisterActions()
+    CoverBrowser.addSortMethods()
 
     if BookInfoManager:getSetting("use_custom_bookstatus") then
         BookStatusWidget.genHeader = AltBookStatusWidget.genHeader
@@ -299,7 +302,6 @@ function CoverBrowser:init()
     end
 
     init_done = true
-    self:onDispatcherRegisterActions()
     BookInfoManager:closeDbConnection() -- will be re-opened if needed
 end
 
@@ -1238,6 +1240,28 @@ end
 -- Gesturable: Switch to Cover List display mode
 function CoverBrowser:onSwitchToCoverList()
     self:setDisplayMode("list_image_meta")
+end
+
+function CoverBrowser.addSortMethods()
+    BookList.collates.pages = {
+        text = _("Project: Title") .. " - " .. _("Pages"),
+        menu_order = 401,
+        item_func = function(item, ui)
+            local file = item.path or item.file
+            item.pages = ptutil.getPageCount(file) or 1
+        end,
+        init_sort_func = function()
+            return function(a, b)
+                if a.pages ~= b.pages then
+                    return a.pages < b.pages
+                end
+                return FFIUtil.strcoll((a.path or a.file), (b.path or b.file))
+            end
+        end,
+        mandatory_func = function(item)
+            return item.pages
+        end,
+    }
 end
 
 return CoverBrowser

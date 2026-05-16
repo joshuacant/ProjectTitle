@@ -804,4 +804,14 @@ function ptutil.formatFooterText(footer_config, _manager, path, fm_default_dir, 
     end
 end
 
+function ptutil.getPageCount(fullpath)
+    local bookinfo = BookInfoManager:getBookInfo(fullpath, false)
+    if bookinfo then
+        logger.info(bookinfo.authors, bookinfo.series, bookinfo.series_index, bookinfo.title)
+        return bookinfo.pages or nil
+    else
+        return nil
+    end
+end
+
 return ptutil
