@@ -1248,7 +1248,7 @@ function CoverBrowser.addSortMethods()
         menu_order = 401,
         item_func = function(item, ui)
             local file = item.path or item.file
-            item.pages = ptutil.getPageCount(file) or 1
+            item.pages = ptutil.getPageCount(file) or 999999
         end,
         init_sort_func = function()
             return function(a, b)
