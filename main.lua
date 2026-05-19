@@ -1243,9 +1243,86 @@ function CoverBrowser:onSwitchToCoverList()
 end
 
 function CoverBrowser.addSortMethods()
-    BookList.collates.pages = {
-        text = _("Project: Title") .. " - " .. _("Pages"),
+    BookList.collates.title = {
+        text = _("Project: Title") .. " - " .. _("Title"),
         menu_order = 401,
+        item_func = function(item, ui)
+            local file = item.path or item.file
+            item.title = ptutil.getTitle(file) or "\u{FFFF}"
+        end,
+        init_sort_func = function()
+            return function(a, b)
+                return FFIUtil.strcoll(a.title, b.title)
+            end
+        end,
+    }
+    BookList.collates.authors = {
+        text = _("Project: Title") .. " - " .. _("Author First Name"),
+        menu_order = 402,
+        item_func = function(item, ui)
+            local file = item.path or item.file
+            item.author = ptutil.getAuthor(file, false, nil) or "\u{FFFF}"
+        end,
+        init_sort_func = function()
+            return function(a, b)
+                if a.author ~= b.author then
+                    return FFIUtil.strcoll(a.author, b.author)
+                end
+                return FFIUtil.strcoll((a.path or a.file), (b.path or b.file))
+            end
+        end,
+    }
+    BookList.collates.authorsswap = {
+        text = _("Project: Title") .. " - " .. _("Author Last Name"),
+        menu_order = 403,
+        item_func = function(item, ui)
+            local file = item.path or item.file
+            item.author = ptutil.getAuthor(file, true, nil) or "\u{FFFF}"
+        end,
+        init_sort_func = function()
+            return function(a, b)
+                if a.author ~= b.author then
+                    return FFIUtil.strcoll(a.author, b.author)
+                end
+                return FFIUtil.strcoll((a.path or a.file), (b.path or b.file))
+            end
+        end,
+    }
+    BookList.collates.series = {
+        text = _("Project: Title") .. " - " .. _("Series"),
+        menu_order = 404,
+        item_func = function(item, ui)
+            local file = item.path or item.file
+            item.series = ptutil.getSeries(file) or "\u{FFFF}"
+        end,
+        init_sort_func = function()
+            return function(a, b)
+                if a.series ~= b.series then
+                    return FFIUtil.strcoll(a.series, b.series)
+                end
+                return FFIUtil.strcoll((a.path or a.file), (b.path or b.file))
+            end
+        end,
+    }
+    BookList.collates.keywords = {
+        text = _("Project: Title") .. " - " .. _("First Keyword"),
+        menu_order = 405,
+        item_func = function(item, ui)
+            local file = item.path or item.file
+            item.keywords = ptutil.getKeyword(file) or "\u{FFFF}"
+        end,
+        init_sort_func = function()
+            return function(a, b)
+                if a.keywords ~= b.keywords then
+                    return FFIUtil.strcoll(a.keywords, b.keywords)
+                end
+                return FFIUtil.strcoll((a.path or a.file), (b.path or b.file))
+            end
+        end,
+    }
+    BookList.collates.pages = {
+        text = _("Project: Title") .. " - " .. _("Page Count"),
+        menu_order = 411,
         item_func = function(item, ui)
             local file = item.path or item.file
             item.pages = ptutil.getPageCount(file) or 999999
