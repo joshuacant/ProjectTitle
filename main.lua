@@ -1257,7 +1257,7 @@ function CoverBrowser.addSortMethods()
         end,
     }
     BookList.collates.authors = {
-        text = _("Project: Title") .. " - " .. _("Author First Name"),
+        text = _("Project: Title") .. " - " .. _("Author first name"),
         menu_order = 402,
         item_func = function(item, ui)
             local file = item.path or item.file
@@ -1273,7 +1273,7 @@ function CoverBrowser.addSortMethods()
         end,
     }
     BookList.collates.authorsswap = {
-        text = _("Project: Title") .. " - " .. _("Author Last Name"),
+        text = _("Project: Title") .. " - " .. _("Author last name"),
         menu_order = 403,
         item_func = function(item, ui)
             local file = item.path or item.file
@@ -1305,7 +1305,7 @@ function CoverBrowser.addSortMethods()
         end,
     }
     BookList.collates.keywords = {
-        text = _("Project: Title") .. " - " .. _("First Keyword"),
+        text = _("Project: Title") .. " - " .. _("Keywords"),
         menu_order = 405,
         item_func = function(item, ui)
             local file = item.path or item.file
@@ -1321,7 +1321,7 @@ function CoverBrowser.addSortMethods()
         end,
     }
     BookList.collates.pages = {
-        text = _("Project: Title") .. " - " .. _("Page Count"),
+        text = _("Project: Title") .. " - " .. _("Total pages"),
         menu_order = 411,
         item_func = function(item, ui)
             local file = item.path or item.file
@@ -1337,6 +1337,44 @@ function CoverBrowser.addSortMethods()
         end,
         mandatory_func = function(item)
             return item.pages
+        end,
+    }
+    BookList.collates.fullmeta = {
+        text = _("Project: Title") .. " - " .. _("Author first name") ..", ".. _("Series") ..", ".. _("Title"),
+        menu_order = 421,
+        item_func = function(item, ui)
+            local file = item.path or item.file
+            item.fullmeta = ptutil.getMetaSummary(file, false) or ""
+        end,
+        init_sort_func = function()
+            return function(a, b)
+                if a.fullmeta ~= b.fullmeta then
+                    return a.fullmeta < b.fullmeta
+                end
+                return FFIUtil.strcoll((a.path or a.file), (b.path or b.file))
+            end
+        end,
+        mandatory_func = function(item)
+            return item.fullmeta
+        end,
+    }
+    BookList.collates.fullmetaswap = {
+        text = _("Project: Title") .. " - " .. _("Author last name") ..", ".. _("Series") ..", ".. _("Title"),
+        menu_order = 422,
+        item_func = function(item, ui)
+            local file = item.path or item.file
+            item.fullmeta = ptutil.getMetaSummary(file, true) or ""
+        end,
+        init_sort_func = function()
+            return function(a, b)
+                if a.fullmeta ~= b.fullmeta then
+                    return a.fullmeta < b.fullmeta
+                end
+                return FFIUtil.strcoll((a.path or a.file), (b.path or b.file))
+            end
+        end,
+        mandatory_func = function(item)
+            return item.fullmeta
         end,
     }
 end
