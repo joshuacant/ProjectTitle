@@ -69,7 +69,7 @@ local BOOKINFO_DB_SCHEMA = [[
     );
     CREATE UNIQUE INDEX IF NOT EXISTS dir_filename ON bookinfo(directory, filename);
 
-    -- To keep track of CoverBrowser settings
+    -- To keep track of ProjectTitle settings
     CREATE TABLE IF NOT EXISTS config (
         key TEXT PRIMARY KEY,
         value TEXT
@@ -419,7 +419,7 @@ function BookInfoManager:getBookInfo(filepath, get_cover)
 
     local directory, filename = util.splitFilePathName(filepath)
 
-    -- CoverBrowser may be used by PathChooser, which will not filter out
+    -- ProjectTitle may be used by PathChooser, which will not filter out
     -- files with unknown book extension. If not a supported extension,
     -- returns a bookinfo like-object enough for a correct display and
     -- to not trigger extraction, so we don't clutter DB with such files.
