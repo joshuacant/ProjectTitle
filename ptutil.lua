@@ -945,6 +945,12 @@ function ptutil.getTitle(fullpath)
     end
 end
 
+ptutil.max_index = "99999"
+function ptutil.zeroPadIndex(i)
+    if type(i) ~= "number" then return ptutil.max_index end
+    return string.format("%05d", i)
+end
+
 function ptutil.getSeries(fullpath)
     local bookinfo = BookInfoManager:getBookInfo(fullpath, false)
     local series
@@ -952,7 +958,9 @@ function ptutil.getSeries(fullpath)
         if bookinfo.series then
             series = bookinfo.series
             if bookinfo.series_index then
-                series = series .. " " .. bookinfo.series_index
+                series = series .. " " .. ptutil.zeroPadIndex(bookinfo.series_index)
+            else
+                series = series .. " " .. ptutil.max_index
             end
             return series
         else
@@ -981,7 +989,8 @@ function ptutil.getMetaSummary(fullpath, swap)
     if bookinfo then
         local author = ptutil.getAuthor(nil, swap, bookinfo) or "\u{FFFF}"
         local series = bookinfo.series or "\u{FFFF}"
-        local series_index = bookinfo.series_index or "\u{FFFF}"
+        local series_index = bookinfo.series_index or ptutil.max_index
+        series_index = ptutil.zeroPadIndex(series_index)
         local title = bookinfo.title or "\u{FFFF}"
         return author .. " " .. series  .. " " .. series_index .. " " .. title
     else
