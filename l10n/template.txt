@@ -121,6 +121,9 @@ msgstr ""
 msgid "Show last item indicator on touchscreen devices"
 msgstr ""
 
+msgid "Use custom sort methods"
+msgstr ""
+
 msgid "Author first name"
 msgstr ""
 

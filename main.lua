@@ -267,6 +267,11 @@ function CoverBrowser:init()
         BookInfoManager:saveSetting("show_tags", false)
         BookInfoManager:saveSetting("config_version", "5")
     end
+    if BookInfoManager:getSetting("config_version") == 5 then
+        logger.info(ptdbg.logprefix, "Migrating settings to version 6")
+        BookInfoManager:saveSetting("use_custom_sorts", true)
+        BookInfoManager:saveSetting("config_version", "6")
+    end
 
     -- restart if needed
     if restart_needed then
@@ -280,7 +285,10 @@ function CoverBrowser:init()
     CoverBrowser.setupWidgetDisplayMode("collections", true)
     series_mode = BookInfoManager:getSetting("series_mode")
     self:onDispatcherRegisterActions()
-    CoverBrowser.addSortMethods()
+
+    if BookInfoManager:getSetting("use_custom_sorts") then
+        CoverBrowser.addSortMethods()
+    end
 
     if BookInfoManager:getSetting("use_custom_bookstatus") then
         BookStatusWidget.genHeader = AltBookStatusWidget.genHeader
@@ -804,6 +812,14 @@ function CoverBrowser:addToMainMenu(menu_items)
                 checked_func = function() return BookInfoManager:getSetting("force_focus_indicator") end,
                 callback = function()
                     BookInfoManager:toggleSetting("force_focus_indicator")
+                end,
+            },
+            {
+                text = _("Use custom sort methods"),
+                checked_func = function() return BookInfoManager:getSetting("use_custom_sorts") end,
+                callback = function()
+                    BookInfoManager:toggleSetting("use_custom_sorts")
+                    UIManager:askForRestart()
                 end,
             },
         },
