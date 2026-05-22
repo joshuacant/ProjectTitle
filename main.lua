@@ -617,6 +617,14 @@ function CoverBrowser:addToMainMenu(menu_items)
                             fc:updateItems(1, true)
                         end,
                     },
+                    {
+                        text = _("Use custom sort methods"),
+                        checked_func = function() return BookInfoManager:getSetting("use_custom_sorts") end,
+                        callback = function()
+                            BookInfoManager:toggleSetting("use_custom_sorts")
+                            UIManager:askForRestart()
+                        end,
+                    },
                 },
             },
             {
@@ -812,14 +820,6 @@ function CoverBrowser:addToMainMenu(menu_items)
                 checked_func = function() return BookInfoManager:getSetting("force_focus_indicator") end,
                 callback = function()
                     BookInfoManager:toggleSetting("force_focus_indicator")
-                end,
-            },
-            {
-                text = _("Use custom sort methods"),
-                checked_func = function() return BookInfoManager:getSetting("use_custom_sorts") end,
-                callback = function()
-                    BookInfoManager:toggleSetting("use_custom_sorts")
-                    UIManager:askForRestart()
                 end,
             },
         },
