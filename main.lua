@@ -28,7 +28,7 @@ if type(plugins_disabled) ~= "table" then
     plugins_disabled = {}
 end
 if plugins_disabled["coverbrowser"] == nil or plugins_disabled["coverbrowser"] == false then
-    logger.warn(ptdbg.logprefix, "CoverBrowser enabled")
+    logger.warn(ptdbg.logprefix, "Cover Browser enabled")
     return { disabled = true }
 end
 
