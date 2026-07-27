@@ -15,7 +15,7 @@ https://github.com/koreader/koreader/wiki/User-patches
 local userpatch = require("userpatch")
 local logger = require ("logger")
 
-local function patchCoverBrowser(plugin)
+local function patchProjectTitle(plugin)
     -- Modify functionality in ptutil:
     local ptutil = require("ptutil")
         -- Override a formatting or setting
@@ -41,4 +41,4 @@ local function patchCoverBrowser(plugin)
         -- CoverMenu:genItemTable(dirs, files, path) generates the item table
 end
 
-userpatch.registerPatchPluginFunc("coverbrowser", patchCoverBrowser)
+userpatch.registerPatchPluginFunc("projecttitle", patchProjectTitle)
