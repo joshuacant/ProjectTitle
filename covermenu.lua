@@ -514,7 +514,7 @@ function CoverMenu:setupLayout()
             local been_opened = BookList.hasBookBeenOpened(file)
             local doc_settings_or_file = file
             if has_provider or been_opened then
-                book_props = file_manager.coverbrowser and file_manager.coverbrowser:getBookInfo(file)
+                book_props = file_manager.projecttitle and file_manager.projecttitle:getBookInfo(file)
                 if been_opened then
                     doc_settings_or_file = BookList.getDocSettings(file)
                     if not book_props then

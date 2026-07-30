@@ -206,6 +206,7 @@ function ProjectTitle:init()
     end
 
     -- impersonate coverbrowser to support calls from KOReader core
+    self.coverbrowser = self
     self.ui.coverbrowser = self
 
     -- on first ever run and occasionally afterward it will be necessary to create
