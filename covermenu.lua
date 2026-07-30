@@ -412,6 +412,9 @@ function CoverMenu:setupLayout()
 
     local file_manager = self
 
+    -- refresh our impersionation of cover browser
+    self.coverbrowser = self.projecttitle
+
     function file_chooser:onFileSelect(item)
         if file_manager.selected_files then -- toggle selection
             item.dim = not item.dim and true or nil
