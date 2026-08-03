@@ -63,7 +63,7 @@ if (util.arrayContains(safe_versions, cv_int) or util.fileExists(data_dir .. "/s
     version_unsafe = false
 else
     logger.warn(ptdbg.logprefix, "Version not safe", tostring(cv_int))
-    if safe_versions[1] - cv_int < 1000 then
+    if (cv_int % 1000) ~= 0 then
         logger.warn(ptdbg.logprefix, "This is a KOReader nightly build, not the official release")
     end
 end
