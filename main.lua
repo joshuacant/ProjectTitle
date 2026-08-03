@@ -52,14 +52,18 @@ end
 
     https://github.com/joshuacant/ProjectTitle/wiki/Use-With-Nightly-KOReader-Builds
 --]]
-local safe_version = 202607010000
+local safe_versions = {
+    202607000000,
+    202607010000,
+    202607020000,
+}
 local cv_int, cv_commit = Version:getNormalizedCurrentVersion()
 local version_unsafe = true
-if (cv_int == safe_version or util.fileExists(data_dir .. "/settings/pt-skipversioncheck.txt")) then
+if (util.arrayContains(safe_versions, cv_int) or util.fileExists(data_dir .. "/settings/pt-skipversioncheck.txt")) then
     version_unsafe = false
 else
     logger.warn(ptdbg.logprefix, "Version not safe", tostring(cv_int))
-    if safe_version - cv_int < 1000 then
+    if safe_versions[1] - cv_int < 1000 then
         logger.warn(ptdbg.logprefix, "This is a KOReader nightly build, not the official release")
     end
 end
