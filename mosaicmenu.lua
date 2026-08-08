@@ -798,7 +798,7 @@ function MosaicMenuItem:update()
             else
                 -- add Series metadata if requested
                 local title_add, authors_add
-                if bookinfo.series and bookinfo.series_index and bookinfo.series_index ~= 0 then -- suppress series if index is "0"
+                if bookinfo.series and bookinfo.series_index then
                     authors_add = BD.auto(bookinfo.series)
                     bookinfo.series = "#" .. bookinfo.series_index .. ptutil.separator.en_dash .. BD.auto(bookinfo.series)
                 end
@@ -929,38 +929,38 @@ function MosaicMenuItem:paintTo(bb, x, y)
     local bookinfo = BookInfoManager:getBookInfo(self.filepath, false)
     if bookinfo and self.init_done then
         local series_mode = BookInfoManager:getSetting("series_mode")
-        -- suppress showing series if index is "0"
-        local show_series = bookinfo.series and bookinfo.series_index and bookinfo.series_index ~= 0
+        local show_series = bookinfo.series and bookinfo.series_index
         if series_mode == "series_in_separate_line" and show_series and is_pathchooser == false then
-            local series_index = " " .. bookinfo.series_index .. " "
-            if string.len(series_index) == 3 then series_index = " " .. series_index .. " " end
-            local series_widget_radius = 0
-            local series_widget_background = Blitbuffer.COLOR_WHITE
-            local xmult = 0.80
-            if self.show_progress_bar then
-                -- xmult = 1.25
-                series_widget_radius = Size.radius.default
-                -- series_widget_background = Blitbuffer.COLOR_GRAY_E
+            local series_index = ptutil.formatSeriesIndex(bookinfo.series_index)
+            if series_index ~= nil then
+                local series_widget_radius = 0
+                local series_widget_background = Blitbuffer.COLOR_WHITE
+                local xmult = 0.80
+                if self.show_progress_bar then
+                    -- xmult = 1.25
+                    series_widget_radius = Size.radius.default
+                    -- series_widget_background = Blitbuffer.COLOR_GRAY_E
+                end
+                local series_widget_text = TextWidget:new {
+                    text = series_index,
+                    face = Font:getFace(ptutil.good_serif, 14),
+                    alignment = "left",
+                    padding = 0,
+                }
+                local series_widget = FrameContainer:new {
+                    linesize = Screen:scaleBySize(1),
+                    radius = series_widget_radius,
+                    color = Blitbuffer.COLOR_BLACK,
+                    bordersize = Size.line.thin,
+                    background = series_widget_background,
+                    padding = 0,
+                    margin = 0,
+                    series_widget_text,
+                }
+                local pos_x = x + (self.width / 2) + (target.width / 2) - (series_widget:getSize().w * xmult)
+                local pos_y = y + (self.height - target.height) / 2 + (series_widget:getSize().h * (1 - xmult))
+                series_widget:paintTo(bb, pos_x, pos_y)
             end
-            local series_widget_text = TextWidget:new {
-                text = series_index,
-                face = Font:getFace(ptutil.good_serif, 14),
-                alignment = "left",
-                padding = 0,
-            }
-            local series_widget = FrameContainer:new {
-                linesize = Screen:scaleBySize(1),
-                radius = series_widget_radius,
-                color = Blitbuffer.COLOR_BLACK,
-                bordersize = Size.line.thin,
-                background = series_widget_background,
-                padding = 0,
-                margin = 0,
-                series_widget_text,
-            }
-            local pos_x = x + (self.width / 2) + (target.width / 2) - (series_widget:getSize().w * xmult)
-            local pos_y = y + (self.height - target.height) / 2 + (series_widget:getSize().h * (1 - xmult))
-            series_widget:paintTo(bb, pos_x, pos_y)
         end
 
         if self.show_progress_bar and is_pathchooser == false then

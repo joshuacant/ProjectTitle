@@ -121,6 +121,15 @@ msgstr ""
 msgid "Show last item indicator on touchscreen devices"
 msgstr ""
 
+msgid "Use custom sort methods"
+msgstr ""
+
+msgid "Author first name"
+msgstr ""
+
+msgid "Author last name"
+msgstr ""
+
 # bookinfomanager.lua
 msgid ""
 "This will extract metadata and cover images from books in the current "

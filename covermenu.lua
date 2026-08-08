@@ -445,7 +445,7 @@ function CoverMenu:genItemTable(dirs, files, path)
     self.meta_show_opened = nil
 
     if meta_browse_mode == true and is_pathchooser == false and G_reader_settings:readSetting("home_dir") ~= nil then
-        -- build item tables from coverbrowser-style sqlite db
+        -- build item tables from our sqlite db
         if BookInfoManager:getSetting("opened_at_top_of_library") then self.meta_show_opened = true end
         local SQ3 = require("lua-ljsqlite3/init")
         local DataStorage = require("datastorage")
@@ -575,6 +575,9 @@ function CoverMenu:setupLayout()
 
     local file_manager = self
 
+    -- refresh our impersionation of cover browser
+    self.coverbrowser = self.projecttitle
+
     function file_chooser:onFileSelect(item)
         if file_manager.selected_files then -- toggle selection
             item.dim = not item.dim and true or nil
@@ -677,7 +680,7 @@ function CoverMenu:setupLayout()
             local been_opened = BookList.hasBookBeenOpened(file)
             local doc_settings_or_file = file
             if has_provider or been_opened then
-                book_props = file_manager.coverbrowser and file_manager.coverbrowser:getBookInfo(file)
+                book_props = file_manager.projecttitle and file_manager.projecttitle:getBookInfo(file)
                 if been_opened then
                     doc_settings_or_file = BookList.getDocSettings(file)
                     if not book_props then

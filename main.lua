@@ -28,7 +28,7 @@ if type(plugins_disabled) ~= "table" then
     plugins_disabled = {}
 end
 if plugins_disabled["coverbrowser"] == nil or plugins_disabled["coverbrowser"] == false then
-    logger.warn(ptdbg.logprefix, "CoverBrowser enabled")
+    logger.warn(ptdbg.logprefix, "Cover Browser enabled")
     return { disabled = true }
 end
 
@@ -52,14 +52,18 @@ end
 
     https://github.com/joshuacant/ProjectTitle/wiki/Use-With-Nightly-KOReader-Builds
 --]]
-local safe_version = 202603000000
+local safe_versions = {
+    202607000000,
+    202607010000,
+    202607020000,
+}
 local cv_int, cv_commit = Version:getNormalizedCurrentVersion()
 local version_unsafe = true
-if (cv_int == safe_version or util.fileExists(data_dir .. "/settings/pt-skipversioncheck.txt")) then
+if (util.arrayContains(safe_versions, cv_int) or util.fileExists(data_dir .. "/settings/pt-skipversioncheck.txt")) then
     version_unsafe = false
 else
     logger.warn(ptdbg.logprefix, "Version not safe", tostring(cv_int))
-    if safe_version - cv_int < 1000 then
+    if (cv_int % 1000) ~= 0 then
         logger.warn(ptdbg.logprefix, "This is a KOReader nightly build, not the official release")
     end
 end
@@ -85,10 +89,10 @@ if fonts_missing or icons_missing or version_unsafe then
         alignment = "center",
         timeout = 30,
     })
-    local CoverBrowser = WidgetContainer:extend {
-        name = "coverbrowsernil",
+    local ProjectTitle = WidgetContainer:extend {
+        name = "projecttitlenil",
     }
-    return CoverBrowser
+    return ProjectTitle
 end
 
 -- Load full plugin if all tests pass
@@ -96,6 +100,7 @@ logger.info(ptdbg.logprefix, "All tests passed, loading into KOReader ver", tost
 local BookStatusWidget = require("ui/widget/bookstatuswidget")
 local AltBookStatusWidget = require("altbookstatuswidget")
 local BookInfoManager = require("bookinfomanager")
+local BookList = require("ui/widget/booklist")
 local FileChooser = require("ui/widget/filechooser")
 local FileManager = require("apps/filemanager/filemanager")
 local FileManagerHistory = require("apps/filemanager/filemanagerhistory")
@@ -154,8 +159,8 @@ local curr_display_modes = {
 }
 local series_mode = nil  -- defaults to not display series
 
-local CoverBrowser = WidgetContainer:extend {
-    name = "coverbrowser",
+local ProjectTitle = WidgetContainer:extend {
+    name = "projecttitle",
     modes = {
         { _("Cover List"),    "list_image_meta" },
         { _("Cover Grid"),    "mosaic_image" },
@@ -165,7 +170,7 @@ local CoverBrowser = WidgetContainer:extend {
     },
 }
 
-function CoverBrowser:onDispatcherRegisterActions()
+function ProjectTitle:onDispatcherRegisterActions()
     Dispatcher:registerAction("dec_items_pp", {
         category = "none",
         event = "DecreaseItemsPerPage",
@@ -196,7 +201,7 @@ function CoverBrowser:onDispatcherRegisterActions()
     })
 end
 
-function CoverBrowser:init()
+function ProjectTitle:init()
     if not self.ui.document then -- FileManager menu only
         self.ui.menu:registerToMainMenu(self)
     end
@@ -206,7 +211,8 @@ function CoverBrowser:init()
     end
 
     -- impersonate coverbrowser to support calls from KOReader core
-    -- self.ui.coverbrowser = self
+    self.coverbrowser = self
+    self.ui.coverbrowser = self
 
     -- on first ever run and occasionally afterward it will be necessary to create
     -- new settings keys in the 'config' table and some of them require restarting
@@ -267,6 +273,11 @@ function CoverBrowser:init()
         BookInfoManager:saveSetting("show_tags", false)
         BookInfoManager:saveSetting("config_version", "5")
     end
+    if BookInfoManager:getSetting("config_version") == 5 then
+        logger.info(ptdbg.logprefix, "Migrating settings to version 6")
+        BookInfoManager:saveSetting("use_custom_sorts", true)
+        BookInfoManager:saveSetting("config_version", "6")
+    end
 
     -- restart if needed
     if restart_needed then
@@ -276,9 +287,14 @@ function CoverBrowser:init()
     end
 
     self:setupFileManagerDisplayMode(BookInfoManager:getSetting("filemanager_display_mode"))
-    CoverBrowser.setupWidgetDisplayMode("history", true)
-    CoverBrowser.setupWidgetDisplayMode("collections", true)
+    ProjectTitle.setupWidgetDisplayMode("history", true)
+    ProjectTitle.setupWidgetDisplayMode("collections", true)
     series_mode = BookInfoManager:getSetting("series_mode")
+    self:onDispatcherRegisterActions()
+
+    if BookInfoManager:getSetting("use_custom_sorts") then
+        ProjectTitle.addSortMethods()
+    end
 
     if BookInfoManager:getSetting("use_custom_bookstatus") then
         BookStatusWidget.genHeader = AltBookStatusWidget.genHeader
@@ -300,11 +316,78 @@ function CoverBrowser:init()
     end
 
     init_done = true
-    self:onDispatcherRegisterActions()
     BookInfoManager:closeDbConnection() -- will be re-opened if needed
 end
 
-function CoverBrowser:addToMainMenu(menu_items)
+function ProjectTitle:stopPlugin()
+    logger.info(ptdbg.logprefix, "Disabling plugin per user request")
+end
+
+function ProjectTitle:deletePluginSettings()
+    logger.info(ptdbg.logprefix, "Removing settings and cache database per user request")
+
+    -- tear down PT and restore stock filemanager view
+    local DataStorage = require("datastorage")
+    local settings_dir = DataStorage:getSettingsDir()
+    local fc = self.ui.file_chooser
+    ProjectTitle.removeFileDialogButtons("filesearcher")
+    _modified_widgets["filesearcher"].updateItemTable = _updateItemTable_orig_funcs["filesearcher"]
+    FileChooser.updateItems = _FileChooser_updateItems_orig
+    FileChooser.onCloseWidget = _FileChooser_onCloseWidget_orig
+    FileChooser._recalculateDimen = _FileChooser__recalculateDimen_orig
+    ProjectTitle.removeFileDialogButtons("filemanager")
+    FileChooser.genItemTable = _FileChooser_genItemTable_orig
+    FileManager.setupLayout = _FileManager_setupLayout_orig
+    Menu.init = _Menu_init_orig
+    Menu.updatePageInfo = _Menu_updatePageInfo_orig
+    FileChooser._updateItemsBuildUI = nil
+    FileChooser._do_cover_images = nil
+    FileChooser._do_filename_only = nil
+    FileChooser._do_hint_opened = nil
+    FileChooser._do_center_partial_rows = nil
+    if fc then
+        fc:_recalculateDimen()
+        fc:switchItemTable(nil, nil, fc.prev_itemnumber, { dummy = "" }) -- dummy itemmatch to draw focus
+    end
+    BookInfoManager:closeDbConnection()
+
+    -- delete settings
+    G_reader_settings:delSetting("aaaProjectTitle_initial_default_setup_done2")
+    os.remove(settings_dir .. "/pt-skipversioncheck.txt")
+
+    -- delete cache database
+    os.remove(settings_dir .. "/PT_bookinfo_cache.sqlite3")
+
+    -- delete installed fonts
+    FFIUtil.purgeDir(ptutil.koreader_dir .. "/fonts/source")
+
+    -- delete installed icons
+    local icons_path = ptutil.koreader_dir .. "/icons"
+    local icons_list = {
+        "favorites",
+        "go_up",
+        "hero",
+        "history",
+        "last_document",
+        "plus",
+    }
+    local icons_checksum_list = {
+        "546928404910d90cbdcaf4b1c207683c",
+        "5536bb523b1f11a6ef48ec71bb7ddc55",
+        "a92f359e7521a1bed709f90e464c6b5d",
+        "e26a48a6e9f6dc4086bcd32222349752",
+        "9408835d5c1aa69d8ad9c2701e22e33a",
+        "515a084140c4931607bc066b6819d34e",
+    }
+    for i, icon in ipairs(icons_list) do
+        local icon_file = icons_path .. "/" .. icon .. ".svg"
+        if icons_checksum_list[i] == util.partialMD5(icon_file) then
+            os.remove(icon_file)
+        end
+    end
+end
+
+function ProjectTitle:addToMainMenu(menu_items)
     local sub_item_table, history_sub_item_table, collection_sub_item_table = {}, {}, {}
     local fc = self.ui.file_chooser
     for i, v in ipairs(self.modes) do
@@ -324,7 +407,7 @@ function CoverBrowser:addToMainMenu(menu_items)
                 return mode == curr_display_modes["history"]
             end,
             callback = function()
-                CoverBrowser.setupWidgetDisplayMode("history", mode)
+                ProjectTitle.setupWidgetDisplayMode("history", mode)
             end,
         }
         collection_sub_item_table[i] = {
@@ -333,7 +416,7 @@ function CoverBrowser:addToMainMenu(menu_items)
                 return mode == curr_display_modes["collections"]
             end,
             callback = function()
-                CoverBrowser.setupWidgetDisplayMode("collections", mode)
+                ProjectTitle.setupWidgetDisplayMode("collections", mode)
             end,
         }
     end
@@ -345,8 +428,8 @@ function CoverBrowser:addToMainMenu(menu_items)
         end,
         callback = function()
             if BookInfoManager:toggleSetting("unified_display_mode") then
-                CoverBrowser.setupWidgetDisplayMode("history", curr_display_modes["filemanager"])
-                CoverBrowser.setupWidgetDisplayMode("collections", curr_display_modes["filemanager"])
+                ProjectTitle.setupWidgetDisplayMode("history", curr_display_modes["filemanager"])
+                ProjectTitle.setupWidgetDisplayMode("collections", curr_display_modes["filemanager"])
             end
         end,
     })
@@ -627,6 +710,14 @@ function CoverBrowser:addToMainMenu(menu_items)
                             fc:updateItems(1, true)
                         end,
                     },
+                    {
+                        text = _("Use custom sort methods"),
+                        checked_func = function() return BookInfoManager:getSetting("use_custom_sorts") end,
+                        callback = function()
+                            BookInfoManager:toggleSetting("use_custom_sorts")
+                            UIManager:askForRestart()
+                        end,
+                    },
                 },
             },
             {
@@ -833,7 +924,7 @@ function CoverBrowser:addToMainMenu(menu_items)
     }
 end
 
-function CoverBrowser:genExtractBookInfoButton(close_dialog_callback) -- for FileManager Plus dialog
+function ProjectTitle:genExtractBookInfoButton(close_dialog_callback) -- for FileManager Plus dialog
     return curr_display_modes["filemanager"] and {
         {
             text = _("Extract and cache book information"),
@@ -849,7 +940,7 @@ function CoverBrowser:genExtractBookInfoButton(close_dialog_callback) -- for Fil
     }
 end
 
-function CoverBrowser:genMultipleRefreshBookInfoButton(close_dialog_toggle_select_mode_callback, button_disabled)
+function ProjectTitle:genMultipleRefreshBookInfoButton(close_dialog_toggle_select_mode_callback, button_disabled)
     return curr_display_modes["filemanager"] and {
         {
             text = _("Refresh cached book information"),
@@ -865,7 +956,7 @@ function CoverBrowser:genMultipleRefreshBookInfoButton(close_dialog_toggle_selec
     }
 end
 
-function CoverBrowser.initGrid(menu, display_mode)
+function ProjectTitle.initGrid(menu, display_mode)
     if menu == nil then return end
     if menu.nb_cols_portrait == nil then
         menu.nb_cols_portrait  = BookInfoManager:getSetting("nb_cols_portrait") or ptutil.grid_defaults.default_cols
@@ -878,9 +969,9 @@ function CoverBrowser.initGrid(menu, display_mode)
     menu.display_mode_type = display_mode and display_mode:gsub("_.*", "") -- "mosaic" or "list"
 end
 
-function CoverBrowser.addFileDialogButtons(widget_id)
+function ProjectTitle.addFileDialogButtons(widget_id)
     local widget = _modified_widgets[widget_id]
-    FileManager.addFileDialogButtons(widget, "coverbrowser_1", function(file, is_file, bookinfo)
+    FileManager.addFileDialogButtons(widget, "projecttitle_1", function(file, is_file, bookinfo)
         if is_file then
             return bookinfo and {
                 { -- Allow user to ignore some offending cover image
@@ -912,7 +1003,7 @@ function CoverBrowser.addFileDialogButtons(widget_id)
             }
         end
     end)
-    FileManager.addFileDialogButtons(widget, "coverbrowser_2", function(file, is_file, bookinfo)
+    FileManager.addFileDialogButtons(widget, "projecttitle_2", function(file, is_file, bookinfo)
         if is_file then
             return bookinfo and {
                 { -- Allow a new extraction (multiple interruptions, book replaced)...
@@ -931,13 +1022,13 @@ function CoverBrowser.addFileDialogButtons(widget_id)
     end)
 end
 
-function CoverBrowser.removeFileDialogButtons(widget_id)
+function ProjectTitle.removeFileDialogButtons(widget_id)
     local widget = _modified_widgets[widget_id]
-    FileManager.removeFileDialogButtons(widget, "coverbrowser_2")
-    FileManager.removeFileDialogButtons(widget, "coverbrowser_1")
+    FileManager.removeFileDialogButtons(widget, "projecttitle_2")
+    FileManager.removeFileDialogButtons(widget, "projecttitle_1")
 end
 
-function CoverBrowser:refreshFileManagerInstance()
+function ProjectTitle:refreshFileManagerInstance()
     local fc = self.ui.file_chooser
     if fc then
         fc:_recalculateDimen()
@@ -945,15 +1036,15 @@ function CoverBrowser:refreshFileManagerInstance()
     end
 end
 
-function CoverBrowser:setDisplayMode(display_mode)
+function ProjectTitle:setDisplayMode(display_mode)
     self:setupFileManagerDisplayMode(display_mode)
     if BookInfoManager:getSetting("unified_display_mode") then
-        CoverBrowser.setupWidgetDisplayMode("history", display_mode)
-        CoverBrowser.setupWidgetDisplayMode("collections", display_mode)
+        ProjectTitle.setupWidgetDisplayMode("history", display_mode)
+        ProjectTitle.setupWidgetDisplayMode("collections", display_mode)
     end
 end
 
-function CoverBrowser:setupFileManagerDisplayMode(display_mode)
+function ProjectTitle:setupFileManagerDisplayMode(display_mode)
     if not DISPLAY_MODES[display_mode] then
         display_mode = nil                                                  -- unknown mode, fallback to classic
     end
@@ -968,20 +1059,20 @@ function CoverBrowser:setupFileManagerDisplayMode(display_mode)
     logger.dbg(ptdbg.logprefix, "Setting FileManager display mode to:", display_mode or "classic")
 
     -- init Mosaic and List grid dimensions (in Classic mode used in the settings menu)
-    CoverBrowser.initGrid(FileChooser, display_mode)
+    ProjectTitle.initGrid(FileChooser, display_mode)
 
     if not init_done and not display_mode then
         return -- starting in classic mode, nothing to patch
     end
 
     if not display_mode then -- classic mode
-        CoverBrowser.removeFileDialogButtons("filesearcher")
+        ProjectTitle.removeFileDialogButtons("filesearcher")
         _modified_widgets["filesearcher"].updateItemTable = _updateItemTable_orig_funcs["filesearcher"]
         -- Put back original methods
         FileChooser.updateItems = _FileChooser_updateItems_orig
         FileChooser.onCloseWidget = _FileChooser_onCloseWidget_orig
         FileChooser._recalculateDimen = _FileChooser__recalculateDimen_orig
-        CoverBrowser.removeFileDialogButtons("filemanager")
+        ProjectTitle.removeFileDialogButtons("filemanager")
         FileChooser.genItemTable = _FileChooser_genItemTable_orig
         FileManager.setupLayout = _FileManager_setupLayout_orig
         FileManager.getPlusDialogButtons = _FileManager_getPlusDialogButtons_orig
@@ -997,14 +1088,14 @@ function CoverBrowser:setupFileManagerDisplayMode(display_mode)
         return
     end
 
-    CoverBrowser.addFileDialogButtons("filesearcher")
-    _modified_widgets["filesearcher"].updateItemTable = CoverBrowser.getUpdateItemTableFunc(display_mode)
+    ProjectTitle.addFileDialogButtons("filesearcher")
+    _modified_widgets["filesearcher"].updateItemTable = ProjectTitle.getUpdateItemTableFunc(display_mode)
     -- In both mosaic and list modes, replace original methods with those from
     -- our generic CoverMenu
     local CoverMenu = require("covermenu")
     FileChooser.updateItems = CoverMenu.updateItems
     FileChooser.onCloseWidget = CoverMenu.onCloseWidget
-    CoverBrowser.addFileDialogButtons("filemanager")
+    ProjectTitle.addFileDialogButtons("filemanager")
     if FileChooser.display_mode_type == "mosaic" then
         -- Replace some other original methods with those from our MosaicMenu
         local MosaicMenu = require("mosaicmenu")
@@ -1058,7 +1149,7 @@ function CoverBrowser:setupFileManagerDisplayMode(display_mode)
     end
 end
 
-function CoverBrowser.setupWidgetDisplayMode(widget_id, display_mode)
+function ProjectTitle.setupWidgetDisplayMode(widget_id, display_mode)
     if display_mode == true then -- init
         display_mode = BookInfoManager:getSetting(display_mode_db_names[widget_id])
     end
@@ -1082,15 +1173,15 @@ function CoverBrowser.setupWidgetDisplayMode(widget_id, display_mode)
     -- We only need to replace one method
     local widget = _modified_widgets[widget_id]
     if display_mode then
-        CoverBrowser.addFileDialogButtons(widget_id)
-        widget.updateItemTable = CoverBrowser.getUpdateItemTableFunc(display_mode)
+        ProjectTitle.addFileDialogButtons(widget_id)
+        widget.updateItemTable = ProjectTitle.getUpdateItemTableFunc(display_mode)
     else -- classic mode
-        CoverBrowser.removeFileDialogButtons(widget_id)
+        ProjectTitle.removeFileDialogButtons(widget_id)
         widget.updateItemTable = _updateItemTable_orig_funcs[widget_id]
     end
 end
 
-function CoverBrowser.getUpdateItemTableFunc(display_mode)
+function ProjectTitle.getUpdateItemTableFunc(display_mode)
     return function(this, ...)
         -- 'this' here is the single widget instance
         -- The widget has just created a new instance of BookList as 'booklist_menu'
@@ -1099,8 +1190,8 @@ function CoverBrowser.getUpdateItemTableFunc(display_mode)
         local booklist_menu = this.booklist_menu
         local widget_id = booklist_menu.name
 
-        if not booklist_menu._coverbrowser_overridden then
-            booklist_menu._coverbrowser_overridden = true
+        if not booklist_menu._projecttitle_overridden then
+            booklist_menu._projecttitle_overridden = true
 
             -- In both mosaic and list modes, replace original methods with those from
             -- our generic CoverMenu
@@ -1108,7 +1199,7 @@ function CoverBrowser.getUpdateItemTableFunc(display_mode)
             booklist_menu.updateItems = CoverMenu.updateItems
             booklist_menu.onCloseWidget = CoverMenu.onCloseWidget
 
-            CoverBrowser.initGrid(booklist_menu, display_mode)
+            ProjectTitle.initGrid(booklist_menu, display_mode)
             if booklist_menu.display_mode_type == "mosaic" then
                 -- Replace some other original methods with those from our MosaicMenu
                 local MosaicMenu = require("mosaicmenu")
@@ -1146,20 +1237,20 @@ function CoverBrowser.getUpdateItemTableFunc(display_mode)
     end
 end
 
-function CoverBrowser:getBookInfo(file)
+function ProjectTitle:getBookInfo(file)
     return BookInfoManager:getBookInfo(file)
 end
 
-function CoverBrowser.getDocProps(file)
+function ProjectTitle.getDocProps(file)
     return BookInfoManager:getDocProps(file)
 end
 
-function CoverBrowser:onInvalidateMetadataCache(file)
+function ProjectTitle:onInvalidateMetadataCache(file)
     BookInfoManager:deleteBookInfo(file)
     return true
 end
 
-function CoverBrowser:extractBooksInDirectory(path)
+function ProjectTitle:extractBooksInDirectory(path)
     local Trapper = require("ui/trapper")
     Trapper:wrap(function()
         BookInfoManager:extractBooksInDirectory(path)
@@ -1167,7 +1258,7 @@ function CoverBrowser:extractBooksInDirectory(path)
 end
 
 -- Gesturable: Increase items per page (makes items smaller)
-function CoverBrowser:onIncreaseItemsPerPage()
+function ProjectTitle:onIncreaseItemsPerPage()
     local fc = self.ui.file_chooser
     local display_mode = BookInfoManager:getSetting("filemanager_display_mode")
     -- list modes
@@ -1211,7 +1302,7 @@ function CoverBrowser:onIncreaseItemsPerPage()
 end
 
 -- Gesturable: Decrease items per page (makes items bigger)
-function CoverBrowser:onDecreaseItemsPerPage()
+function ProjectTitle:onDecreaseItemsPerPage()
     local fc = self.ui.file_chooser
     local display_mode = BookInfoManager:getSetting("filemanager_display_mode")
     -- list modes
@@ -1255,13 +1346,150 @@ function CoverBrowser:onDecreaseItemsPerPage()
 end
 
 -- Gesturable: Switch to Cover Grid display mode
-function CoverBrowser:onSwitchToCoverGrid()
+function ProjectTitle:onSwitchToCoverGrid()
     self:setDisplayMode("mosaic_image")
 end
 
 -- Gesturable: Switch to Cover List display mode
-function CoverBrowser:onSwitchToCoverList()
+function ProjectTitle:onSwitchToCoverList()
     self:setDisplayMode("list_image_meta")
 end
 
-return CoverBrowser
+function ProjectTitle.addSortMethods()
+    BookList.collates.title = {
+        text = _("Project: Title") .. " - " .. _("Title"),
+        menu_order = 401,
+        item_func = function(item, ui)
+            local file = item.path or item.file
+            item.title = ptutil.getTitle(file) or "\u{FFFF}"
+        end,
+        init_sort_func = function()
+            return function(a, b)
+                return FFIUtil.strcoll(a.title, b.title)
+            end
+        end,
+    }
+    BookList.collates.authors = {
+        text = _("Project: Title") .. " - " .. _("Author first name"),
+        menu_order = 402,
+        item_func = function(item, ui)
+            local file = item.path or item.file
+            item.author = ptutil.getAuthor(file, false, nil) or "\u{FFFF}"
+        end,
+        init_sort_func = function()
+            return function(a, b)
+                if a.author ~= b.author then
+                    return FFIUtil.strcoll(a.author, b.author)
+                end
+                return FFIUtil.strcoll((a.path or a.file), (b.path or b.file))
+            end
+        end,
+    }
+    BookList.collates.authorsswap = {
+        text = _("Project: Title") .. " - " .. _("Author last name"),
+        menu_order = 403,
+        item_func = function(item, ui)
+            local file = item.path or item.file
+            item.author = ptutil.getAuthor(file, true, nil) or "\u{FFFF}"
+        end,
+        init_sort_func = function()
+            return function(a, b)
+                if a.author ~= b.author then
+                    return FFIUtil.strcoll(a.author, b.author)
+                end
+                return FFIUtil.strcoll((a.path or a.file), (b.path or b.file))
+            end
+        end,
+    }
+    BookList.collates.series = {
+        text = _("Project: Title") .. " - " .. _("Series"),
+        menu_order = 404,
+        item_func = function(item, ui)
+            local file = item.path or item.file
+            item.series = ptutil.getSeries(file) or "\u{FFFF}"
+        end,
+        init_sort_func = function()
+            return function(a, b)
+                if a.series ~= b.series then
+                    return FFIUtil.strcoll(a.series, b.series)
+                end
+                return FFIUtil.strcoll((a.path or a.file), (b.path or b.file))
+            end
+        end,
+    }
+    BookList.collates.keywords = {
+        text = _("Project: Title") .. " - " .. _("Keywords"),
+        menu_order = 405,
+        item_func = function(item, ui)
+            local file = item.path or item.file
+            item.keywords = ptutil.getKeyword(file) or "\u{FFFF}"
+        end,
+        init_sort_func = function()
+            return function(a, b)
+                if a.keywords ~= b.keywords then
+                    return FFIUtil.strcoll(a.keywords, b.keywords)
+                end
+                return FFIUtil.strcoll((a.path or a.file), (b.path or b.file))
+            end
+        end,
+    }
+    BookList.collates.pages = {
+        text = _("Project: Title") .. " - " .. _("Total pages"),
+        menu_order = 411,
+        item_func = function(item, ui)
+            local file = item.path or item.file
+            item.pages = ptutil.getPageCount(file) or 999999
+        end,
+        init_sort_func = function()
+            return function(a, b)
+                if a.pages ~= b.pages then
+                    return a.pages < b.pages
+                end
+                return FFIUtil.strcoll((a.path or a.file), (b.path or b.file))
+            end
+        end,
+        mandatory_func = function(item)
+            return item.pages
+        end,
+    }
+    BookList.collates.fullmeta = {
+        text = _("Project: Title") .. " - " .. _("Author first name") ..", ".. _("Series") ..", ".. _("Title"),
+        menu_order = 421,
+        item_func = function(item, ui)
+            local file = item.path or item.file
+            item.fullmeta = ptutil.getMetaSummary(file, false) or ""
+        end,
+        init_sort_func = function()
+            return function(a, b)
+                if a.fullmeta ~= b.fullmeta then
+                    return a.fullmeta < b.fullmeta
+                end
+                return FFIUtil.strcoll((a.path or a.file), (b.path or b.file))
+            end
+        end,
+        mandatory_func = function(item)
+            return item.fullmeta
+        end,
+    }
+    BookList.collates.fullmetaswap = {
+        text = _("Project: Title") .. " - " .. _("Author last name") ..", ".. _("Series") ..", ".. _("Title"),
+        menu_order = 422,
+        item_func = function(item, ui)
+            local file = item.path or item.file
+            item.fullmeta = ptutil.getMetaSummary(file, true) or ""
+        end,
+        init_sort_func = function()
+            return function(a, b)
+                if a.fullmeta ~= b.fullmeta then
+                    return a.fullmeta < b.fullmeta
+                end
+                return FFIUtil.strcoll((a.path or a.file), (b.path or b.file))
+            end
+        end,
+        mandatory_func = function(item)
+            return item.fullmeta
+        end,
+    }
+end
+
+return ProjectTitle

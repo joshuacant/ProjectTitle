@@ -329,6 +329,12 @@ function ptutil.getFolderCover(filepath, max_img_w, max_img_h, pt_cover_path)
     end
 end
 
+function ptutil.make_sql_safe(string)
+    string = string:gsub("'", "''") -- use '' inside '
+    string = string:gsub(";","_")   -- ljsqlite3 splits commands on semicolons
+    return string
+end
+
 function ptutil.query_cover_paths(folder, include_subfolders)
     local db_conn = SQ3.open(DataStorage:getSettingsDir() .. "/PT_bookinfo_cache.sqlite3")
     db_conn:set_busy_timeout(5000)
@@ -336,20 +342,19 @@ function ptutil.query_cover_paths(folder, include_subfolders)
     if not util.directoryExists(folder) then return nil end
 
     local query
-    folder = folder:gsub("'", "''")
-    folder = folder:gsub(";","_") -- ljsqlite3 splits commands on semicolons
+    local folder_safe = ptutil.make_sql_safe(folder)
     if include_subfolders then
         query = string.format([[
             SELECT directory, filename FROM bookinfo
             WHERE directory LIKE '%s/%%' AND has_cover = 'Y'
             ORDER BY RANDOM() LIMIT 16;
-            ]], folder)
+            ]], folder_safe)
     else
         query = string.format([[
             SELECT directory, filename FROM bookinfo
             WHERE directory = '%s/' AND has_cover = 'Y'
             ORDER BY RANDOM() LIMIT 16;
-            ]], folder)
+            ]], folder_safe)
     end
 
     local res = db_conn:exec(query)
@@ -605,20 +610,21 @@ end
 
 function ptutil.formatSeries(series, series_index)
     local formatted_series = ""
-    -- suppress series if index is "0"
-    if series_index == 0 then
-        return ""
-    end
-    -- if series is formated like "big series: small subseries" then show only "small subseries"
-    if string.match(series, ": ") then
-        series = string.sub(series, util.lastIndexOf(series, ": ") + 1, -1)
-    end
     if series_index then
         formatted_series = "#" .. series_index .. ptutil.separator.en_dash .. BD.auto(series)
     else
         formatted_series = BD.auto(series)
     end
     return formatted_series
+end
+
+function ptutil.formatSeriesIndex(series_index)
+    local formatted_series_index = ""
+    formatted_series_index = " " .. series_index .. " "
+    if string.len(formatted_series_index) == 3 then
+        formatted_series_index = " " .. formatted_series_index .. " "
+    end
+    return formatted_series_index
 end
 
 function ptutil.formatAuthorSeries(authors, series, series_mode, show_tags)
@@ -804,6 +810,200 @@ function ptutil.formatFooterText(footer_config, _manager, path, fm_default_dir, 
         end
         if meta_browse_mode == true then display_path = _("Library") end
         return display_path
+    end
+end
+
+function ptutil.getPageCount(fullpath)
+    local bookinfo = BookInfoManager:getBookInfo(fullpath, false)
+    if bookinfo then
+        return bookinfo.pages or nil
+    else
+        return nil
+    end
+end
+
+ptutil.author_sort_copy_method_comma = false
+ptutil.author_use_remove_bracketed_text = true
+ptutil.author_name_copywords = {'agency', 'corporation', 'company', 'co.', 'council', 'committee', 'inc.', 'institute',
+                            'national', 'society', 'club', 'team', 'software', 'games', 'entertainment', 'media', 'studios',}
+ptutil.author_use_name_copywords = true
+ptutil.author_name_suffixes = {'jr', 'sr', 'inc', 'ph.d', 'phd', 'md', 'm.d', 'i', 'ii', 'iii', 'iv', 'junior', 'senior',}
+ptutil.author_use_name_suffixes = true
+ptutil.author_name_prefixes = {'mr', 'mrs', 'ms', 'dr', 'prof',}
+ptutil.author_use_name_prefixes = true
+ptutil.author_surname_prefixes = {'da', 'de', 'di', 'la', 'le', 'van', 'von',}
+ptutil.author_use_surname_prefixes = false
+
+function ptutil.arrayContainsMatch(t, s)
+    local cb = function(s1, s2)
+        if util.stringSearch(s1, s2, false, 1) ~= 0 then
+            return true
+        else
+            return false
+        end
+    end
+    for _k, _v in ipairs(t) do
+        if cb(s, _v) then
+            return true
+        end
+    end
+    return false
+end
+
+function ptutil.removeMatches(t, s, at_end)
+    s = util.trim(s)
+    local r = 0
+    for _k, _v in ipairs(t) do
+        if at_end then
+            s, r = s:gsub(_v.."%.?$","")
+            if r > 0 then s = ptutil.removeMatches(t, s, at_end) end
+        else
+            s, r = s:gsub("^".._v.."%.?","")
+            if r > 0 then s = ptutil.removeMatches(t, s, at_end) end
+        end
+    end
+    return s
+end
+
+function ptutil.conjoinMatches(t, s)
+    s = util.trim(s)
+    local r = 0
+    for _k, _v in ipairs(t) do
+        s, r = s:gsub("%s".._v.."%s+(%w+)$", " ".._v.."%1")
+        if r > 0 then s = ptutil.conjoinMatches(t, s) end
+    end
+    return s
+end
+
+function ptutil.swapAuthor(author)
+    -- method based on Calibre's "automatic author sort" functionality
+    -- https://github.com/kovidgoyal/calibre/blob/master/src/calibre/ebooks/metadata/__init__.py
+
+    -- if author contains a comma already then return it as-is
+    if ptutil.author_sort_copy_method_comma and ptutil.arrayContainsMatch({','}, author) then
+        return author
+    end
+
+    -- remove anything inside ()
+    if ptutil.author_use_remove_bracketed_text then
+        author = author:gsub("%(.+%)","")
+    end
+
+    -- if author contains a "copyword" then return it as-is, preserving authors like "Acme Corporation" or "Bingo Club"
+    if ptutil.author_use_name_copywords and ptutil.arrayContainsMatch(ptutil.author_name_copywords, author) then
+        return author
+    end
+
+    -- remove suffixes like Jr. and MD
+    if ptutil.author_use_name_suffixes then
+        author = ptutil.removeMatches(ptutil.author_name_suffixes, util.stringLower(author), true)
+    end
+
+    -- remove prefixes like Mr. and Dr.
+    if ptutil.author_use_name_prefixes then
+        author = ptutil.removeMatches(ptutil.author_name_prefixes, util.stringLower(author), false)
+    end
+
+    -- include surname prefixes in the sort, ie sort on "Van Der Graff" not "Graff"
+    if ptutil.author_use_surname_prefixes then
+        author = ptutil.conjoinMatches(ptutil.author_surname_prefixes, util.stringLower(author))
+    end
+
+    -- Split on spaces and then move the last word to the front.
+    local author_lastname = ""
+    local author_firstname = ""
+    author_lastname = string.sub(author, util.lastIndexOf(author, " ") + 1, -1)
+    author_firstname = string.sub(author, 1, (string.len(author) - string.len(author_lastname)))
+    author = author_lastname .. " " .. author_firstname
+
+    return author
+end
+
+function ptutil.getAuthor(fullpath, swap, bookinfo)
+    if fullpath ~= nil then
+        bookinfo = BookInfoManager:getBookInfo(fullpath, false)
+    end
+    local authors = ""
+    if bookinfo then
+        if bookinfo.authors then
+            authors = bookinfo.authors
+        else
+            return nil
+        end
+    else
+        return nil
+    end
+    local full_authors_list = util.splitToArray(authors, "\n")
+    local author = full_authors_list[1]
+    if author.match(author, " ") and swap then
+        author = ptutil.swapAuthor(author)
+    end
+    return author
+end
+
+function ptutil.getTitle(fullpath)
+    local bookinfo = BookInfoManager:getBookInfo(fullpath, false)
+    if bookinfo then
+        if bookinfo.title then
+            return bookinfo.title
+        else
+            return nil
+        end
+    else
+        return nil
+    end
+end
+
+ptutil.max_index = "99999"
+function ptutil.zeroPadIndex(i)
+    if type(i) ~= "number" then return ptutil.max_index end
+    return string.format("%05d", i)
+end
+
+function ptutil.getSeries(fullpath)
+    local bookinfo = BookInfoManager:getBookInfo(fullpath, false)
+    local series
+    if bookinfo then
+        if bookinfo.series then
+            series = bookinfo.series
+            if bookinfo.series_index then
+                series = series .. " " .. ptutil.zeroPadIndex(bookinfo.series_index)
+            else
+                series = series .. " " .. ptutil.max_index
+            end
+            return series
+        else
+            return nil
+        end
+    else
+        return nil
+    end
+end
+
+function ptutil.getKeyword(fullpath)
+    local bookinfo = BookInfoManager:getBookInfo(fullpath, false)
+    if bookinfo then
+        if bookinfo.keywords then
+            return bookinfo.keywords
+        else
+            return nil
+        end
+    else
+        return nil
+    end
+end
+
+function ptutil.getMetaSummary(fullpath, swap)
+    local bookinfo = BookInfoManager:getBookInfo(fullpath, false)
+    if bookinfo then
+        local author = ptutil.getAuthor(nil, swap, bookinfo) or "\u{FFFF}"
+        local series = bookinfo.series or "\u{FFFF}"
+        local series_index = bookinfo.series_index or ptutil.max_index
+        series_index = ptutil.zeroPadIndex(series_index)
+        local title = bookinfo.title or "\u{FFFF}"
+        return author .. " " .. series  .. " " .. series_index .. " " .. title
+    else
+        return nil
     end
 end
 
