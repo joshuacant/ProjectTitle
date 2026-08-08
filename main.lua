@@ -239,7 +239,7 @@ function CoverBrowser:init()
         logger.info(ptdbg.logprefix, "Migrating settings to version 1")
         BookInfoManager:saveSetting("config_version", "1")
     end
-    if BookInfoManager:getSetting("config_version") == "1" then
+    if BookInfoManager:getSetting("config_version") == 1 then
         logger.info(ptdbg.logprefix, "Migrating settings to version 2")
         BookInfoManager:saveSetting("disable_auto_foldercovers", false)
         BookInfoManager:saveSetting("force_max_progressbars", false)
@@ -251,18 +251,18 @@ function CoverBrowser:init()
         BookInfoManager:saveSetting("config_version", "2")
         restart_needed = true
     end
-    if BookInfoManager:getSetting("config_version") == "2" then
+    if BookInfoManager:getSetting("config_version") == 2 then
         logger.info(ptdbg.logprefix, "Migrating settings to version 3")
         BookInfoManager:saveSetting("force_no_progressbars", false)
         BookInfoManager:saveSetting("config_version", "3")
     end
-    if BookInfoManager:getSetting("config_version") == "3" then
+    if BookInfoManager:getSetting("config_version") == 3 then
         logger.info(ptdbg.logprefix, "Migrating settings to version 4")
         BookInfoManager:saveSetting("force_focus_indicator", false)
         BookInfoManager:saveSetting("use_stacked_foldercovers", false)
         BookInfoManager:saveSetting("config_version", "4")
     end
-    if BookInfoManager:getSetting("config_version") == "4" then
+    if BookInfoManager:getSetting("config_version") == 4 then
         logger.info(ptdbg.logprefix, "Migrating settings to version 5")
         BookInfoManager:saveSetting("show_tags", false)
         BookInfoManager:saveSetting("config_version", "5")
@@ -984,6 +984,7 @@ function CoverBrowser:setupFileManagerDisplayMode(display_mode)
         CoverBrowser.removeFileDialogButtons("filemanager")
         FileChooser.genItemTable = _FileChooser_genItemTable_orig
         FileManager.setupLayout = _FileManager_setupLayout_orig
+        FileManager.getPlusDialogButtons = _FileManager_getPlusDialogButtons_orig
         Menu.init = _Menu_init_orig
         Menu.updatePageInfo = _Menu_updatePageInfo_orig
         -- Also clean-up what we added, even if it does not bother original code
