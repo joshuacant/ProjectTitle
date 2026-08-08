@@ -3,6 +3,7 @@ local Blitbuffer = require("ffi/blitbuffer")
 local BottomContainer = require("ui/widget/container/bottomcontainer")
 local BookList = require("ui/widget/booklist")
 local ButtonDialog = require("ui/widget/buttondialog")
+local ConfirmBox = require("ui/widget/confirmbox")
 local DocumentRegistry = require("document/documentregistry")
 local FileChooser = require("ui/widget/filechooser")
 local Geom = require("ui/geometry")
@@ -72,6 +73,14 @@ local function onFolderUp()
     end
 end
 
+-- Shared favorites callbacks (favorites vs show_favorites only differ by icon)
+local function favoritesTap()
+    return function() FileManager.instance.collections:onShowColl() end
+end
+local function favoritesHold()
+    return function() FileManager.instance.folder_shortcuts:onShowFolderShortcutsDialog() end
+end
+
 -- Action registry for configurable titlebar slots
 local TITLEBAR_ACTIONS = {
     home = {
@@ -81,8 +90,8 @@ local TITLEBAR_ACTIONS = {
     },
     favorites = {
         icon = "favorites",
-        tap = function() return function() FileManager.instance.collections:onShowColl() end end,
-        hold = function() return function() FileManager.instance.folder_shortcuts:onShowFolderShortcutsDialog() end end,
+        tap = favoritesTap,
+        hold = favoritesHold,
     },
     history = {
         icon = "history",
@@ -134,7 +143,7 @@ local TITLEBAR_ACTIONS = {
         icon = "tab_manga",
         tap = function() return function()
             local fm = FileManager.instance
-            if fm.rakuyomi then
+            if fm and fm.rakuyomi then
                 fm.rakuyomi:openLibraryView()
             else
                 UIManager:show(InfoMessage:new { text = _("Rakuyomi plugin not found.") })
@@ -146,7 +155,7 @@ local TITLEBAR_ACTIONS = {
         icon = "tab_books",
         tap = function() return function()
             local fm = FileManager.instance
-            local plugin = fm.annas_archive or fm["annas-archive"] or fm.annasarchive or fm["Anna's Archive"]
+            local plugin = fm and (fm.annas_archive or fm["annas-archive"] or fm.annasarchive or fm["Anna's Archive"])
             if plugin then
                 if plugin.showMultiSearchDialog then
                     plugin:showMultiSearchDialog()
@@ -165,7 +174,7 @@ local TITLEBAR_ACTIONS = {
         icon = "tab_news",
         tap = function() return function()
             local fm = FileManager.instance
-            local plugin = fm["Z-library"] or fm["Z-Library"] or fm["z-library"] or fm.zlibrary
+            local plugin = fm and (fm["Z-library"] or fm["Z-Library"] or fm["z-library"] or fm.zlibrary)
             if plugin and plugin.showMultiSearchDialog then
                 plugin:showMultiSearchDialog()
             else
@@ -178,7 +187,7 @@ local TITLEBAR_ACTIONS = {
         icon = "tab_continue",
         tap = function() return function()
             local fm = FileManager.instance
-            if fm.appstore then
+            if fm and fm.appstore then
                 fm.appstore:showBrowser()
             else
                 UIManager:show(InfoMessage:new { text = _("AppStore plugin not found.") })
@@ -190,7 +199,7 @@ local TITLEBAR_ACTIONS = {
         icon = "tab_history",
         tap = function() return function()
             local fm = FileManager.instance
-            if fm.opds then
+            if fm and fm.opds then
                 fm.opds:onShowOPDSCatalog()
             else
                 UIManager:show(InfoMessage:new { text = _("OPDS plugin not found.") })
@@ -200,13 +209,28 @@ local TITLEBAR_ACTIONS = {
     },
     exit = {
         icon = "tab_exit",
-        tap = function(self) return function() self:onClose() end end,
+        -- Honor stock back_to_exit: "always" exits immediately; otherwise prompt
+        -- (explicit Exit button still prompts when back_to_exit is "disable")
+        tap = function(self) return function()
+            local back_to_exit = G_reader_settings:readSetting("back_to_exit", "prompt")
+            if back_to_exit == "always" then
+                self:onClose()
+            else
+                UIManager:show(ConfirmBox:new {
+                    text = _("Exit KOReader?"),
+                    ok_text = _("Exit"),
+                    ok_callback = function()
+                        self:onClose()
+                    end,
+                })
+            end
+        end end,
         hold = false,
     },
     show_favorites = {
         icon = "tab_favorites",
-        tap = function() return function() FileManager.instance.collections:onShowColl() end end,
-        hold = function() return function() FileManager.instance.folder_shortcuts:onShowFolderShortcutsDialog() end end,
+        tap = favoritesTap,
+        hold = favoritesHold,
     },
     none = {
         icon = nil,
@@ -226,13 +250,11 @@ local function getTitlebarSlotConfig(fm)
         local tap_action = TITLEBAR_ACTIONS[tap_id] or TITLEBAR_ACTIONS["none"]
         local hold_action = TITLEBAR_ACTIONS[hold_id] or TITLEBAR_ACTIONS["none"]
 
-        -- Icon: check for center icon overrides
-        local icon = tap_action.icon
+        -- Icon from tap action, falling back to hold so hold-only slots stay visible
+        local icon = tap_action.icon or hold_action.icon
         if slot == "center" then
             if BookInfoManager:getSetting("titlebar_center_hero") then
                 icon = "hero"
-            elseif not icon and hold_action.icon then
-                icon = hold_action.icon
             end
             if not icon then icon = "hero" end
         end
