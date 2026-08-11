@@ -56,7 +56,6 @@ local ptdbg = require("ptdbg")
 local previous_path = nil
 local current_path = nil
 local is_pathchooser = false
-local meta_browse_mode = false
 
 -- Do some collectgarbage() every few drawings
 local NB_DRAWINGS_BETWEEN_COLLECTGARBAGE = 5
@@ -266,86 +265,6 @@ function CoverMenu:onCloseWidget()
     Menu.onCloseWidget(self)
 end
 
-function CoverMenu:genItemTable(dirs, files, path)
-    is_pathchooser = ptutil.isPathChooser(self)
-    self.recent_boundary_index = 0
-    self.meta_show_opened = nil
-
-    if meta_browse_mode == true and is_pathchooser == false and G_reader_settings:readSetting("home_dir") ~= nil then
-        -- build item tables from our sqlite db
-        if BookInfoManager:getSetting("opened_at_top_of_library") then self.meta_show_opened = true end
-        local SQ3 = require("lua-ljsqlite3/init")
-        local DataStorage = require("datastorage")
-        local lfs = require("libs/libkoreader-lfs")
-        local custom_item_table = {}
-        local items_place_at_top = {}
-        self.db_location = DataStorage:getSettingsDir() .. "/PT_bookinfo_cache.sqlite3"
-        self.db_conn = SQ3.open(self.db_location)
-        self.db_conn:set_busy_timeout(5000)
-        local query = string.format(
-            "SELECT directory, filename FROM bookinfo WHERE directory LIKE '%s%%' ORDER BY authors ASC, series ASC, series_index ASC, title ASC;",
-            G_reader_settings:readSetting("home_dir"):gsub("'", "''"))
-        local res = self.db_conn:exec(query)
-        if res then
-            local directories = res[1]
-            local filenames = res[2]
-            local dirpath
-            local fullpath
-            local place_at_top
-            local attributes
-            local item
-            local book_info
-            local collate = { can_collate_mixed = nil, item_func = nil }
-            for i, filename in ipairs(filenames) do
-                dirpath = directories[i]
-                fullpath = dirpath .. filename
-                place_at_top = false
-                if util.fileExists(fullpath) and not (G_reader_settings:isFalse("show_hidden") and util.stringStartsWith(filename, ".")) then
-                    attributes = lfs.attributes(fullpath) or {}
-                    item = FileChooser:getListItem(dirpath, filename, fullpath, attributes, collate)
-                    if BookInfoManager:getSetting("opened_at_top_of_library") then
-                        book_info = BookList.getBookInfo(fullpath)
-                        if book_info.status == "reading" and (book_info.percent_finished ~= nil and book_info.percent_finished < 100) then
-                            place_at_top = true
-                        end
-                    end
-                    if place_at_top then
-                        table.insert(items_place_at_top, item)
-                    else
-                        table.insert(custom_item_table, item)
-                    end
-                end
-            end
-            if util.tableSize(items_place_at_top) > 0 then
-                self.recent_boundary_index = util.tableSize(items_place_at_top)
-                local function join_tables(t1,t2)
-                    for i=1,#t2 do
-                        t1[#t1+1] = t2[i]
-                    end
-                    return t1
-                end
-                custom_item_table = join_tables(items_place_at_top, custom_item_table)
-            end
-        end
-        self.db_conn:close()
-        return custom_item_table
-    else
-        local item_table = CoverMenu._FileChooser_genItemTable_orig(self, dirs, files, path)
-        if item_table == nil then item_table = {} end
-        if #item_table > 0 and is_pathchooser == false then
-            if item_table[1].text == "⬆ ../" then table.remove(item_table, 1) end
-        end
-        if path ~= "/" and (G_reader_settings:isTrue("lock_home_folder") and path == G_reader_settings:readSetting("home_dir")) and is_pathchooser then
-            table.insert(item_table, 1, {
-                text = BD.mirroredUILayout() and BD.ltr("../ ⬆") or "⬆ ../",
-                path = path .. "/..",
-                is_go_up = true,
-            })
-        end
-        return item_table
-    end
-end
-
 function CoverMenu:setupLayout()
     self.show_parent = self.show_parent or self
     self.title_bar = TitleBar:new {
@@ -368,10 +287,7 @@ function CoverMenu:setupLayout()
         center_icon = "hero",
         center_icon_tap_callback = false,
         center_icon_hold_callback = function()
-            if G_reader_settings:readSetting("home_dir") ~= nil then
-                meta_browse_mode = not meta_browse_mode
-                self:onHome()
-            end
+            self.file_chooser:toggleShowFilesMode("show_flat_view")
         end,
         -- open last file
         right3_icon = "last_document",
@@ -769,7 +685,7 @@ function CoverMenu:updatePageInfo(select_number)
     if not is_pathchooser and self.cur_folder_text and type(self.path) == "string" and self.path ~= '' then
         self.cur_folder_text:setMaxWidth(self.screen_w * 0.94 - self.page_info:getSize().w)
         local footertxt = ptutil.formatFooterText(self.footer_config, self._manager, self.path, filemanagerutil.getDefaultDir(),
-                                        FileManagerShortcuts:hasFolderShortcut(self.path), meta_browse_mode)
+                                        FileManagerShortcuts:hasFolderShortcut(self.path))
         self.cur_folder_text:setText(footertxt)
     end
 end

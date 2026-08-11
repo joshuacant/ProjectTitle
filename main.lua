@@ -115,7 +115,6 @@ local FFIUtil = require("ffi/util")
 local _FileChooser__recalculateDimen_orig = FileChooser._recalculateDimen
 local _FileChooser_updateItems_orig = FileChooser.updateItems
 local _FileChooser_onCloseWidget_orig = FileChooser.onCloseWidget
-local _FileChooser_genItemTable_orig = FileChooser.genItemTable         -- not in Cover Browser
 
 -- https://github.com/koreader/koreader/commits/master/frontend/apps/filemanager/filemanager.lua
 local _FileManager_setupLayout_orig = FileManager.setupLayout           -- not in Cover Browser
@@ -335,7 +334,6 @@ function ProjectTitle:deletePluginSettings()
     FileChooser.onCloseWidget = _FileChooser_onCloseWidget_orig
     FileChooser._recalculateDimen = _FileChooser__recalculateDimen_orig
     ProjectTitle.removeFileDialogButtons("filemanager")
-    FileChooser.genItemTable = _FileChooser_genItemTable_orig
     FileManager.setupLayout = _FileManager_setupLayout_orig
     Menu.init = _Menu_init_orig
     Menu.updatePageInfo = _Menu_updatePageInfo_orig
@@ -740,23 +738,6 @@ function ProjectTitle:addToMainMenu(menu_items)
                 },
             },
             {
-                text = _("Library mode"),
-                sub_item_table = {
-                    {
-                        text = _("Show opened books first"),
-                        checked_func = function()
-                            return BookInfoManager:getSetting("opened_at_top_of_library")
-                        end,
-                        callback = function()
-                            BookInfoManager:toggleSetting("opened_at_top_of_library")
-                            -- can't figure out how to refresh the item table from here
-                            -- but a restart gets the job done
-                            UIManager:askForRestart()
-                        end,
-                    },
-                },
-            },
-            {
                 text = _("Cache database"),
                 sub_item_table = {
                     {
@@ -985,7 +966,6 @@ function ProjectTitle:setupFileManagerDisplayMode(display_mode)
         FileChooser.onCloseWidget = _FileChooser_onCloseWidget_orig
         FileChooser._recalculateDimen = _FileChooser__recalculateDimen_orig
         ProjectTitle.removeFileDialogButtons("filemanager")
-        FileChooser.genItemTable = _FileChooser_genItemTable_orig
         FileManager.setupLayout = _FileManager_setupLayout_orig
         Menu.init = _Menu_init_orig
         Menu.updatePageInfo = _Menu_updatePageInfo_orig
@@ -1032,9 +1012,6 @@ function ProjectTitle:setupFileManagerDisplayMode(display_mode)
         FileChooser._do_filename_only = display_mode == "list_no_meta"
         FileChooser._do_hint_opened = true -- dogear at bottom
     end
-
-    CoverMenu._FileChooser_genItemTable_orig = _FileChooser_genItemTable_orig
-    FileChooser.genItemTable = CoverMenu.genItemTable
 
     CoverMenu._FileManager_setupLayout_orig = _FileManager_setupLayout_orig
     FileManager.setupLayout = CoverMenu.setupLayout

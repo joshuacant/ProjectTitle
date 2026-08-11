@@ -38,7 +38,6 @@ local function patchProjectTitle(plugin)
     local CoverMenu = require("covermenu")
         -- CoverMenu:setupLayout() has the top bar
         -- CoverMenu:updatePageInfo(select_number) has the bottom bar
-        -- CoverMenu:genItemTable(dirs, files, path) generates the item table
 end
 
 userpatch.registerPatchPluginFunc("projecttitle", patchProjectTitle)

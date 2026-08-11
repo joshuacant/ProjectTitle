@@ -697,7 +697,7 @@ function ptutil.formatProgressText(status, bookinfo, pages, draw_progressbar, pe
     return progress_str, percent_str, pages_str, pages_left_str
 end
 
-function ptutil.formatFooterText(footer_config, _manager, path, fm_default_dir, has_shortcut, meta_browse_mode)
+function ptutil.formatFooterText(footer_config, _manager, path, fm_default_dir, has_shortcut)
     if BookInfoManager:getSetting("replace_footer_text") then
         local config = footer_config or {
             order = {
@@ -799,7 +799,6 @@ function ptutil.formatFooterText(footer_config, _manager, path, fm_default_dir, 
             end
             display_path = folder_name
         end
-        if meta_browse_mode == true then display_path = _("Library") end
         return display_path
     end
 end
