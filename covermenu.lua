@@ -685,7 +685,7 @@ function CoverMenu:updatePageInfo(select_number)
     if not is_pathchooser and self.cur_folder_text and type(self.path) == "string" and self.path ~= '' then
         self.cur_folder_text:setMaxWidth(self.screen_w * 0.94 - self.page_info:getSize().w)
         local footertxt = ptutil.formatFooterText(self.footer_config, self._manager, self.path, filemanagerutil.getDefaultDir(),
-                                        FileManagerShortcuts:hasFolderShortcut(self.path))
+                                        FileManagerShortcuts:hasFolderShortcut(self.path), G_reader_settings:readSetting("show_flat_view"))
         self.cur_folder_text:setText(footertxt)
     end
 end
