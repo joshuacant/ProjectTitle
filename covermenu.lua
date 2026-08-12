@@ -269,6 +269,7 @@ function CoverMenu:setupLayout()
     self.show_parent = self.show_parent or self
     self.title_bar = TitleBar:new {
         show_parent = self.show_parent,
+        fullscreen = "true",
         title = "",
         subtitle = "",
         -- home
@@ -308,9 +309,6 @@ function CoverMenu:setupLayout()
         path = self.root_path,
         focused_path = self.focused_file,
         show_parent = self.show_parent,
-        height = Screen:getHeight(),
-        is_popout = false,
-        is_borderless = true,
         file_filter = function(filename) return DocumentRegistry:hasProvider(filename) end,
         close_callback = function() return self:onClose() end,
         -- allow left bottom tap gesture, otherwise it is eaten by hidden return button
@@ -337,7 +335,7 @@ function CoverMenu:setupLayout()
             file_manager.selected_files[item.path] = item.dim
             self:updateItems(1, true)
         else
-            file_manager:openFile(item.path)
+            filemanagerutil.openFile(file_manager, item.path)
         end
         return true
     end
@@ -442,8 +440,7 @@ function CoverMenu:setupLayout()
                         book_props.has_cover = true -- to enable "Book cover" button, we do not know if cover exists
                     end
                 end
-                table.insert(buttons,
-                    filemanagerutil.genStatusButtonsRow(doc_settings_or_file, close_dialog_refresh_callback))
+                table.insert(buttons, filemanagerutil.genStatusButtonsRow(doc_settings_or_file, close_dialog_refresh_callback))
                 table.insert(buttons, {}) -- separator
                 table.insert(buttons, {
                     filemanagerutil.genResetSettingsButton(doc_settings_or_file, close_dialog_refresh_callback),
@@ -526,9 +523,6 @@ function CoverMenu:setupLayout()
         file_chooser,
     }
     self[1] = fm_ui
-    self.menu = FileManagerMenu:new {
-        ui = self,
-    }
     -- No need to reinvent the wheel, use FileChooser's layout
     self.layout = file_chooser.layout
     self:registerKeyEvents()

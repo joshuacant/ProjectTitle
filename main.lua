@@ -117,11 +117,11 @@ local _FileChooser_updateItems_orig = FileChooser.updateItems
 local _FileChooser_onCloseWidget_orig = FileChooser.onCloseWidget
 
 -- https://github.com/koreader/koreader/commits/master/frontend/apps/filemanager/filemanager.lua
-local _FileManager_setupLayout_orig = FileManager.setupLayout           -- not in Cover Browser
+local _FileManager_setupLayout_orig = FileManager.setupLayout           -- not in Cover Browser, orig not called
 
 -- https://github.com/koreader/koreader/commits/master/frontend/ui/widget/menu.lua
-local _Menu_init_orig = Menu.init                                       -- not in Cover Browser
-local _Menu_updatePageInfo_orig = Menu.updatePageInfo                   -- not in Cover Browser
+local _Menu_init_orig = Menu.init                                       -- not in Cover Browser, orig is called
+local _Menu_updatePageInfo_orig = Menu.updatePageInfo                   -- not in Cover Browser, orig is called
 
 local _modified_widgets = {
     filemanager  = FileManager,
