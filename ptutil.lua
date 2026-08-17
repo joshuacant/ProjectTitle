@@ -114,14 +114,16 @@ ptutil.bookstatus_defaults = {
     description_font_size = Screen:scaleBySize(18),
 }
 
-ptutil.good_serif = "source/SourceSerif4-Regular.ttf"
-ptutil.good_serif_it = "source/SourceSerif4-It.ttf"
-ptutil.good_serif_bold = "source/SourceSerif4-Bold.ttf"
-ptutil.good_serif_boldit = "source/SourceSerif4-BoldIt.ttf"
-ptutil.good_sans = "source/SourceSans3-Regular.ttf"
-ptutil.good_sans_it = "source/SourceSans3-It.ttf"
-ptutil.good_sans_bold = "source/SourceSans3-Bold.ttf"
-ptutil.good_sans_boldit = "source/SourceSans3-BoldIt.ttf"
+ptutil.koreader_dir = DataStorage:getDataDir()
+ptutil.fonts_dir = ptutil.koreader_dir .. "/fonts"
+ptutil.good_serif = ptutil.fonts_dir .. "/source/SourceSerif4-Regular.ttf"
+ptutil.good_serif_it = ptutil.fonts_dir .. "/source/SourceSerif4-It.ttf"
+ptutil.good_serif_bold = ptutil.fonts_dir .. "/source/SourceSerif4-Bold.ttf"
+ptutil.good_serif_boldit = ptutil.fonts_dir .. "/source/SourceSerif4-BoldIt.ttf"
+ptutil.good_sans = ptutil.fonts_dir .. "/source/SourceSans3-Regular.ttf"
+ptutil.good_sans_it = ptutil.fonts_dir .. "/source/SourceSans3-It.ttf"
+ptutil.good_sans_bold = ptutil.fonts_dir .. "/source/SourceSans3-Bold.ttf"
+ptutil.good_sans_boldit = ptutil.fonts_dir .. "/source/SourceSans3-BoldIt.ttf"
 ptutil.title_serif = ptutil.good_serif_boldit
 
 -- a non-standard space is used here because it looks nicer
@@ -133,8 +135,6 @@ ptutil.separator = {
     em_dash = " — ",
     en_dash = " - ",
 }
-
-ptutil.koreader_dir = DataStorage:getDataDir()
 
 function ptutil.getPluginDir()
     local callerSource = debug.getinfo(2, "S").source
@@ -150,12 +150,11 @@ function ptutil.copyRecursive(from, to)
 end
 
 function ptutil.installFonts()
-    local fonts_path = ptutil.koreader_dir .. "/fonts"
     local function checkfonts()
         logger.info(ptdbg.logprefix, "Checking for fonts")
-        if util.fileExists(fonts_path .. "/source/SourceSans3-Regular.ttf") and
-            util.fileExists(fonts_path .. "/source/SourceSerif4-Regular.ttf") and
-            util.fileExists(fonts_path .. "/source/SourceSerif4-BoldIt.ttf") then
+        if util.fileExists(ptutil.fonts_dir .. "/source/SourceSans3-Regular.ttf") and
+            util.fileExists(ptutil.fonts_dir .. "/source/SourceSerif4-Regular.ttf") and
+            util.fileExists(ptutil.fonts_dir .. "/source/SourceSerif4-BoldIt.ttf") then
             logger.info(ptdbg.logprefix, "Fonts found")
             return true
         else
@@ -166,14 +165,14 @@ function ptutil.installFonts()
     if checkfonts() then return true end
 
     local result
-    if not util.directoryExists(fonts_path) then
+    if not util.directoryExists(ptutil.fonts_dir) then
         result = util.makePath(ptutil.koreader_dir .. "/fonts/")
         logger.info(ptdbg.logprefix, "Creating fonts folder")
         if not result then return false end
     end
-    if util.directoryExists(fonts_path) then
+    if util.directoryExists(ptutil.fonts_dir) then
         -- copy the entire "source"
-        result = ptutil.copyRecursive(ptutil.getPluginDir() .. "/fonts/source", fonts_path)
+        result = ptutil.copyRecursive(ptutil.getPluginDir() .. "/fonts/source", ptutil.fonts_dir)
         logger.info(ptdbg.logprefix, "Copying fonts")
         if not result then return false end
         package.loaded["ui/font"] = nil
