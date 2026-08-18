@@ -1,3 +1,4 @@
+local Archiver = require("ffi/archiver")
 local BD = require("ui/bidi")
 local Blitbuffer = require("ffi/blitbuffer")
 local DataStorage = require("datastorage")
@@ -618,42 +619,24 @@ function BookInfoManager:extractBookInfo(filepath, cover_specs)
                         return nil
                     end
 
-                    local opf_file = nil
-                    local locate_opf_command = "unzip " .. "-lqq \"" .. fname
-                    local opf_match_pattern = "(%S+%.opf)$"
-                    local line = ""
-
-                    -- fh style for Android
-                    if Device:isAndroid() then
-                        -- android unzip binary doesn't always have wildcard support
-                        locate_opf_command = locate_opf_command .. "\""
-                        logger.dbg(ptdbg.logprefix, locate_opf_command)
-                        local fh = io.popen(locate_opf_command, "r")
-                        while true and fh ~= nil do
-                            line = fh:read()
-                            if line == nil or opf_file ~= nil then
+                    -- Read calibre's #pages custom column out of the book's opf via
+                    -- KOReader's archiver (libarchive), not the platform "unzip" binary:
+                    -- unzip isn't present on every device and aborts on some (e.g. Onyx's
+                    -- ubsan-hardened build) when an epub has a zeroed zip timestamp.
+                    local opf_content = nil
+                    local arc = Archiver.Reader:new()
+                    if arc:open(fname) then
+                        for entry in arc:iterate() do
+                            if entry.mode == "file" and string.match(entry.path, "%.opf$") then
+                                logger.dbg(ptdbg.logprefix, "reading opf from archive", entry.path)
+                                opf_content = arc:extractToMemory(entry.path)
                                 break
                             end
-                            opf_file = string.match(line, opf_match_pattern)
-                            logger.dbg(ptdbg.logprefix, line)
                         end
-                    -- std_out style for POSIX
-                    else
-                        local std_out = nil
-                        -- non-android (kobo, kindle, etc?) unzip seems to have wildcard support
-                        locate_opf_command = locate_opf_command .. "\" \"*.opf\""
-                        logger.dbg(ptdbg.logprefix, locate_opf_command)
-                        std_out = io.popen(locate_opf_command)
-                        if std_out then
-                            line = std_out:read()
-                            opf_file = string.match(line, opf_match_pattern)
-                            logger.dbg(ptdbg.logprefix, line)
-                            std_out:close()
-                        end
+                        arc:close()
                     end
 
-                    if opf_file then
-                        local expand_opf_command = "unzip " .. "-p \"" .. fname .. "\" " .. "\"" .. opf_file .. "\""
+                    if opf_content then
                         local found_pages = nil
                         local found_value = nil
                         local do_break = false
@@ -684,27 +667,9 @@ function BookInfoManager:extractBookInfo(filepath, cover_specs)
                             return fp, fv, false
                         end
 
-                        -- fh style for Android
-                        if Device:isAndroid() then
-                            local fh = io.popen(expand_opf_command, "r")
-                            while true and fh ~= nil do
-                                line = fh:read()
-                                if line == nil then
-                                    break
-                                end
-                                found_pages, found_value, do_break = parse_opf_file(found_pages, found_value, line)
-                                if do_break then break end
-                            end
-                        -- std_out style for POSIX
-                        else
-                            local std_out = io.popen(expand_opf_command)
-                            if std_out then
-                                for std_line in std_out:lines() do
-                                    found_pages, found_value, do_break = parse_opf_file(found_pages, found_value, std_line)
-                                    if do_break then break end
-                                end
-                                std_out:close()
-                            end
+                        for opf_line in util.gsplit(opf_content, "\n", false) do
+                            found_pages, found_value, do_break = parse_opf_file(found_pages, found_value, opf_line)
+                            if do_break then break end
                         end
 
                         if found_value and found_value ~= "0" then
