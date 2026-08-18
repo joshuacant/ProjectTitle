@@ -130,6 +130,9 @@ function CoverMenu:updateItems(select_number, no_recalculate_dimen)
     self._has_cover_images = false
     select_number = self:_updateItemsBuildUI() or select_number
 
+    -- test to see what style to draw (pathchooser vs one of our fancy modes)
+    is_pathchooser = ptutil.isPathChooser(self)
+
     -- Set the local variables with the things we know
     -- These are used only by extractBooksInDirectory(), which should
     -- use the cover_specs set for FileBrowser, and not those from History.
@@ -655,9 +658,6 @@ function CoverMenu:menuInit()
         bordersize = 0,
         footer
     }
-
-    -- test to see what style to draw (pathchooser vs one of our fancy modes)
-    is_pathchooser = ptutil.isPathChooser(self)
 
     if self.item_table.current then
         self.page = self:getPageNumber(self.item_table.current)
