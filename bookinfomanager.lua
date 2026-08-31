@@ -619,10 +619,7 @@ function BookInfoManager:extractBookInfo(filepath, cover_specs)
                         return nil
                     end
 
-                    -- Read calibre's #pages custom column out of the book's opf via
-                    -- KOReader's archiver (libarchive), not the platform "unzip" binary:
-                    -- unzip isn't present on every device and aborts on some (e.g. Onyx's
-                    -- ubsan-hardened build) when an epub has a zeroed zip timestamp.
+                    -- Read calibre's #pages custom column out of the book's opf via KOReader's archiver (libarchive)
                     local opf_content = nil
                     local arc = Archiver.Reader:new()
                     if arc:open(fname) then
