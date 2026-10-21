@@ -1199,6 +1199,7 @@ Do you want to prune the cache of removed books?]]
 end
 
 function BookInfoManager.getCachedCoverSize(img_w, img_h, max_img_w, max_img_h)
+    if not (img_w and img_h) or img_w <= 0 or img_h <= 0 then return max_img_w, max_img_h, 1 end
     local scale_factor
     local width = math.floor(max_img_h * img_w / img_h + 0.5)
     if max_img_w >= width then

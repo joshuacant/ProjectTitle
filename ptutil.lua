@@ -375,7 +375,7 @@ function ptutil.build_cover_images(db_res, max_w, max_h)
             local fullpath = directories[i] .. filename
             if util.fileExists(fullpath) then
                 local bookinfo = BookInfoManager:getBookInfo(fullpath, true)
-                if bookinfo then
+                if bookinfo and bookinfo.has_cover and bookinfo.cover_w and bookinfo.cover_h and bookinfo.cover_bb then
                     local border_total = (Size.border.thin * 2)
                     local _, _, scale_factor = BookInfoManager.getCachedCoverSize(
                         bookinfo.cover_w, bookinfo.cover_h, max_img_w, max_img_h)
