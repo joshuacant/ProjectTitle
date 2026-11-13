@@ -28,6 +28,7 @@ local filemanagerutil = require("apps/filemanager/filemanagerutil")
 local logger = require("logger")
 local util = require("util")
 local ffiUtil = require("ffi/util")
+local lfs = require("libs/libkoreader-lfs")
 local C_ = _.pgettext
 local Screen = Device.screen
 local BookInfoManager = require("bookinfomanager")
@@ -290,12 +291,17 @@ function CoverMenu:setupLayout()
         -- centered logo
         center_icon = "hero",
         center_icon_tap_callback = false,
-        center_icon_hold_callback = function()
-            self.file_chooser:toggleShowFilesMode("show_flat_view")
-        end,
+        center_icon_hold_callback = function() self.file_chooser:toggleShowFilesMode("show_flat_view") end,
         -- open last file
         right3_icon = "last_document",
-        right3_icon_tap_callback = function() FileManager.instance.menu:onOpenLastDoc() end,
+        right3_icon_tap_callback = function()
+            local last_file = G_reader_settings:readSetting("lastfile")
+            if last_file and lfs.attributes(last_file, "mode") == "file" then
+                self:openFile(last_file)
+            else
+                UIManager:show(InfoMessage:new{ text = _("Cannot open previous document") })
+            end
+        end,
         right3_icon_hold_callback = false,
         -- up folder
         right2_icon = "go_up",
