@@ -659,12 +659,12 @@ function CoverMenu:menuInit()
         footer
     }
 
-    if self.item_table.current then
-        self.page = self:getPageNumber(self.item_table.current)
-    end
-    if not self.path_items then -- not FileChooser
-        self:updateItems(1, true)
-    end
+    -- if self.item_table.current then
+    --     self.page = self:getPageNumber(self.item_table.current)
+    -- end
+    -- if not self.path_items then -- not FileChooser
+    --     self:updateItems(1, true)
+    -- end
 end
 
 function CoverMenu:updatePageInfo(select_number)
